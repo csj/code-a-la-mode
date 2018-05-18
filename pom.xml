@@ -3,11 +3,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>com.codingame.game</groupId>
-	<artifactId>skeleton</artifactId>
+	<artifactId>code-a-la-mode</artifactId>
 	<version>1.0-SNAPSHOT</version>
 
     <properties>
-        <gamengine.version>1.20</gamengine.version>
+        <kotlin.version>1.2.41</kotlin.version>
+        <gameengine.version>1.30</gameengine.version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
     </properties>
@@ -16,19 +17,93 @@
         <dependency>
             <groupId>com.codingame.gameengine</groupId>
             <artifactId>core</artifactId>
-            <version>${gamengine.version}</version>
+            <version>${gameengine.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.codingame.gameengine</groupId>
             <artifactId>module-entities</artifactId>
-            <version>${gamengine.version}</version>
+            <version>${gameengine.version}</version>
         </dependency>
 
         <dependency>
             <groupId>com.codingame.gameengine</groupId>
             <artifactId>runner</artifactId>
-            <version>${gamengine.version}</version>
+            <version>${gameengine.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-test</artifactId>
+            <version>${kotlin.version}</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jetbrains.kotlin</groupId>
+            <artifactId>kotlin-stdlib-jdk8</artifactId>
+            <version>${kotlin.version}</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jetbrains.kotlin</groupId>
+                <artifactId>kotlin-maven-plugin</artifactId>
+                <version>${kotlin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirs>
+                                <source>src/main/java</source>
+                                <source>src/main/kotlin</source>
+                            </sourceDirs>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>test-compile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>test-compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <jvmTarget>1.8</jvmTarget>
+                    <experimentalCoroutines>enable</experimentalCoroutines>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.7.0</version>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>
