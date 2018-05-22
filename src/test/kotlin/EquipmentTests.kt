@@ -1,24 +1,73 @@
-import com.codingame.game.Board
-import com.codingame.game.IceCreamCrate
-import com.codingame.game.IceCreamFlavour
-import com.codingame.game.buildBoard
-import org.jetbrains.spek.api.Spek
-import org.jetbrains.spek.api.dsl.describe
-import org.jetbrains.spek.api.dsl.it
-import org.jetbrains.spek.api.dsl.on
-import org.jetbrains.spek.subject.SubjectSpek
-import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import com.codingame.game.*
+import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrowAny
+import io.kotlintest.specs.FreeSpec
 
-object EquipmentSpek: SubjectSpek<Board>({
-  subject { buildBoard() }
+class EquipmentSpec: FreeSpec({
+  "the game board" - {
+    "adding equipment" - {
+      "adds equipment to both sides when adding to only one side" {
+        val board = buildBoard()
+        board["I2"].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
+        board["I2"].equipment.shouldBe(IceCreamCrate(IceCreamFlavour.VANILLA))
+        board["i2"].equipment.shouldBe(IceCreamCrate(IceCreamFlavour.VANILLA))
+      }
+    }
+  }
 
-  describe("the game board") {
-    on("adding equipment") {
-      it("adds equipment to both sides when adding to only one side") {
-        subject["I2"].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
-        assertTrue { subject["I2"].equipment is IceCreamCrate }
-        assertTrue { subject["i2"].equipment is IceCreamCrate }
+  "scooping ice cream" - {
+    "a player holding a scoop" - {
+      val board = buildBoard()
+      board["I2"].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
+      val player = Player()
+
+      fun setup() {
+        player.location = board["I3"]
+        player.heldItem = Scoop()
+      }
+
+      "can't scoop if he's too far away" {
+        setup()
+        shouldThrowAny {
+          player.location = board["I4"]
+          player.use(board["I2"])
+        }
+      }
+
+      "can scoop under normal circumstances" {
+        setup()
+        player.use(board["I2"])
+        player.heldItem.shouldBe(Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA)))
+      }
+
+      "can scoop using a dirty vanilla scoop" {
+        setup()
+        player.heldItem = Scoop(ScoopState.Dirty(IceCreamFlavour.VANILLA))
+        player.use(board["I2"])
+        player.heldItem.shouldBe(Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA)))
+      }
+
+      "can't scoop if the scoop was used with a different flavour" {
+        setup()
+        shouldThrowAny {
+          player.heldItem = Scoop(ScoopState.Dirty(IceCreamFlavour.BUTTERSCOTCH))
+          player.use(board["I2"])
+        }
+      }
+
+      "can't scoop if already holding ice cream" {
+        setup()
+        shouldThrowAny {
+          player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
+          player.use(board["I2"])
+        }
+      }
+
+      "can't scoop if he USEs the wrong location" {
+        setup()
+        shouldThrowAny {
+          player.use(board["H3"])
+        }
       }
     }
   }

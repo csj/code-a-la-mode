@@ -16,17 +16,18 @@ sealed class ScoopState {
   data class IceCream(val flavour: IceCreamFlavour) : ScoopState()
 }
 
-data class Scoop(val state: ScoopState) : Item()
+data class Scoop(val state: ScoopState = ScoopState.Clean) : Item()
 
 /**
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
  */
 abstract class Equipment { abstract fun use(player: Player) }
-class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
+data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   override fun use(player: Player) {
     val item = player.heldItem
-    if (item is Scoop && item.state == ScoopState.Clean)
+    if (item is Scoop && (item.state == ScoopState.Clean || item.state == ScoopState.Dirty(flavour)))
       player.heldItem = Scoop(ScoopState.IceCream(flavour))
+    else throw Exception("Cannot use this now")
   }
 }
 
@@ -34,6 +35,7 @@ class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
+  lateinit var oppositeCell: Cell
 
   val neighbours by lazy { straightNeighbours.map {it to 2} + diagonalNeighbours.map {it to 3} }
 
@@ -42,6 +44,10 @@ class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
   }
 
   var equipment: Equipment? = null
+  set(value) {
+    field = value
+    if (oppositeCell.equipment != value) oppositeCell.equipment = value
+  }
 
   fun distanceTo(target: Cell): Int? {
     val visitedCells = mutableSetOf<Cell>()
@@ -93,6 +99,7 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
   init {
     for (x in xRange) {
       for (y in yRange) {
+        get(x,y).oppositeCell = get(-x,y)
         for (dx in -1..1) for (dy in -1..1) {
           if (dx != 0 || dy != 0) {
             val x2 = x+dx; val y2 = y+dy
