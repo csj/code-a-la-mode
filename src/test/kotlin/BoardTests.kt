@@ -1,6 +1,10 @@
 import com.codingame.game.Board
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec
+import io.kotlintest.tables.forAll
+import io.kotlintest.tables.headers
+import io.kotlintest.tables.row
+import io.kotlintest.tables.table
 
 class BoardSpec: FreeSpec({
   "an empty board" - {
@@ -29,25 +33,22 @@ class BoardSpec: FreeSpec({
     val board = Board(5, 5, boardLayout)
 
     "Some examples" {
-      data class DistanceTest(val c1: String, val c2: String, val d: Int?)
-
-      val tests = listOf(
-        DistanceTest("B1", "B3", 6),
-        DistanceTest("B1", "C3", 5),
-        DistanceTest("B1", "C4", 9),
-        DistanceTest("A0", "A0", 0),
-        DistanceTest("B1", "B1", 0),
-        DistanceTest("A0", "C2", null),
-        DistanceTest("A2", "E0", 17)
+      val myTable = table(
+        headers("Start", "Finish", "Distance"),
+        row("B1", "B3", 6 as Int?),
+        row("B1", "C3", 5 as Int?),
+        row("B1", "C4", 9 as Int?),
+        row("A0", "A0", 0 as Int?),
+        row("B1", "B1", 0 as Int?),
+        row("A0", "C2", null as Int?),
+        row("A2", "E0", 17 as Int?)
       )
-      tests.forEach { (c1, c2, d) ->
-        "$c1 to $c2 should be $d" {
-          board[c1].distanceTo(board[c2]).shouldBe(d)
-        }
-        "-$c1 to -$c2 should be $d" {
-          fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
-          board[negafyCellName(c1)].distanceTo(board[negafyCellName(c2)]).shouldBe(d)
-        }
+
+      fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
+
+      forAll(myTable) { c1, c2, d ->
+        board[c1].distanceTo(board[c2]) shouldBe d
+        board[negafyCellName(c1)].distanceTo(board[negafyCellName(c2)]) shouldBe d
       }
     }
   }
