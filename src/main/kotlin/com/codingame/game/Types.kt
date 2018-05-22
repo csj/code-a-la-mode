@@ -8,7 +8,21 @@ enum class IceCreamFlavour {
   BUTTERSCOTCH
 }
 
-abstract class Item
+abstract class Item {
+  open fun drop(player: Player, cell: Cell) {
+    val item = cell.item
+    if (item is Dish) return dropOntoDish(player, item)
+    if (!cell.isTable) throw Exception("Cannot drop: not a table!")
+    cell.item = this
+    player.heldItem = null
+  }
+
+  open fun dropOntoDish(player: Player, dish: Dish) {
+    throw Exception("Cannot drop this onto a dish")
+  }
+}
+
+data class IceCreamBall(val flavour: IceCreamFlavour) : Item()
 
 sealed class ScoopState {
   object Clean : ScoopState()
@@ -16,7 +30,16 @@ sealed class ScoopState {
   data class IceCream(val flavour: IceCreamFlavour) : ScoopState()
 }
 
-data class Scoop(val state: ScoopState = ScoopState.Clean) : Item()
+data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
+  override fun dropOntoDish(player: Player, dish: Dish) {
+    if (state is ScoopState.IceCream) {
+      dish.contents += IceCreamBall(state.flavour)
+      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
+    }
+  }
+}
+
+data class Dish(val contents: MutableList<Item> = mutableListOf()) : Item()
 
 /**
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
@@ -31,7 +54,7 @@ data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   }
 }
 
-class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
+class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
@@ -48,6 +71,7 @@ class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
     field = value
     if (oppositeCell.equipment != value) oppositeCell.equipment = value
   }
+  var item: Item? = null
 
   fun distanceTo(target: Cell): Int? {
     val visitedCells = mutableSetOf<Cell>()
@@ -59,7 +83,7 @@ class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
       val (cell, dist) = floodedCells.remove()!!
       visitedCells += cell
       if (cell == target) return dist
-      if (cell.isWalkable || isFirst) {
+      if (!cell.isTable || isFirst) {
         floodedCells += cell.neighbours
           .filterNot { (nc, _) -> nc in visitedCells }
           .map { (nc, nd) -> nc to dist + nd }
@@ -79,11 +103,11 @@ class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
 class Board(val width: Int, val height: Int, layout: List<String>? = null) {
   val cells = Array(width * 2 - 1, { x ->
     Array(height, { y ->
-      val walkable = if (layout == null) true else {
+      val isTable = if (layout == null) false else {
         val layoutX = (x - (width-1)) * if (x < width) -1 else 1
-        layout[y][layoutX] == '.'
+        layout[y][layoutX] == 'X'
       }
-      Cell(x - width + 1, y, walkable)
+      Cell(x - width + 1, y, isTable)
     })
   })
 
