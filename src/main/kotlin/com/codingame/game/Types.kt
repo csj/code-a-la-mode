@@ -2,6 +2,34 @@ package com.codingame.game
 
 import java.util.*
 
+enum class IceCreamFlavour {
+  VANILLA,
+  CHOCOLATE,
+  BUTTERSCOTCH
+}
+
+abstract class Item
+
+sealed class ScoopState {
+  object Clean : ScoopState()
+  data class Dirty(val flavour: IceCreamFlavour) : ScoopState()
+  data class IceCream(val flavour: IceCreamFlavour) : ScoopState()
+}
+
+data class Scoop(val state: ScoopState) : Item()
+
+/**
+ * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
+ */
+abstract class Equipment { abstract fun use(player: Player) }
+class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
+  override fun use(player: Player) {
+    val item = player.heldItem
+    if (item is Scoop && item.state == ScoopState.Clean)
+      player.heldItem = Scoop(ScoopState.IceCream(flavour))
+  }
+}
+
 class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
@@ -12,6 +40,8 @@ class Cell(val x: Int, val y: Int, val isWalkable: Boolean = true) {
   fun connect(other: Cell, isStraight: Boolean) {
     (if (isStraight) straightNeighbours else diagonalNeighbours) += other
   }
+
+  var equipment: Equipment? = null
 
   fun distanceTo(target: Cell): Int? {
     val visitedCells = mutableSetOf<Cell>()
@@ -52,9 +82,11 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
   })
 
   operator fun get(x: Int, y: Int): Cell = cells[x + width - 1][y]
-  operator fun get(cellName: String, isEnemy: Boolean = false): Cell =
-    get((cellName[0] - 'A') * (if (isEnemy) -1 else 1), cellName.substring(1).toInt())
-
+  operator fun get(cellName: String): Cell {
+    val file = cellName[0]
+    val x = if (file in 'A'..'Z') file - 'A' else 'a' - file
+    return get(x, cellName.substring(1).toInt())
+  }
   val xRange = -(width-1)..(width-1)
   val yRange = 0 until height
 

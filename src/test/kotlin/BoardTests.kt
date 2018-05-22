@@ -57,7 +57,8 @@ object BoardSpek: Spek({
           assertEquals(d, board[c1].distanceTo(board[c2]))
         }
         it("-$c1 to -$c2 should be $d") {
-          assertEquals(d, board[c1, true].distanceTo(board[c2, true]))
+          fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
+          assertEquals(d, board[negafyCellName(c1)].distanceTo(board[negafyCellName(c2)]))
         }
       }
     }
