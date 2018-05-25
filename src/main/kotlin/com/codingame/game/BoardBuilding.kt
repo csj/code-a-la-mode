@@ -2,7 +2,7 @@ package com.codingame.game
 
 val boardLayout = listOf(
 //        ABCDEFGHI
-/* 0 */  "XXXXXXXXX",  // 0
+/* 0 */  "XDdXXXXXX",  // 0
 /* 1 */  "X.......X",  // 1
 /* 2 */  "X..X.X..X",  // 2
 /* 3 */  "X..XXX..X",  // 3

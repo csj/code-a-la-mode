@@ -16,6 +16,13 @@ class Player : AbstractPlayer() {
     item.drop(this, cell)
   }
 
+  fun take(cell: Cell) {
+    if (heldItem != null) throw Exception("Cannot take: already holding something!")
+    if (cell.distanceTo(location) != 2) throw Exception("Cannot take: too far!")
+    val item = cell.item ?: throw Exception("Cannot take: nothing there!")
+    item.take(this, cell)
+  }
+
   var heldItem: Item? = null
   lateinit var location: Cell
 }

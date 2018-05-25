@@ -21,6 +21,29 @@ class EquipmentSpec: FreeSpec({
     board[iceCreamLoc].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
     val player = Player()
 
+    "a scoop on top of an ice cream crate" - {
+      fun setup() {
+        player.location = board["H2"]
+        player.heldItem = null
+        board["I2"].item = Scoop()
+      }
+
+      "can be picked up (without disturbing the crate)" {
+        setup()
+        player.take(board["I2"])
+        board["I2"].equipment shouldBe IceCreamCrate(IceCreamFlavour.VANILLA)
+        board["I2"].item shouldBe null
+        player.heldItem shouldBe Scoop()
+      }
+
+      "cannot be USEd" {
+        setup()
+        shouldThrowAny {
+          player.use(board["I2"])
+        }
+      }
+    }
+
     "a player holding a full scoop near a table with a dish" - {
       fun setup() {
         player.location = board["E2"]
@@ -31,11 +54,19 @@ class EquipmentSpec: FreeSpec({
       "can DROP ice cream onto a dish out of a scoop" {
         setup()
         player.drop(board["F2"])
-        board["F2"].item shouldBe Dish(mutableListOf(IceCreamBall(IceCreamFlavour.VANILLA)))
+        board["F2"].item shouldBe Dish(IceCreamBall(IceCreamFlavour.VANILLA))
         player.heldItem shouldBe Scoop(ScoopState.Dirty(IceCreamFlavour.VANILLA))
       }
 
-      "can DROP a full scoop onto a table" {
+      "cannot DROP ice cream onto a dish out of a scoop, if the dish already has ice cream" {
+        setup()
+        (board["F2"].item as Dish) += IceCreamBall(IceCreamFlavour.VANILLA)
+        shouldThrowAny {
+          player.drop(board["F2"])
+        }
+      }
+
+      "can DROP a full scoop onto a table (this drops the entire scoop)" {
         setup()
         player.drop(board["D2"])
         board["D2"].item shouldBe Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))

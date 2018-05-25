@@ -20,9 +20,18 @@ abstract class Item {
   open fun dropOntoDish(player: Player, dish: Dish) {
     throw Exception("Cannot drop this onto a dish")
   }
+
+  open fun take(player: Player, cell: Cell) {
+    cell.item = null
+    player.heldItem = this
+  }
 }
 
-data class IceCreamBall(val flavour: IceCreamFlavour) : Item()
+data class IceCreamBall(val flavour: IceCreamFlavour) : Item() {
+  override fun take(player: Player, cell: Cell) {
+    throw Exception("Cannot take this directly!")
+  }
+}
 
 sealed class ScoopState {
   object Clean : ScoopState()
@@ -33,13 +42,33 @@ sealed class ScoopState {
 data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
   override fun dropOntoDish(player: Player, dish: Dish) {
     if (state is ScoopState.IceCream) {
-      dish.contents += IceCreamBall(state.flavour)
+      dish += IceCreamBall(state.flavour)
       player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
     }
   }
 }
 
-data class Dish(val contents: MutableList<Item> = mutableListOf()) : Item()
+class Dish(vararg initialContents: Item) : Item() {
+  private val contents: MutableSet<Item> = mutableSetOf(*initialContents) // warning: can't contain two of the same item!
+  infix operator fun plusAssign(item: Item) {
+    if (item in contents) throw Exception("Can't drop: dish already contains $item")
+    contents += item
+  }
+
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as Dish
+    return contents == other.contents
+  }
+
+  override fun hashCode(): Int {
+    return contents.hashCode()
+  }
+
+
+}
 
 /**
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
@@ -105,7 +134,7 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
     Array(height, { y ->
       val isTable = if (layout == null) false else {
         val layoutX = (x - (width-1)) * if (x < width) -1 else 1
-        layout[y][layoutX] == 'X'
+        layout[y][layoutX] != '.'
       }
       Cell(x - width + 1, y, isTable)
     })
