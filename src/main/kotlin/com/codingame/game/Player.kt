@@ -25,6 +25,7 @@ class Player : AbstractPlayer() {
 
   fun moveTo(cell: Cell) {
     if (location.distanceTo(cell) ?: Int.MAX_VALUE > 7) throw Exception("Cannot move: too far!")
+    if(cell.isTable) throw Exception("Cannot move: can't walk here!")
     location = cell
   }
 

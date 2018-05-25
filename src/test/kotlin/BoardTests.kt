@@ -10,7 +10,7 @@ import io.kotlintest.tables.table
 
 class BoardSpec: FreeSpec({
   "an empty board" - {
-    val board = Board(5,5)
+    val board = Board(  5,5)
 
     "neighbour distances" {
       board["B2"].distanceTo(board["B3"]).shouldBe(2)
@@ -57,7 +57,7 @@ class BoardSpec: FreeSpec({
     "Player can move a max of 7 distance" {
       val moveTable = table(
         headers("Start", "Finish", "Can Move"),
-        row("A4", "E4", false),
+        row("A4", "A1", false),
         row("A2", "C4", true)
       )
 
@@ -75,6 +75,14 @@ class BoardSpec: FreeSpec({
         else shouldThrowAny { doit() }
       }
 
+    }
+
+    "Player cannot move onto a table" {
+      val moveTable = table(
+              headers("Start", "Finish", "Can Move"),
+              row("A4", "E4", false),
+              row("A2", "C4", true)
+      )
     }
   }
 })
