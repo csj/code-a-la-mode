@@ -3,14 +3,11 @@ import com.codingame.game.Player
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec
-import io.kotlintest.tables.forAll
-import io.kotlintest.tables.headers
-import io.kotlintest.tables.row
-import io.kotlintest.tables.table
+import io.kotlintest.tables.*
 
-class BoardSpec: FreeSpec({
+class BoardSpec : FreeSpec({
   "an empty board" - {
-    val board = Board(  5,5)
+    val board = Board(5, 5)
 
     "neighbour distances" {
       board["B2"].distanceTo(board["B3"]).shouldBe(2)
@@ -25,25 +22,25 @@ class BoardSpec: FreeSpec({
 
   "a board with obstructions" - {
     val boardLayout = listOf(
-      "...X.",  // 0
-      "XXXX.",  // 1
-      ".X...",  // 2
-      ".XX..",  // 3
-      "....."   // 4
-    // ABCDE    -- A is always shared with the opponent
+        "...X.",  // 0
+        "XXXX.",  // 1
+        ".X...",  // 2
+        ".XX..",  // 3
+        "....."   // 4
+        // ABCDE    -- A is always shared with the opponent
     )
     val board = Board(5, 5, boardLayout)
 
     "Distances should be accurate" {
       val myTable = table(
-        headers("Start", "Finish", "Distance"),
-        row("B1", "B3", 6 as Int?),
-        row("B1", "C3", 5 as Int?),
-        row("B1", "C4", 9 as Int?),
-        row("A0", "A0", 0 as Int?),
-        row("B1", "B1", 0 as Int?),
-        row("A0", "C2", null as Int?),
-        row("A2", "E0", 17 as Int?)
+          headers("Start", "Finish", "Distance"),
+          row("B1", "B3", 6 as Int?),
+          row("B1", "C3", 5 as Int?),
+          row("B1", "C4", 9 as Int?),
+          row("A0", "A0", 0 as Int?),
+          row("B1", "B1", 0 as Int?),
+          row("A0", "C2", null as Int?),
+          row("A2", "E0", 17 as Int?)
       )
 
       fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
@@ -54,13 +51,7 @@ class BoardSpec: FreeSpec({
       }
     }
 
-    "Player can move a max of 7 distance" {
-      val moveTable = table(
-        headers("Start", "Finish", "Can Move"),
-        row("A4", "E4", false),
-        row("A2", "C4", true)
-      )
-
+    fun testMoves(moveTable: Table3<String, String, Boolean>, board: Board) {
       val player = Player()
 
       forAll(moveTable) { start, end, canMove ->
@@ -74,15 +65,28 @@ class BoardSpec: FreeSpec({
         if (canMove) doit()
         else shouldThrowAny { doit() }
       }
+    }
+
+    "Player can move a max of 7 distance" {
+      val moveTable = table(
+          headers("Start", "Finish", "Can Move"),
+          row("A4", "E4", false),
+          row("A2", "C4", true)
+      )
+
+      testMoves(moveTable, board)
 
     }
 
     "Player cannot move onto a table" {
       val moveTable = table(
-              headers("Start", "Finish", "Can Move"),
-              row("A4", "A1", false),
-              row("A2", "C4", true)
+          headers("Start", "Finish", "Can Move"),
+          row("A4", "A1", false),
+          row("A2", "C4", true)
       )
+
+      testMoves(moveTable, board)
     }
+
   }
 })
