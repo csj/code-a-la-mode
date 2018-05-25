@@ -57,7 +57,7 @@ class BoardSpec: FreeSpec({
     "Player can move a max of 7 distance" {
       val moveTable = table(
         headers("Start", "Finish", "Can Move"),
-        row("A4", "A1", false),
+        row("A4", "E4", false),
         row("A2", "C4", true)
       )
 
@@ -80,7 +80,7 @@ class BoardSpec: FreeSpec({
     "Player cannot move onto a table" {
       val moveTable = table(
               headers("Start", "Finish", "Can Move"),
-              row("A4", "E4", false),
+              row("A4", "A1", false),
               row("A2", "C4", true)
       )
     }
