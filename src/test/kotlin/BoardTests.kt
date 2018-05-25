@@ -51,7 +51,7 @@ class BoardSpec : FreeSpec({
       }
     }
 
-    fun testMoves(moveTable: Table3<String, String, Boolean>, board: Board) {
+    fun testMoves(moveTable: Table3<String, String, Boolean>) {
       val player = Player()
 
       forAll(moveTable) { start, end, canMove ->
@@ -74,7 +74,7 @@ class BoardSpec : FreeSpec({
           row("A2", "C4", true)
       )
 
-      testMoves(moveTable, board)
+      testMoves(moveTable)
 
     }
 
@@ -85,7 +85,7 @@ class BoardSpec : FreeSpec({
           row("A2", "C4", true)
       )
 
-      testMoves(moveTable, board)
+      testMoves(moveTable)
     }
 
   }

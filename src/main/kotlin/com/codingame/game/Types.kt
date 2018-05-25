@@ -1,5 +1,6 @@
 package com.codingame.game
 
+import io.undertow.predicate.EqualsPredicate
 import java.util.*
 
 enum class IceCreamFlavour {
@@ -19,6 +20,10 @@ abstract class Item {
 
   open fun dropOntoDish(player: Player, dish: Dish) {
     throw Exception("Cannot drop this onto a dish")
+  }
+
+  open fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    throw Exception("Cannot drop this onto equipment!")
   }
 
   open fun take(player: Player, cell: Cell) {
@@ -55,6 +60,12 @@ class Dish(vararg initialContents: Item) : Item() {
     contents += item
   }
 
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    when (equipment) {
+      is Window -> { equipment.deliver(this); player.heldItem = null }
+    }
+  }
+
   override fun equals(other: Any?): Boolean {
     if (this === other) return true
     if (javaClass != other?.javaClass) return false
@@ -67,19 +78,34 @@ class Dish(vararg initialContents: Item) : Item() {
     return contents.hashCode()
   }
 
-
+  override fun toString(): String {
+    return "Dish $contents"
+  }
 }
 
 /**
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
  */
-abstract class Equipment { abstract fun use(player: Player) }
+abstract class Equipment {
+  abstract fun use(player: Player)
+}
+
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   override fun use(player: Player) {
     val item = player.heldItem
     if (item is Scoop && (item.state == ScoopState.Clean || item.state == ScoopState.Dirty(flavour)))
       player.heldItem = Scoop(ScoopState.IceCream(flavour))
     else throw Exception("Cannot use this now")
+  }
+}
+
+class Window : Equipment() {
+  override fun use(player: Player) {
+    throw Exception("Cannot use a delivery window")
+  }
+
+  fun deliver(dish: Dish) {
+
   }
 }
 
