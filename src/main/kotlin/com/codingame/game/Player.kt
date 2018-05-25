@@ -23,6 +23,11 @@ class Player : AbstractPlayer() {
     item.take(this, cell)
   }
 
+  fun moveTo(cell: Cell) {
+    if (location.distanceTo(cell) ?: Int.MAX_VALUE > 7) throw Exception("Cannot move: too far!")
+    location = cell
+  }
+
   var heldItem: Item? = null
   lateinit var location: Cell
 }

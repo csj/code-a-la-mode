@@ -1,5 +1,7 @@
 import com.codingame.game.Board
+import com.codingame.game.Player
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec
 import io.kotlintest.tables.forAll
 import io.kotlintest.tables.headers
@@ -32,7 +34,7 @@ class BoardSpec: FreeSpec({
     )
     val board = Board(5, 5, boardLayout)
 
-    "Some examples" {
+    "Distances should be accurate" {
       val myTable = table(
         headers("Start", "Finish", "Distance"),
         row("B1", "B3", 6 as Int?),
@@ -50,6 +52,29 @@ class BoardSpec: FreeSpec({
         board[c1].distanceTo(board[c2]) shouldBe d
         board[negafyCellName(c1)].distanceTo(board[negafyCellName(c2)]) shouldBe d
       }
+    }
+
+    "Player can move a max of 7 distance" {
+      val moveTable = table(
+        headers("Start", "Finish", "Can Move"),
+        row("A4", "E4", false),
+        row("A2", "C4", true)
+      )
+
+      val player = Player()
+
+      forAll(moveTable) { start, end, canMove ->
+        player.location = board[start]
+
+        fun doit() {
+          player.moveTo(board[end])
+          player.location shouldBe board[end]
+        }
+
+        if (canMove) doit()
+        else shouldThrowAny { doit() }
+      }
+
     }
   }
 })
