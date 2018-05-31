@@ -22,6 +22,10 @@ abstract class Item {
     throw Exception("Cannot drop this onto a dish")
   }
 
+  open fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    throw Exception("Cannot drop this onto equipment!")
+  }
+
   open fun take(player: Player, cell: Cell) {
     cell.item = null
     player.heldItem = this
@@ -49,32 +53,28 @@ data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
   }
 }
 
-class Dish(vararg initialContents: Item) : Item() {
-  private val contents: MutableSet<Item> = mutableSetOf(*initialContents) // warning: can't contain two of the same item!
+data class Dish(val contents: MutableSet<Item> = mutableSetOf()) : Item() {
+  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+
   infix operator fun plusAssign(item: Item) {
     if (item in contents) throw Exception("Can't drop: dish already contains $item")
     contents += item
   }
 
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-
-    other as Dish
-    return contents == other.contents
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    when (equipment) {
+      is Window -> { equipment.deliver(this); player.heldItem = null }
+    }
   }
-
-  override fun hashCode(): Int {
-    return contents.hashCode()
-  }
-
-
 }
 
 /**
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
  */
-abstract class Equipment { abstract fun use(player: Player) }
+abstract class Equipment {
+  abstract fun use(player: Player)
+}
+
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   override fun use(player: Player) {
     val item = player.heldItem
@@ -82,6 +82,19 @@ data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
       player.heldItem = Scoop(ScoopState.IceCream(flavour))
     else throw Exception("Cannot use this now")
   }
+}
+
+
+/**
+ * @param onDelivery: a callback to be called when a player makes a delivery. Typically
+ * this will be a scorekeeper function of some sort.
+ */
+class Window(private val onDelivery: (Item) -> Unit = { }) : Equipment() {
+  override fun use(player: Player) {
+    throw Exception("Cannot use a delivery window")
+  }
+
+  fun deliver(dish: Dish) = onDelivery(dish)
 }
 
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
@@ -100,7 +113,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   var equipment: Equipment? = null
   set(value) {
     field = value
-    if (oppositeCell.equipment != value) oppositeCell.equipment = value
+    if (value !is Window && oppositeCell.equipment != value) oppositeCell.equipment = value
   }
   var item: Item? = null
 

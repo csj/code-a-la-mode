@@ -111,16 +111,16 @@ class EquipmentSpec: FreeSpec({
 
       "can't scoop if the scoop was used with a different flavour" {
         setup()
+        player.heldItem = Scoop(ScoopState.Dirty(IceCreamFlavour.BUTTERSCOTCH))
         shouldThrowAny {
-          player.heldItem = Scoop(ScoopState.Dirty(IceCreamFlavour.BUTTERSCOTCH))
           player.use(board[iceCreamLoc])
         }
       }
 
       "can't scoop if already holding ice cream" {
         setup()
+        player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
         shouldThrowAny {
-          player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
           player.use(board[iceCreamLoc])
         }
       }

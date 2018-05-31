@@ -13,6 +13,8 @@ class Player : AbstractPlayer() {
   fun drop(cell: Cell) {
     val item = heldItem ?: throw Exception("Cannot drop: not holding anything!")
     if (cell.distanceTo(location) != 2) throw Exception("Cannot drop: too far!")
+    val equipment = cell.equipment
+    if (equipment != null) return item.dropOntoEquipment(this, equipment)
     item.drop(this, cell)
   }
 
