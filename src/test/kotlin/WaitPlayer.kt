@@ -14,9 +14,9 @@ class WaitPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream): 
 
 @Suppress("unused")
 abstract class BasePlayer(stdin: InputStream, val stdout: PrintStream, val stderr: PrintStream) {
-  private val scanner = Scanner(stdin)
+  public val scanner = Scanner(stdin)
   protected fun readInputs() = AllInputs(scanner.nextLine()!!)
-    .also { System.out.println("Received world state: $it")}
+    .also { /*System.out.println("Received world state: $it")*/}
 }
 
 data class AllInputs(val line: String)

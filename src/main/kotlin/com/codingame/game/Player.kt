@@ -1,9 +1,12 @@
 package com.codingame.game
 
 import com.codingame.gameengine.core.AbstractPlayer
+import com.codingame.gameengine.module.entities.Rectangle
 
 class Player : AbstractPlayer() {
   override fun getExpectedOutputLines() = 1
+  lateinit var sprite:Rectangle
+
   fun use(cell: Cell) {
     val equipment = cell.equipment ?: throw Exception("Cannot use: no equipment!")
     if (cell.distanceTo(location) != 2) throw Exception("Cannot use: too far!")
