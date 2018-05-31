@@ -1,5 +1,4 @@
-import com.codingame.game.Board
-import com.codingame.game.Player
+import com.codingame.game.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec
@@ -87,6 +86,24 @@ class BoardSpec : FreeSpec({
 
       testMoves(moveTable)
     }
+  }
 
+  "Adding delivery windows" - {
+    "Adding a window to one side should NOT add a window to the other" {
+      val board = buildBoard()
+      board["B0"].equipment = Window()
+      board["b0"].equipment shouldBe null
+    }
+
+    "The delivery callback should be called upon successful delivery" {
+      val board = buildBoard()
+      var deliveredItem: Item? = null
+      board["B0"].equipment = Window { deliveredItem = it }
+      val player = Player()
+      player.heldItem = Dish()
+      player.location = board["B1"]
+      player.drop(board["B0"])
+      deliveredItem shouldBe Dish()
+    }
   }
 })

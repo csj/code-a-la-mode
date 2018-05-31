@@ -1,6 +1,5 @@
 package com.codingame.game
 
-import io.undertow.predicate.EqualsPredicate
 import java.util.*
 
 enum class IceCreamFlavour {
@@ -53,8 +52,9 @@ data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
   }
 }
 
-class Dish(vararg initialContents: Item) : Item() {
-  private val contents: MutableSet<Item> = mutableSetOf(*initialContents) // warning: can't contain two of the same item!
+data class Dish(val contents: MutableSet<Item> = mutableSetOf()) : Item() {
+  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+
   infix operator fun plusAssign(item: Item) {
     if (item in contents) throw Exception("Can't drop: dish already contains $item")
     contents += item
@@ -64,22 +64,6 @@ class Dish(vararg initialContents: Item) : Item() {
     when (equipment) {
       is Window -> { equipment.deliver(this); player.heldItem = null }
     }
-  }
-
-  override fun equals(other: Any?): Boolean {
-    if (this === other) return true
-    if (javaClass != other?.javaClass) return false
-
-    other as Dish
-    return contents == other.contents
-  }
-
-  override fun hashCode(): Int {
-    return contents.hashCode()
-  }
-
-  override fun toString(): String {
-    return "Dish $contents"
   }
 }
 
@@ -99,14 +83,17 @@ data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   }
 }
 
-class Window : Equipment() {
+
+/**
+ * @param onDelivery: a callback to be called when a player makes a delivery. Typically
+ * this will be a scorekeeper function of some sort.
+ */
+class Window(private val onDelivery: (Item) -> Unit = { }) : Equipment() {
   override fun use(player: Player) {
     throw Exception("Cannot use a delivery window")
   }
 
-  fun deliver(dish: Dish) {
-
-  }
+  fun deliver(dish: Dish) = onDelivery(dish)
 }
 
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
@@ -124,7 +111,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   var equipment: Equipment? = null
   set(value) {
     field = value
-    if (oppositeCell.equipment != value) oppositeCell.equipment = value
+    if (value !is Window && oppositeCell.equipment != value) oppositeCell.equipment = value
   }
   var item: Item? = null
 
