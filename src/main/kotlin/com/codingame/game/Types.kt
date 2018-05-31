@@ -1,5 +1,6 @@
 package com.codingame.game
 
+import com.codingame.gameengine.module.entities.Rectangle
 import java.util.*
 
 enum class IceCreamFlavour {
@@ -88,6 +89,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
   lateinit var oppositeCell: Cell
+  lateinit var visualRect: Rectangle
 
   val neighbours by lazy { straightNeighbours.map {it to 2} + diagonalNeighbours.map {it to 3} }
 
