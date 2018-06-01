@@ -24,8 +24,9 @@ class Player : AbstractPlayer() {
   fun take(cell: Cell) {
     if (heldItem != null) throw Exception("Cannot take: already holding something!")
     if (cell.distanceTo(location) != 2) throw Exception("Cannot take: too far!")
-    val item = cell.item ?: throw Exception("Cannot take: nothing there!")
-    item.take(this, cell)
+    cell.item?.let { return it.take(this, cell) }
+    cell.equipment?.let { return it.takeFrom(this) }
+    throw Exception("Cannot take: nothing here!")
   }
 
   fun moveTo(cell: Cell) {

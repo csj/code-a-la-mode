@@ -19,11 +19,11 @@ abstract class Item {
   }
 
   open fun dropOntoDish(player: Player, dish: Dish) {
-    throw Exception("Cannot drop this onto a dish")
+    throw Exception("Cannot drop $this onto a dish")
   }
 
   open fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    throw Exception("Cannot drop this onto equipment!")
+    throw Exception("Cannot drop $this onto equipment!")
   }
 
   open fun take(player: Player, cell: Cell) {
@@ -34,7 +34,7 @@ abstract class Item {
 
 data class IceCreamBall(val flavour: IceCreamFlavour) : Item() {
   override fun take(player: Player, cell: Cell) {
-    throw Exception("Cannot take this directly!")
+    throw Exception("Cannot take $this directly!")
   }
 }
 
@@ -51,19 +51,27 @@ data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
       player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
     }
   }
+
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    if (state is ScoopState.IceCream) {
+      if (equipment is Blender) {
+        equipment += IceCreamBall(state.flavour)
+        player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
+        return
+      }
+    }
+
+    super.dropOntoEquipment(player, equipment)
+  }
 }
 
-data class Dish(val contents: MutableSet<Item> = mutableSetOf()) : Item() {
+data class Dish(override val contents: MutableSet<Item> = mutableSetOf()) : Item(), HasContents {
   constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
-
-  infix operator fun plusAssign(item: Item) {
-    if (item in contents) throw Exception("Can't drop: dish already contains $item")
-    contents += item
-  }
 
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
     when (equipment) {
       is Window -> { equipment.deliver(this); player.heldItem = null }
+      else -> super.dropOntoEquipment(player, equipment)
     }
   }
 }
@@ -72,7 +80,13 @@ data class Dish(val contents: MutableSet<Item> = mutableSetOf()) : Item() {
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.
  */
 abstract class Equipment {
-  abstract fun use(player: Player)
+  open fun use(player: Player) {
+    throw Exception("Cannot use $this directly!")
+  }
+
+  open fun takeFrom(player: Player) {
+    throw Exception("$this cannot be taken directly!")
+  }
 }
 
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
@@ -84,6 +98,36 @@ data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   }
 }
 
+
+interface HasContents {
+  val contents: MutableSet<Item>
+}
+
+infix operator fun HasContents.plusAssign(item: Item) {
+  if (item in contents) throw Exception("Can't add: $this already contains $item")
+  contents += item
+}
+
+data class Milkshake(override val contents: MutableSet<Item> = mutableSetOf()) : Item(), HasContents {
+  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+}
+
+data class Blender(override val contents: MutableSet<Item> = mutableSetOf()) : Equipment(), HasContents {
+  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+
+  override fun takeFrom(player: Player) {
+    if (IceCreamBall(IceCreamFlavour.VANILLA) !in contents) throw Exception("Not ready for taking: no ice cream!")
+    player.heldItem = Milkshake(contents.toMutableSet())
+    contents.clear()
+  }
+
+  infix operator fun plusAssign(item: Item) {
+    when (item) {
+      IceCreamBall(IceCreamFlavour.VANILLA) /* , ChoppedBanana(), ... */ -> (this as HasContents) += item
+      else -> throw Exception("Cannot add $item to $this")
+    }
+  }
+}
 
 /**
  * @param onDelivery: a callback to be called when a player makes a delivery. Typically

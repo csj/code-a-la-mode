@@ -35,7 +35,6 @@ class Referee : AbstractReferee() {
     val worldWidth = 1920
     val worldHeight = 1080
 
-
     val cellSpacing = 5
     val yOffset = 0
     val xOffset = 100
