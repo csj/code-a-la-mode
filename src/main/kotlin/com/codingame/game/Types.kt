@@ -65,15 +65,17 @@ data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
   }
 }
 
-data class Dish(override val contents: MutableSet<Item> = mutableSetOf()) : Item(), HasContents {
-  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
-
+abstract class DeliverableItem() : Item() {
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
     when (equipment) {
       is Window -> { equipment.deliver(this); player.heldItem = null }
       else -> super.dropOntoEquipment(player, equipment)
     }
   }
+}
+
+data class Dish(override val contents: MutableSet<Item> = mutableSetOf()) : DeliverableItem(), HasContents {
+  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
 }
 
 /**
@@ -108,7 +110,7 @@ infix operator fun HasContents.plusAssign(item: Item) {
   contents += item
 }
 
-data class Milkshake(override val contents: MutableSet<Item> = mutableSetOf()) : Item(), HasContents {
+data class Milkshake(override val contents: MutableSet<Item> = mutableSetOf()) : DeliverableItem(), HasContents {
   constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
 }
 
@@ -138,7 +140,7 @@ class Window(private val onDelivery: (Item) -> Unit = { }) : Equipment() {
     throw Exception("Cannot use a delivery window")
   }
 
-  fun deliver(dish: Dish) = onDelivery(dish)
+  fun deliver(food: DeliverableItem) = onDelivery(food)
 }
 
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
