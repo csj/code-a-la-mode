@@ -23,7 +23,7 @@ abstract class Item {
   }
 
   open fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    throw Exception("Cannot drop $this onto equipment!")
+    throw Exception("Cannot drop $this onto $equipment!")
   }
 
   open fun take(player: Player, cell: Cell) {
@@ -32,7 +32,16 @@ abstract class Item {
   }
 }
 
-data class IceCreamBall(val flavour: IceCreamFlavour) : Item() {
+abstract class EdibleItem: Item() {
+  override fun dropOntoDish(player: Player, dish: Dish) { dish += this }
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) { if (equipment is Blender) equipment += this }
+}
+
+object Strawberries: EdibleItem()
+object Blueberries: EdibleItem()
+object ChoppedBananas: EdibleItem()
+
+data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
   override fun take(player: Player, cell: Cell) {
     throw Exception("Cannot take $this directly!")
   }
@@ -47,25 +56,25 @@ sealed class ScoopState {
 data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
   override fun dropOntoDish(player: Player, dish: Dish) {
     if (state is ScoopState.IceCream) {
-      dish += IceCreamBall(state.flavour)
+      IceCreamBall(state.flavour).dropOntoDish(player, dish)
       player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
+      return
     }
+    super.dropOntoDish(player, dish)
   }
 
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
     if (state is ScoopState.IceCream) {
-      if (equipment is Blender) {
-        equipment += IceCreamBall(state.flavour)
-        player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
-        return
-      }
+      IceCreamBall(state.flavour).dropOntoEquipment(player, equipment)
+      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
+      return
     }
 
     super.dropOntoEquipment(player, equipment)
   }
 }
 
-abstract class DeliverableItem() : Item() {
+abstract class DeliverableItem : Item() {
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
     when (equipment) {
       is Window -> { equipment.deliver(this); player.heldItem = null }
@@ -74,8 +83,8 @@ abstract class DeliverableItem() : Item() {
   }
 }
 
-data class Dish(override val contents: MutableSet<Item> = mutableSetOf()) : DeliverableItem(), HasContents {
-  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), HasContents {
+  constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
 }
 
 /**
@@ -89,9 +98,22 @@ abstract class Equipment {
   open fun takeFrom(player: Player) {
     throw Exception("$this cannot be taken directly!")
   }
+
+  open fun clone(): Equipment {
+    throw Exception("$this cannot be cloned!")
+  }
+}
+
+/**
+ * Marks the passage of time
+ */
+abstract class TimeSensitiveEquipment: Equipment() {
+  abstract fun tick()
 }
 
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
+  override fun clone(): Equipment = copy()
+
   override fun use(player: Player) {
     val item = player.heldItem
     if (item is Scoop && (item.state == ScoopState.Clean || item.state == ScoopState.Dirty(flavour)))
@@ -102,20 +124,44 @@ data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
 
 
 interface HasContents {
-  val contents: MutableSet<Item>
+  val contents: MutableSet<EdibleItem>
 }
 
-infix operator fun HasContents.plusAssign(item: Item) {
+infix operator fun HasContents.plusAssign(item: EdibleItem) {
   if (item in contents) throw Exception("Can't add: $this already contains $item")
   contents += item
 }
 
-data class Milkshake(override val contents: MutableSet<Item> = mutableSetOf()) : DeliverableItem(), HasContents {
-  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+enum class PieFlavour {
+  Strawberry,
+  Blueberry
 }
 
-data class Blender(override val contents: MutableSet<Item> = mutableSetOf()) : Equipment(), HasContents {
-  constructor(vararg initialContents: Item): this(mutableSetOf(*initialContents))
+data class RawPie(private val pieFlavour: PieFlavour): Item() {
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    if (equipment is Oven) {
+      equipment.insertRawPie(pieFlavour)
+      player.heldItem = null
+      return
+    }
+    super.dropOntoEquipment(player, equipment)
+  }
+}
+
+data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item()
+
+data class PieSlice(val pieFlavour: PieFlavour): EdibleItem()
+
+object BurntPie: Item()
+
+data class Milkshake(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), HasContents {
+  constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
+}
+
+data class Blender(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : Equipment(), HasContents {
+  constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
+
+  override fun clone(): Equipment = copy()
 
   override fun takeFrom(player: Player) {
     if (IceCreamBall(IceCreamFlavour.VANILLA) !in contents) throw Exception("Not ready for taking: no ice cream!")
@@ -123,19 +169,69 @@ data class Blender(override val contents: MutableSet<Item> = mutableSetOf()) : E
     contents.clear()
   }
 
-  infix operator fun plusAssign(item: Item) {
+  infix operator fun plusAssign(item: EdibleItem) {
     when (item) {
-      IceCreamBall(IceCreamFlavour.VANILLA) /* , ChoppedBanana(), ... */ -> (this as HasContents) += item
+      IceCreamBall(IceCreamFlavour.VANILLA),
+      is Strawberries,
+      is Blueberries,
+      is ChoppedBananas
+        -> (this as HasContents) += item
       else -> throw Exception("Cannot add $item to $this")
     }
   }
 }
+
+sealed class OvenState {
+  object Empty: OvenState()
+  data class Cooking(val flavour: PieFlavour, val timeUntilCooked: Int): OvenState()
+  data class Cooked(val flavour: PieFlavour, val timeUntilBurnt: Int): OvenState()
+  object Burnt: OvenState()
+}
+
+data class Oven(private val cookTime: Int, private val burnTime: Int, private var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
+  override fun clone(): Equipment = copy()
+
+  override fun tick() {
+    val curState = state
+    state = when (curState) {
+      is OvenState.Empty -> return
+      is OvenState.Cooking -> {
+        val (fl, time) = curState
+        if (time == 1) OvenState.Cooked(fl, burnTime) else curState.copy(timeUntilCooked = time-1)
+      }
+      is OvenState.Cooked -> {
+        val time = curState.timeUntilBurnt
+        if (time == 1) OvenState.Burnt else curState.copy(timeUntilBurnt = time-1)
+      }
+      is OvenState.Burnt -> return
+    }
+  }
+
+  fun insertRawPie(flavour: PieFlavour) {
+    if (state === OvenState.Empty)
+      state = OvenState.Cooking(flavour, cookTime)
+    else throw Exception("Cannot insert pie: oven not empty!")
+  }
+
+  override fun takeFrom(player: Player) {
+    val curState = state
+    state = when (curState) {
+      OvenState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
+      is OvenState.Cooking -> throw Exception("Cannot take from $this: pie is cooking!")
+      is OvenState.Cooked -> { player.heldItem = Pie(curState.flavour); OvenState.Empty }
+      OvenState.Burnt -> { player.heldItem = BurntPie; OvenState.Empty }
+    }
+  }
+
+}
+
 
 /**
  * @param onDelivery: a callback to be called when a player makes a delivery. Typically
  * this will be a scorekeeper function of some sort.
  */
 class Window(private val onDelivery: (Item) -> Unit = { }) : Equipment() {
+
   override fun use(player: Player) {
     throw Exception("Cannot use a delivery window")
   }
@@ -159,7 +255,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   var equipment: Equipment? = null
   set(value) {
     field = value
-    if (value !is Window && oppositeCell.equipment != value) oppositeCell.equipment = value
+    if (value !is Window && oppositeCell.equipment != value) oppositeCell.equipment = value?.clone()
   }
   var item: Item? = null
 
@@ -202,12 +298,19 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
     })
   })
 
+  val allCells = cells.flatten()
+
   operator fun get(x: Int, y: Int): Cell = cells[x + width - 1][y]
   operator fun get(cellName: String): Cell {
     val file = cellName[0]
     val x = if (file in 'A'..'Z') file - 'A' else 'a' - file
     return get(x, cellName.substring(1).toInt())
   }
+
+  fun tick() {
+    allCells.forEach { cell -> (cell.equipment as? TimeSensitiveEquipment)?.tick() }
+  }
+
   val xRange = -(width-1)..(width-1)
   val yRange = 0 until height
 

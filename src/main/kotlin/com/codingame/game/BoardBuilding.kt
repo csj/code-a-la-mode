@@ -9,9 +9,9 @@ val boardLayout = listOf(
 /* 4 */  "X...X...X",  // 4
 /* 5 */  "X...X...X",  // 5
 /* 6 */  "X..XXX..X",  // 6
-/* 7 */  "X.......X",  // 7
+/* 7 */  "X.......O",  // 7
 /* 8 */  "X.......X",  // 8
-/* 9 */  "XXXXXXXXX"   // 9
+/* 9 */  "XXXXXSsXX"   // 9
 //        ABCDEFGHI
 )
 
