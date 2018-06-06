@@ -171,6 +171,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
 
     while (floodedCells.any()) {
       val (cell, dist) = floodedCells.remove()!!
+      if (cell in visitedCells) continue
       visitedCells += cell
       if (cell == target) return dist
       if (!cell.isTable || isFirst) {
