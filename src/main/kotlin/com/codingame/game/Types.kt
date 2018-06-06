@@ -34,12 +34,19 @@ abstract class Item {
 
 abstract class EdibleItem: Item() {
   override fun dropOntoDish(player: Player, dish: Dish) { dish += this }
-  override fun dropOntoEquipment(player: Player, equipment: Equipment) { if (equipment is Blender) equipment += this }
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    if (equipment is Blender) {
+      equipment += this
+      return
+    }
+    super.dropOntoEquipment(player, equipment)
+  }
 }
 
 object Strawberries: EdibleItem()
 object Blueberries: EdibleItem()
 object ChoppedBananas: EdibleItem()
+object Banana: Item()
 
 data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
   override fun take(player: Player, cell: Cell) {
@@ -148,7 +155,15 @@ data class RawPie(private val pieFlavour: PieFlavour): Item() {
   }
 }
 
-data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item()
+data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item() {
+  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+    if (equipment is ChoppingBoard) {
+      equipment.putPie(this)
+      return
+    }
+    super.dropOntoEquipment(player, equipment)
+  }
+}
 
 data class PieSlice(val pieFlavour: PieFlavour): EdibleItem()
 
@@ -222,7 +237,53 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
       OvenState.Burnt -> { player.heldItem = BurntPie; OvenState.Empty }
     }
   }
+}
 
+data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
+  override fun clone() = copy()
+
+  override fun use(player: Player) {
+    if (player.heldItem === Banana) {
+      checkVacant()
+      player.heldItem = ChoppedBananas
+      return
+    }
+
+    val pie = pieOnBoard
+    if (player.heldItem == null && pie != null) {
+      player.heldItem = PieSlice(pie.pieFlavour)
+      pieOnBoard = when (pie.pieces) {
+        1 -> throw Exception("Cannot chop: only one piece left!")
+        else -> pie.copy(pieces = pie.pieces - 1)
+      }
+      return
+    }
+
+    super.use(player)
+  }
+
+  private fun checkVacant() {
+    if (pieOnBoard != null) throw Exception("Chopping board is not vacant")
+  }
+
+  override fun takeFrom(player: Player) {
+    val pie = pieOnBoard
+    if (player.heldItem == null && pie != null) {
+      player.heldItem = when(pie.pieces) {
+        1 -> PieSlice(pie.pieFlavour)
+        else -> pie
+      }
+      pieOnBoard = null
+      return
+    }
+
+    super.takeFrom(player)
+  }
+
+  fun putPie(pie: Pie) {
+    checkVacant()
+    pieOnBoard = pie
+  }
 }
 
 
