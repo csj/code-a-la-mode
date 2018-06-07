@@ -41,14 +41,31 @@ class ChoppingBoardTests: FreeSpec({
     setup()
     player.heldItem = Pie(PieFlavour.Strawberry)
     player.drop(choppingBoardLoc)
+    player.heldItem shouldBe null
+    choppingBoardLoc.equipment shouldBe ChoppingBoard(Pie(PieFlavour.Strawberry))
   }
 
-  "a player cannot put a cooked pie on a chopping board if there's already pie there (no combining!)" {
+  "a player can put a partial pie on a chopping board" {
     setup()
-    choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Blueberry))
-    player.heldItem = Pie(PieFlavour.Strawberry)
+    player.heldItem = Pie(PieFlavour.Strawberry, 2)
+    player.drop(choppingBoardLoc)
+    player.heldItem shouldBe null
+    choppingBoardLoc.equipment shouldBe ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
+  }
+
+  "a player cannot put a partial pie on a chopping board if there's already pie there (no combining!)" {
+    setup()
+    choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Blueberry, 1))
+    player.heldItem = Pie(PieFlavour.Blueberry, 2)
     shouldThrowAny { player.drop(choppingBoardLoc) }
   }
+
+  "a player cannot put a pie slice on a chopping board" {
+    setup()
+    player.heldItem = PieSlice(PieFlavour.Strawberry)
+    shouldThrowAny { player.drop(choppingBoardLoc) }
+  }
+
 
   "chopping board with full pie" - {
     "a player can take it" {
@@ -108,5 +125,4 @@ class ChoppingBoardTests: FreeSpec({
       shouldThrowAny { player.use(choppingBoardLoc) }
     }
   }
-
 })

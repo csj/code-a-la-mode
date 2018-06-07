@@ -11,11 +11,45 @@ class PieTests: FreeSpec({
   val burnTime = 5
   val totalBurnTime = cookTime + burnTime
   val player = Player()
+  val tableLoc = board["I8"]
+  val frontOfTableLoc = board["H8"]
 
   fun setup() {
     ovenLoc.equipment = Oven(cookTime, burnTime)
     player.location = board["H7"]
     player.heldItem = null
+  }
+
+  "player can add berries to an empty shell" {
+    tableLoc.item = RawPie()
+    player.heldItem = Strawberries
+    player.location = frontOfTableLoc
+    player.drop(tableLoc)
+    player.heldItem shouldBe null
+    tableLoc.item shouldBe RawPie(PieFlavour.Strawberry, 1)
+  }
+
+  "player can add more berries to a partially filled shell" {
+    tableLoc.item = RawPie(PieFlavour.Blueberry, 1)
+    player.heldItem = Blueberries
+    player.location = frontOfTableLoc
+    player.drop(tableLoc)
+    player.heldItem shouldBe null
+    tableLoc.item shouldBe RawPie(PieFlavour.Blueberry, 2)
+  }
+
+  "player cannot add too many berries" {
+    tableLoc.item = RawPie(PieFlavour.Blueberry)
+    player.heldItem = Blueberries
+    player.location = frontOfTableLoc
+    shouldThrowAny { player.drop(tableLoc) }
+  }
+
+  "player cannot add different kinds of berries" {
+    tableLoc.item = RawPie(PieFlavour.Blueberry, 1)
+    player.heldItem = Strawberries
+    player.location = frontOfTableLoc
+    shouldThrowAny { player.drop(tableLoc) }
   }
 
   "player can start cooking a pie" {
