@@ -4,7 +4,7 @@ val boardLayout = listOf(
 //        ABCDEFGHI
 /* 0 */  "XDdXXXXXX",  // 0
 /* 1 */  "X.......X",  // 1
-/* 2 */  "X..X.X..X",  // 2
+/* 2 */  "X..X.W..X",  // 2
 /* 3 */  "X..XXX..X",  // 3
 /* 4 */  "X...X...X",  // 4
 /* 5 */  "X...X...X",  // 5

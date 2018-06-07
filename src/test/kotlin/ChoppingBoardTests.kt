@@ -84,6 +84,13 @@ class ChoppingBoardTests: FreeSpec({
       player.heldItem shouldBe PieSlice(PieFlavour.Strawberry)
       (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe Pie(PieFlavour.Strawberry, 1)
     }
+
+    "a player cannot use it with his hands full" {
+      setup()
+      choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
+      player.heldItem = Dish()
+      shouldThrowAny { player.use(choppingBoardLoc) }
+    }
   }
 
   "chopping board with a single slice pie (note: pie(1) and not pieslice yet)" - {

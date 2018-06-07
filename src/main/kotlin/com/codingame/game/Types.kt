@@ -47,6 +47,9 @@ object Strawberries: EdibleItem()
 object Blueberries: EdibleItem()
 object ChoppedBananas: EdibleItem()
 object Banana: Item()
+object Waffle: EdibleItem()
+object BurntWaffle: Item()
+object BurntPie: Item()
 
 data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
   override fun take(player: Player, cell: Cell) {
@@ -99,7 +102,7 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
  */
 abstract class Equipment {
   open fun use(player: Player) {
-    throw Exception("Cannot use $this directly!")
+    throw Exception("Cannot use $this at this time!")
   }
 
   open fun takeFrom(player: Player) {
@@ -166,8 +169,6 @@ data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item() {
 }
 
 data class PieSlice(val pieFlavour: PieFlavour): EdibleItem()
-
-object BurntPie: Item()
 
 data class Milkshake(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), HasContents {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
@@ -236,6 +237,48 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
       is OvenState.Cooked -> { player.heldItem = Pie(curState.flavour); OvenState.Empty }
       OvenState.Burnt -> { player.heldItem = BurntPie; OvenState.Empty }
     }
+  }
+}
+
+sealed class WaffleState {
+  object Empty : WaffleState()
+  data class Cooking(val timeUntilCooked: Int): WaffleState()
+  data class Cooked(val timeUntilBurnt: Int): WaffleState()
+  object Burnt: WaffleState()
+}
+
+data class WaffleIron(private val cookTime: Int, private val burnTime: Int, private var state: WaffleState = WaffleState.Empty) : TimeSensitiveEquipment() {
+  override fun clone(): Equipment = copy()
+
+  override fun tick() {
+    val curState = state
+    state = when (curState) {
+      is WaffleState.Empty -> return
+      is WaffleState.Cooking -> {
+        val time = curState.timeUntilCooked
+        if (time == 1) WaffleState.Cooked(burnTime) else curState.copy(timeUntilCooked = time-1)
+      }
+      is WaffleState.Cooked -> {
+        val time = curState.timeUntilBurnt
+        if (time == 1) WaffleState.Burnt else curState.copy(timeUntilBurnt = time-1)
+      }
+      is WaffleState.Burnt -> return
+    }
+  }
+
+  override fun takeFrom(player: Player) {
+    val curState = state
+    state = when (curState) {
+      WaffleState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
+      is WaffleState.Cooking -> throw Exception("Cannot take from $this: waffle is cooking!")
+      is WaffleState.Cooked -> { player.heldItem = Waffle; WaffleState.Empty }
+      WaffleState.Burnt -> { player.heldItem = BurntWaffle; WaffleState.Empty }
+    }
+  }
+
+  override fun use(player: Player) {
+    if (state != WaffleState.Empty) throw Exception("Cannot use $this now: not empty!")
+    state = WaffleState.Cooking(cookTime)
   }
 }
 
