@@ -51,7 +51,13 @@ class Referee : AbstractReferee() {
         val y = cell.y * (cellWidth + cellSpacing) + yOffset / 2
 //        println("$x-$y")
 //        println("$cellWidth $x $y")
-        cell.visualRect = graphicEntityModule.createRectangle().setHeight(cellWidth).setWidth(cellWidth).setX(x).setY(y).setFillColor(if (!cell.isTable) fill else tableFill)
+        cell.visualRect = graphicEntityModule.createRectangle().apply {
+          height = cellWidth
+          width = cellWidth
+          setX(x)  // only because there are competing local variables x and y
+          setY(y)
+          fillColor = if (!cell.isTable) fill else tableFill
+        }
       }
     }
 
@@ -76,21 +82,12 @@ class Referee : AbstractReferee() {
       gameManager.activePlayers.forEach { player ->
 //        player.sendInputLine("WORLD STATE")
 
-        player.sendInputLine((board.cells.size * board.cells[0].size).toString())
-        for(i in 0 until board.cells[0].size) {
-          for(j in 0 until board.cells.size) {
-            var cell = board.cells[j][i]
-            val toks = listOf(cell.x, cell.y, if(cell.isTable) 1 else 0)
-            player.sendInputLine(toks.joinToString(" "))
-          }
+        player.sendInputLine((board.height * board.width).toString())
+        board.allCells.forEach { cell ->
+          val toks = listOf(cell.x, cell.y, if(cell.isTable) 1 else 0)
+          player.sendInputLine(toks.joinToString(" "))
         }
-//        board.cells.forEach {
-//          it.forEach {
-//            val toks = listOf(it.x, it.y, if(it.isTable) 1 else 0)
-//
-//            player.sendInputLine(toks.joinToString(" "))
-//          }
-//        }
+
         player.execute()
       }
     }
