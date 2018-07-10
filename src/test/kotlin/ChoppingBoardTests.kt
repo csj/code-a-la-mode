@@ -30,7 +30,7 @@ class ChoppingBoardTests: FreeSpec({
   }
 
   "a player cannot put most items on a chopping board" {
-    listOf(Scoop(), Dish(), Strawberries, BurntPie, RawPie(PieFlavour.Blueberry), ChoppedBananas).forEach { item ->
+    listOf(Dish(), Strawberries, BurntPie, RawPie(PieFlavour.Blueberry), ChoppedBananas).forEach { item ->
       setup()
       player.heldItem = item
       shouldThrowAny { player.drop(choppingBoardLoc) }

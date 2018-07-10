@@ -37,6 +37,7 @@ abstract class EdibleItem: Item() {
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
     if (equipment is Blender) {
       equipment += this
+      player.heldItem = null
       return
     }
     super.dropOntoEquipment(player, equipment)
@@ -57,32 +58,32 @@ data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
   }
 }
 
-sealed class ScoopState {
-  object Clean : ScoopState()
-  data class Dirty(val flavour: IceCreamFlavour) : ScoopState()
-  data class IceCream(val flavour: IceCreamFlavour) : ScoopState()
-}
-
-data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
-  override fun dropOntoDish(player: Player, dish: Dish) {
-    if (state is ScoopState.IceCream) {
-      IceCreamBall(state.flavour).dropOntoDish(player, dish)
-      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
-      return
-    }
-    super.dropOntoDish(player, dish)
-  }
-
-  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    if (state is ScoopState.IceCream) {
-      IceCreamBall(state.flavour).dropOntoEquipment(player, equipment)
-      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
-      return
-    }
-
-    super.dropOntoEquipment(player, equipment)
-  }
-}
+//sealed class ScoopState {
+//  object Clean : ScoopState()
+//  data class Dirty(val flavour: IceCreamFlavour) : ScoopState()
+//  data class IceCream(val flavour: IceCreamFlavour) : ScoopState()
+//}
+//
+//data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
+//  override fun dropOntoDish(player: Player, dish: Dish) {
+//    if (state is ScoopState.IceCream) {
+//      IceCreamBall(state.flavour).dropOntoDish(player, dish)
+//      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
+//      return
+//    }
+//    super.dropOntoDish(player, dish)
+//  }
+//
+//  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
+//    if (state is ScoopState.IceCream) {
+//      IceCreamBall(state.flavour).dropOntoEquipment(player, equipment)
+//      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
+//      return
+//    }
+//
+//    super.dropOntoEquipment(player, equipment)
+//  }
+//}
 
 abstract class DeliverableItem : Item() {
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
@@ -124,12 +125,12 @@ abstract class TimeSensitiveEquipment: Equipment() {
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   override fun clone(): Equipment = copy()
 
-  override fun use(player: Player) {
-    val item = player.heldItem
-    if (item is Scoop && (item.state == ScoopState.Clean || item.state == ScoopState.Dirty(flavour)))
-      player.heldItem = Scoop(ScoopState.IceCream(flavour))
-    else throw Exception("Cannot use this now")
-  }
+//  override fun use(player: Player) {
+//    val item = player.heldItem
+//    if (item is Scoop && (item.state == ScoopState.Clean || item.state == ScoopState.Dirty(flavour)))
+//      player.heldItem = Scoop(ScoopState.IceCream(flavour))
+//    else throw Exception("Cannot use this now")
+//  }
 }
 
 

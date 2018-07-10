@@ -50,9 +50,9 @@ class DeliverySpec: FreeSpec({
         deliveredItem shouldBe Dish()
       }
 
-      "cannot be done with a scoop" {
+      "cannot be done with a banana" {
         setup()
-        player.heldItem = Scoop()
+        player.heldItem = Banana
         shouldThrowAny {
           player.drop(window)
         }

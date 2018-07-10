@@ -20,8 +20,8 @@ class BlenderTests: FreeSpec({
   }
 
   "you can add some items to an empty blender directly, but not others" {
-    val good = listOf<Item>()  // e.g. chopped banana
-    val bad = listOf(Dish(), Scoop())
+    val good = listOf<Item>(ChoppedBananas, Strawberries)
+    val bad = listOf(Dish(), Banana, BurntPie, Waffle)
 
     (good.map { it to true } + bad.map { it to false }).forEach { (item, isOk) ->
       setup()
@@ -39,22 +39,22 @@ class BlenderTests: FreeSpec({
 
   "you can drop a full ice cream scoop (Vanilla)" {
     setup()
-    player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
+    player.heldItem = IceCreamBall(IceCreamFlavour.VANILLA)
     player.drop(blenderLoc)
-    player.heldItem shouldBe Scoop(ScoopState.Dirty(IceCreamFlavour.VANILLA))
+    player.heldItem shouldBe null
     (blenderLoc.equipment as Blender).contents should contain(IceCreamBall(IceCreamFlavour.VANILLA))
   }
 
   "you can't use other ice cream flavours" {
     setup()
-    player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.BUTTERSCOTCH))
+    player.heldItem = IceCreamBall(IceCreamFlavour.BUTTERSCOTCH)
     shouldThrowAny { player.drop(blenderLoc) }
   }
 
   "you can't use a full ice cream scoop if there's already ice cream inside" {
     setup()
     blenderLoc.equipment = Blender(IceCreamBall(IceCreamFlavour.VANILLA))
-    player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
+    player.heldItem = IceCreamBall(IceCreamFlavour.VANILLA)
     shouldThrowAny { player.drop(blenderLoc) }
   }
 

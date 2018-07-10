@@ -91,7 +91,7 @@ class PieTests: FreeSpec({
 
   "an oven is not a table" {
     setup()
-    player.heldItem = Scoop()
+    player.heldItem = Banana
     shouldThrowAny { player.drop(ovenLoc) }
   }
 
