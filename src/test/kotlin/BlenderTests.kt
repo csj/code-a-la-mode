@@ -87,4 +87,18 @@ class BlenderTests: FreeSpec({
     setup()
     shouldThrowAny { player.take(blenderLoc) }
   }
+
+  "a milkshake is not a milkshake unless it contains ice cream" {
+    setup()
+    val blender = blenderLoc.equipment as Blender
+    blender += Strawberries
+    blender += ChoppedBananas
+    shouldThrowAny { player.take(blenderLoc) }
+  }
+
+  "blenders cannot blend whole bananas" {
+    setup()
+    player.heldItem = Banana
+    shouldThrowAny { player.drop(blenderLoc) }
+  }
 })

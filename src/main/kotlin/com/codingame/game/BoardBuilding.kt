@@ -19,3 +19,12 @@ fun buildBoard(): Board {
   val board = Board(9, 10, boardLayout)
   return board
 }
+
+fun buildPlayers(): List<Player> {
+  return listOf(
+      Player(true),
+      Player(false),
+      Player(false),
+      Player(true)
+  )
+}

@@ -344,6 +344,19 @@ class Window(private val onDelivery: (Item) -> Unit = { }) : Equipment() {
   fun deliver(food: DeliverableItem) = onDelivery(food)
 }
 
+class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<Customer>() {
+  fun delivery(item: Item, teamIndex: Int) =
+    this.find { it.item == item }?.let {
+      onPointsAwarded(teamIndex, it.award)
+      remove(it)
+    }
+
+}
+
+data class Customer(val item: Item, var award: Int) {
+  fun age() { award = award*9/10 }
+}
+
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
@@ -386,6 +399,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   }
 }
 
+
 /**
  * Width: The number of horizontal cells _per player_. If width = 5, then
  * The cells will be numbered -4,-3,-2,-1,0,1,2,3,4  -- i.e. each team works with 5 cells including cell 0 (middle counter).
@@ -393,15 +407,15 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
  * they're working with columns 0..4 while the enemy works with -4..0
  */
 class Board(val width: Int, val height: Int, layout: List<String>? = null) {
-  val cells = Array(width * 2 - 1, { x ->
-    Array(height, { y ->
+  val cells = Array(width * 2 - 1) { x ->
+    Array(height) { y ->
       val isTable = if (layout == null) false else {
         val layoutX = (x - (width-1)) * if (x < width) -1 else 1
         layout[y][layoutX] != '.'
       }
       Cell(x - width + 1, y, isTable)
-    })
-  })
+    }
+  }
 
   val allCells = cells.flatten()
 
