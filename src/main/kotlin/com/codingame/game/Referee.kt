@@ -79,6 +79,7 @@ class Referee : AbstractReferee() {
       fun equipmentTypeMap(equipment: Equipment?) = when (equipment) {
         null -> -1
         is Window -> Constants.WINDOW
+        is DishReturn -> Constants.DISH_RETURN
         IceCreamCrate(IceCreamFlavour.VANILLA) -> Constants.VANILLA_CRATE
         else -> throw Exception("Uncoded equipment: $equipment")
       }
@@ -109,6 +110,8 @@ class Referee : AbstractReferee() {
   )
 
   override fun gameTurn(turn: Int) {
+    board.tick()
+
     fun describeItem(item: Item?): Int = when(item) {
       is Dish -> Constants.DISH + item.contents.map(::describeItem).sum()
       is Milkshake -> Constants.MILKSHAKE + item.contents.map(::describeItem).sum()
@@ -199,9 +202,6 @@ class Referee : AbstractReferee() {
         4 -> if (turn % 2 == 0) gameManager.activePlayers.take(2) else gameManager.activePlayers.takeLast(2)
         else -> throw Exception("Expected 2 or 4 players!")
       }
-
-
-    assert (thePlayers[0] != thePlayers[1])
 
     thePlayers.forEach(::sendGameState)
     thePlayers.forEach {

@@ -22,8 +22,11 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   val queue = CustomerQueue(scoreAwardCallback)
 
   // Both windows have to be added separately
-  board["b0"].equipment = Window { queue.delivery(it, 0) }
-  board["B0"].equipment = Window { queue.delivery(it, 1) }
+  val dishReturn1 = DishReturn(board["G9"]).also { board["G9"].equipment = it }
+  val dishReturn2 = DishReturn(board["g9"]).also { board["g9"].equipment = it }
+
+  board["B0"].equipment = Window(dishReturn1) { queue.delivery(it, 0) }
+  board["b0"].equipment = Window(dishReturn2) { queue.delivery(it, 1) }
 
   // For other equipment, it's sufficient to add it to one side only (a clone will go on the other side)
   // Temporary: Make this random in the future

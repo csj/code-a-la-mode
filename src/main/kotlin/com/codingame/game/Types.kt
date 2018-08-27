@@ -40,6 +40,11 @@ abstract class EdibleItem: Item() {
       player.heldItem = null
       return
     }
+
+    if (equipment is DishReturn && equipment.location.item is Dish) {
+      dropOntoDish(player, equipment.location.item as Dish)
+      return
+    }
     super.dropOntoEquipment(player, equipment)
   }
 }
@@ -333,13 +338,37 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
  * @param onDelivery: a callback to be called when a player makes a delivery. Typically
  * this will be a scorekeeper function of some sort.
  */
-class Window(private val onDelivery: (Item) -> Unit = { }) : Equipment() {
-
+class Window(private val dishReturn: DishReturn? = null, private val onDelivery: (Item) -> Unit = { }) : Equipment() {
   override fun use(player: Player) {
     throw Exception("Cannot use a delivery window")
   }
 
-  fun deliver(food: DeliverableItem) = onDelivery(food)
+  fun deliver(food: DeliverableItem) {
+    onDelivery(food)
+    dishReturn?.addDishToQueue()
+  }
+}
+
+data class DishReturn(val location: Cell) : TimeSensitiveEquipment() {
+
+  private val dishQueue = LinkedList<Boolean>(List(40) { false })
+
+  fun addDishToQueue() {
+    dishQueue.add(true)
+  }
+
+  override fun tick() {
+    while (dishQueue.pop()!!) {
+      dishes++
+    }
+    if (location.item !is Dish && dishes > 0) {
+      location.item = Dish()
+      dishes--
+    }
+    dishQueue.add(false)
+  }
+
+  var dishes: Int = 0
 }
 
 class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<Customer>() {
@@ -373,7 +402,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   var equipment: Equipment? = null
   set(value) {
     field = value
-    if (value !is Window && oppositeCell.equipment != value) oppositeCell.equipment = value?.clone()
+    if (value !is Window && value !is DishReturn && oppositeCell.equipment != value) oppositeCell.equipment = value?.clone()
   }
   var item: Item? = null
 
@@ -471,5 +500,6 @@ object Constants {
   val MILKSHAKE = 2048
 
   val WINDOW = 0
-  val VANILLA_CRATE = 1
+  val DISH_RETURN = 1
+  val VANILLA_CRATE = 2
 }
