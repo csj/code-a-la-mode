@@ -1,3 +1,5 @@
+package specs
+
 import com.codingame.game.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
@@ -5,7 +7,7 @@ import io.kotlintest.specs.FreeSpec
 
 class ChoppingBoardTests: FreeSpec({
 
-  val board = buildBoard()
+  val board = buildEmptyBoard()
   val choppingBoardLoc = board["C7"]
   val player = Player()
 

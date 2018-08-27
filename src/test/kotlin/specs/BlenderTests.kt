@@ -1,3 +1,5 @@
+package specs
+
 import com.codingame.game.*
 import io.kotlintest.matchers.beEmpty
 import io.kotlintest.matchers.collections.contain
@@ -9,7 +11,7 @@ import io.kotlintest.specs.FreeSpec
 
 class BlenderTests: FreeSpec({
 
-  val board = buildBoard()
+  val board = buildEmptyBoard()
   val blenderLoc = board["E4"]
   val player = Player()
 

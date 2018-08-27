@@ -1,5 +1,10 @@
+package specs
+
 import com.codingame.game.*
+import io.kotlintest.matchers.beLessThan
+import io.kotlintest.should
 import io.kotlintest.shouldBe
+import io.kotlintest.shouldNotBe
 import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec
 import io.kotlintest.tables.*
@@ -26,7 +31,7 @@ class BoardSpec : FreeSpec({
         ".X...",  // 2
         ".XX..",  // 3
         "....."   // 4
-        // ABCDE    -- A is always shared with the opponent
+      // ABCDE    -- A is always shared with the opponent
     )
     val board = Board(5, 5, boardLayout)
 
@@ -42,9 +47,8 @@ class BoardSpec : FreeSpec({
           row("A2", "E0", 17 as Int?)
       )
 
-      fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
-
       forAll(myTable) { c1, c2, d ->
+//        System.err.println("Verifying: $c1 $c2 $d")
         board[c1].distanceTo(board[c2]) shouldBe d
         board[negafyCellName(c1)].distanceTo(board[negafyCellName(c2)]) shouldBe d
       }
@@ -67,13 +71,17 @@ class BoardSpec : FreeSpec({
     }
 
     "Player can move a max of 7 distance" {
-      val moveTable = table(
-          headers("Start", "Finish", "Can Move"),
-          row("A4", "E4", false),
-          row("A2", "C4", true)
-      )
+      val player = Player()
+      player.location = board["A4"]
+      player.moveTo(board["E4"])
+      System.err.println(player.location)
+      player.location shouldNotBe board["E4"]  // it's too far
 
-      testMoves(moveTable)
+      player.location.distanceTo(board["E4"])!! should beLessThan(board["A4"].distanceTo(board["E4"])!!) // .. but he should get closer
+
+      player.location = board["A2"]
+      player.moveTo(board["C4"])
+      player.location shouldBe board["C4"]  // within range
 
     }
 

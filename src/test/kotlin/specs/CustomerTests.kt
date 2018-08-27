@@ -1,3 +1,5 @@
+package specs
+
 import com.codingame.game.*
 import io.kotlintest.matchers.beEmpty
 import io.kotlintest.should
@@ -7,7 +9,7 @@ import io.kotlintest.specs.FreeSpec
 
 class CustomerTests: FreeSpec({
     val (alice, bonnie, bill, andrew) = buildPlayers()
-    val board = buildBoard()
+    val board = buildEmptyBoard()
 
     val aliceStuff = Milkshake(ChoppedBananas, IceCreamBall(IceCreamFlavour.VANILLA))
     val bonnieStuff = Dish(PieSlice(PieFlavour.Blueberry))

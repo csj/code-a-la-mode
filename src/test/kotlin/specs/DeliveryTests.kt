@@ -1,3 +1,5 @@
+package specs
+
 import com.codingame.game.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
@@ -6,14 +8,14 @@ import io.kotlintest.specs.FreeSpec
 class DeliverySpec: FreeSpec({
   "Adding delivery windows" - {
     "Adding a window to one side should NOT add a window to the other" {
-      val board = buildBoard()
+      val board = buildEmptyBoard()
       board["B0"].equipment = Window()
       board["b0"].equipment shouldBe null
     }
   }
 
   "Interacting with the delivery window" - {
-    val board = buildBoard()
+    val board = buildEmptyBoard()
     var deliveredItem: Item? = null
 
     board["B0"].equipment = Window { deliveredItem = it }

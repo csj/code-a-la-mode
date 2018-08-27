@@ -1,9 +1,8 @@
 package com.codingame.game
 
-import java.util.Properties
-
+import com.codingame.game.Constants
 import com.codingame.gameengine.core.AbstractReferee
-import com.codingame.gameengine.core.GameManager
+import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Rectangle
 import com.google.inject.Inject
@@ -11,23 +10,39 @@ import com.google.inject.Inject
 @Suppress("unused")  // injected by magic
 class Referee : AbstractReferee() {
   @Inject
-  private lateinit var gameManager: GameManager<Player>
+  private lateinit var gameManager: MultiplayerGameManager<Player>
   @Inject
   private lateinit var graphicEntityModule: GraphicEntityModule
 
+  private lateinit var board: Board
+  private lateinit var queue: CustomerQueue
 
-  //  private var board = Board(boardWidth, boardWidth)
-  private var board = buildBoard()
+  override fun init() {
+    fun teamMap() =
+        when(gameManager.activePlayers.size) {
+          2 -> mapOf(0 to listOf(0), 1 to listOf(1))
+          4 -> mapOf(0 to listOf(0, 3), 1 to listOf(2, 3))
+          else -> throw Exception("Expected 2 or 4 players!")
+        }
 
+    fun awardTeamPoints(teamIndex: Int, points: Int) {
+      println("Team $teamIndex gets $points points")
+      teamMap()[teamIndex]!!
+          .forEach { gameManager.players[it].score += points }
+    }
 
-  override fun init(params: Properties): Properties {
+    val (b,q) = buildBoardAndQueue(::awardTeamPoints)
+    board = b
+    queue = q
+
     fun printRect(rect: Rectangle) {
       println("${rect.width} ${rect.height} ${rect.x} ${rect.y}")
     }
 
-    gameManager.activePlayers[0].location = board["B3"]
-    gameManager.activePlayers[1].location = board["b3"]
-
+    gameManager.activePlayers[0].apply { isLeftTeam = true; location = board["b3"] }
+    gameManager.activePlayers[1].apply { isLeftTeam = false; location = board["B3"] }
+    gameManager.activePlayers[2].apply { isLeftTeam = false; location = board["B5"] }
+    gameManager.activePlayers[3].apply { isLeftTeam = true; location = board["b5"] }
 
     var fill = 0xeeeeee
     var tableFill = 0x8B4513
@@ -56,68 +71,147 @@ class Referee : AbstractReferee() {
     }
 
     for (player in gameManager.activePlayers) {
-      player.sprite = graphicEntityModule.createRectangle().setHeight(cellWidth - 10).setWidth(cellWidth - 10).setFillColor(0x0000ff).setX(player.location.visualRect.x + 5).setY(player.location.visualRect.y + 5)
+      player.sprite = graphicEntityModule.createRectangle().setHeight(cellWidth - 10).setWidth(cellWidth - 10).setFillColor(player.colorToken).setX(player.location.visualRect.x + 5).setY(player.location.visualRect.y + 5)
     }
 
-//    for(i in 1..5) {
-//      for (j in 1..5) {
-//        graphicEntityModule.createRectangle().setWidth(100).setHeight(100).setX(100*i).setY(100*j).setLineWidth(1)
-//      }
-//    }
+    fun describeMap(player: Player) {
+      // Describe the table cells on YOUR HALF of the board (width, height, location of equipment)
+      fun equipmentTypeMap(equipment: Equipment?) = when (equipment) {
+        null -> -1
+        is Window -> Constants.WINDOW
+        IceCreamCrate(IceCreamFlavour.VANILLA) -> Constants.VANILLA_CRATE
+        else -> throw Exception("Uncoded equipment: $equipment")
+      }
 
+      player.sendInputLine("${board.width} ${board.height}")
+      board.allCells
+          .filter { it.x >= 0 }
+          .filter { it.isTable }
+          .also { player.sendInputLine(it.size.toString()) }
+          .also { it.forEach { cell ->
+            player.sendInputLine("${cell.x} ${cell.y} ${equipmentTypeMap(cell.equipment)}")
+          }}
+    }
 
-    // Params contains all the game parameters that has been to generate this game
-    // For instance, it can be a seed number, the size of a grid/map, ...
-    return params
+    gameManager.activePlayers.forEach(::describeMap)
   }
+
+  val edibleEncoding: Map<EdibleItem, Int> = mapOf(
+      IceCreamBall(IceCreamFlavour.VANILLA) to Constants.VANILLA_BALL,
+      IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.CHOCOLATE_BALL,
+      IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.BUTTERSCOTCH_BALL,
+      Strawberries to Constants.STRAWBERRIES,
+      Blueberries to Constants.BLUEBERRIES,
+      ChoppedBananas to Constants.CHOPPED_BANANAS,
+      PieSlice(PieFlavour.Strawberry) to Constants.STRAWBERRY_PIE,
+      PieSlice(PieFlavour.Blueberry) to Constants.BLUEBERRY_PIE,
+      Waffle to Constants.WAFFLE
+  )
 
   override fun gameTurn(turn: Int) {
-    fun sendGameState() {
-      gameManager.activePlayers.forEach { player ->
-//        player.sendInputLine("WORLD STATE")
-
-        player.sendInputLine((board.cells.size * board.cells[0].size).toString())
-        for(i in 0 until board.cells[0].size) {
-          for(j in 0 until board.cells.size) {
-            var cell = board.cells[j][i]
-            val toks = listOf(cell.x, cell.y, if(cell.isTable) 1 else 0)
-            player.sendInputLine(toks.joinToString(" "))
-          }
-        }
-//        board.cells.forEach {
-//          it.forEach {
-//            val toks = listOf(it.x, it.y, if(it.isTable) 1 else 0)
-//
-//            player.sendInputLine(toks.joinToString(" "))
-//          }
-//        }
-        player.execute()
-      }
+    fun describeItem(item: Item?): Int = when(item) {
+      is Dish -> Constants.DISH + item.contents.map(::describeItem).sum()
+      is Milkshake -> Constants.MILKSHAKE + item.contents.map(::describeItem).sum()
+      in edibleEncoding.keys -> edibleEncoding[item]!!
+      else -> -1
     }
 
-    fun processPlayerActions() {
-      gameManager.activePlayers.forEach { player ->
-//        System.err.println("${player.nicknameToken} did: ${player.outputs[0]}")
+    fun describeEquipment(equipment: Equipment?): Int = when(equipment) {
+      is Window -> Constants.WINDOW
+      is IceCreamCrate -> Constants.VANILLA_CRATE
+      else -> -1
+    }
 
-        val line = player.outputs[0].trim()
-        val toks = line.split(" ").iterator()
-        val command = toks.next()
+    fun sendGameState(player: Player) {
+      val xMult = if (player.isLeftTeam) -1 else 1  // make sure to invert x for left team
+
+      // 1. Describe all players, including self
+      gameManager.activePlayers.forEach {
+
+        val toks = listOf(
+            it.location.x * xMult,
+            it.location.y,
+            describeItem(it.heldItem),
+            when {
+              it == player -> 0    // self
+              it.isLeftTeam == player.isLeftTeam -> 1   // friend
+              else -> 2    // enemy
+            }
+        )
+        player.sendInputLine(toks)
+      }
+
+      // 2. Describe all table cells
+      board.allCells.filter { it.isTable }
+          .also { player.sendInputLine(it.size) }
+          .forEach {
+        val toks = listOf(
+            it.x * xMult,
+            it.y,
+            describeEquipment(it.equipment),
+            describeItem(it.item)
+        )
+        player.sendInputLine(toks)
+      }
+
+      // 3. Describe customer queue
+      queue
+          .also { player.sendInputLine(it.size) }
+          .also { it.forEach {
+            val toks = listOf(it.award) + describeItem(it.item)
+            player.sendInputLine(toks)
+          }}
+
+      player.execute()
+    }
+
+    fun processPlayerActions(player: Player) {
+      val xMult = if (player.isLeftTeam) -1 else 1  // make sure to invert x for left team
+
+      val line = player.outputs[0].trim()
+      val toks = line.split(" ").iterator()
+      val command = toks.next()
+
+      if (command != "WAIT") {
+        val cellx = toks.next().toInt() * xMult
+        val celly = toks.next().toInt()
+        val target = board[cellx, celly]
 
         when (command) {
-          "MOVE" -> {
-            var cellx = toks.next().toInt()
-            var celly = toks.next().toInt()
-            player.moveTo(board[cellx, celly])
-
-            player.sprite.setX(board[cellx, celly].visualRect.x + 5).setY(board[cellx, celly].visualRect.y + 5)
-
-            graphicEntityModule.commitEntityState(0.5, player.sprite)
-          }
+          "MOVE" -> player.moveTo(target)
+          "USE" -> player.use(target)
+          "TAKE" -> player.take(target)
+          "DROP" -> player.drop(target)
         }
       }
+
+      player.sprite
+          .setX(board[player.location.x, player.location.y].visualRect.x + 5)
+          .setY(board[player.location.x, player.location.y].visualRect.y + 5)
+
+      graphicEntityModule.commitEntityState(0.5, player.sprite)
+
     }
 
-    sendGameState()
-    processPlayerActions()
+    val thePlayers =
+      when (gameManager.playerCount) {
+        2 -> gameManager.activePlayers
+        4 -> if (turn % 2 == 0) gameManager.activePlayers.take(2) else gameManager.activePlayers.takeLast(2)
+        else -> throw Exception("Expected 2 or 4 players!")
+      }
+
+
+    assert (thePlayers[0] != thePlayers[1])
+
+    thePlayers.forEach(::sendGameState)
+    thePlayers.forEach {
+      try {
+        processPlayerActions(it)
+      } catch (ex: Exception) {
+        System.err.println("${it.nicknameToken}: $ex")
+      }
+    }
   }
 }
+
+

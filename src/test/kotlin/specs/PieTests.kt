@@ -1,3 +1,5 @@
+package specs
+
 import com.codingame.game.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
@@ -5,7 +7,7 @@ import io.kotlintest.specs.FreeSpec
 
 class PieTests: FreeSpec({
 
-  val board = buildBoard()
+  val board = buildEmptyBoard()
   val ovenLoc = board["I7"]
   val cookTime = 5
   val burnTime = 5
@@ -56,6 +58,15 @@ class PieTests: FreeSpec({
     player.heldItem = RawPie(PieFlavour.Strawberry)
     player.drop(ovenLoc)
     repeat(totalBurnTime) { board.tick() }
+    player.take(ovenLoc)
+    player.heldItem shouldBe BurntPie
+  }
+
+  "burnt pie stays burnt" {
+    setup()
+    player.heldItem = RawPie(PieFlavour.Strawberry)
+    player.drop(ovenLoc)
+    repeat(totalBurnTime + 3) { board.tick() }
     player.take(ovenLoc)
     player.heldItem shouldBe BurntPie
   }

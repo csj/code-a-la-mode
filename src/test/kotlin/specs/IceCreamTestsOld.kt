@@ -1,3 +1,5 @@
+package specs
+
 //import com.codingame.game.*
 //import io.kotlintest.shouldBe
 //import io.kotlintest.shouldThrowAny
@@ -6,7 +8,7 @@
 //class IceCreamTestsOld: FreeSpec({
 //  "scooping ice cream" - {
 //    val iceCreamLoc = "I2"
-//    val board = buildBoard()
+//    val board = buildEmptyBoard()
 //    board[iceCreamLoc].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
 //    val player = Player()
 //

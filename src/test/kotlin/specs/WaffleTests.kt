@@ -1,3 +1,5 @@
+package specs
+
 import com.codingame.game.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
@@ -5,7 +7,7 @@ import io.kotlintest.specs.FreeSpec
 
 class WaffleTests: FreeSpec({
 
-  val board = buildBoard()
+  val board = buildEmptyBoard()
   val waffleLoc = board["F2"]
   val player = Player()
   val cookTime = 5

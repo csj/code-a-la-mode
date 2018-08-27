@@ -8,9 +8,7 @@
 
     <properties>
         <kotlin.version>1.2.31</kotlin.version>
-        <gameengine.version>1.30</gameengine.version>
-        <maven.compiler.source>1.8</maven.compiler.source>
-        <maven.compiler.target>1.8</maven.compiler.target>
+        <gameengine.version>2.9</gameengine.version>
     </properties>
 
     <dependencies>
@@ -43,6 +41,13 @@
             <version>${kotlin.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- https://mvnrepository.com/artifact/run.smt.ktest/ktest-runner-junit4 -->
+        <dependency>
+            <groupId>run.smt.ktest</groupId>
+            <artifactId>ktest-runner-junit4</artifactId>
+            <version>1.0.0</version>
+        </dependency>
+
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-stdlib-jdk8</artifactId>
@@ -53,6 +58,11 @@
             <artifactId>kotlintest-runner-junit5</artifactId>
             <version>3.1.0</version>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.0</version>
         </dependency>
     </dependencies>
 

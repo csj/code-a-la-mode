@@ -33,7 +33,7 @@ abstract class Item {
 }
 
 abstract class EdibleItem: Item() {
-  override fun dropOntoDish(player: Player, dish: Dish) { dish += this }
+  override fun dropOntoDish(player: Player, dish: Dish) { dish += this; player.heldItem = null }
   override fun dropOntoEquipment(player: Player, equipment: Equipment) {
     if (equipment is Blender) {
       equipment += this
@@ -125,12 +125,10 @@ abstract class TimeSensitiveEquipment: Equipment() {
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   override fun clone(): Equipment = copy()
 
-//  override fun use(player: Player) {
-//    val item = player.heldItem
-//    if (item is Scoop && (item.state == ScoopState.Clean || item.state == ScoopState.Dirty(flavour)))
-//      player.heldItem = Scoop(ScoopState.IceCream(flavour))
-//    else throw Exception("Cannot use this now")
-//  }
+  override fun use(player: Player) {
+    if (player.heldItem != null) throw Exception("Cannot use this now; hands full!")
+    player.heldItem = IceCreamBall(flavour)
+  }
 }
 
 
@@ -357,6 +355,8 @@ data class Customer(val item: Item, var award: Int) {
   fun age() { award = award*9/10 }
 }
 
+fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
+
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
@@ -377,8 +377,8 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   }
   var item: Item? = null
 
-  fun distanceTo(target: Cell): Int? {
-    val visitedCells = mutableSetOf<Cell>()
+  fun buildDistanceMap(): Map<Cell, Int> {
+    val visitedCells = mutableMapOf<Cell, Int>()
     val floodedCells = PriorityQueue<Pair<Cell, Int>> { (_,d1), (_,d2) -> d1.compareTo(d2) }
     floodedCells += this to 0
     var isFirst = true
@@ -386,16 +386,19 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
     while (floodedCells.any()) {
       val (cell, dist) = floodedCells.remove()!!
       if (cell in visitedCells) continue
-      visitedCells += cell
-      if (cell == target) return dist
+      visitedCells += cell to dist
       if (!cell.isTable || isFirst) {
         floodedCells += cell.neighbours
-          .filterNot { (nc, _) -> nc in visitedCells }
-          .map { (nc, nd) -> nc to dist + nd }
+            .filterNot { (nc, _) -> nc in visitedCells.keys }
+            .map { (nc, nd) -> nc to dist + nd }
       }
       isFirst = false
     }
-    return null
+    return visitedCells
+  }
+
+  fun distanceTo(target: Cell): Int? {
+    return buildDistanceMap()[target]
   }
 }
 
@@ -430,8 +433,11 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
     allCells.forEach { cell -> (cell.equipment as? TimeSensitiveEquipment)?.tick() }
   }
 
+  val IntRange.inclusiveLength get() = this.endInclusive - this.start + 1
+
   val xRange = -(width-1)..(width-1)
   val yRange = 0 until height
+  val numCells = xRange.inclusiveLength * yRange.inclusiveLength
 
   init {
     for (x in xRange) {
@@ -448,4 +454,22 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
       }
     }
   }
+}
+
+object Constants {
+  val VANILLA_BALL = 1
+  val CHOCOLATE_BALL = 2
+  val BUTTERSCOTCH_BALL = 4
+  val STRAWBERRIES = 8
+  val BLUEBERRIES = 16
+  val CHOPPED_BANANAS = 32
+  val STRAWBERRY_PIE = 64
+  val BLUEBERRY_PIE = 128
+  val WAFFLE = 256
+
+  val DISH = 1024
+  val MILKSHAKE = 2048
+
+  val WINDOW = 0
+  val VANILLA_CRATE = 1
 }
