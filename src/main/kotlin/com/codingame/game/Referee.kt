@@ -81,6 +81,8 @@ class Referee : AbstractReferee() {
         is Window -> Constants.WINDOW
         is DishReturn -> Constants.DISH_RETURN
         IceCreamCrate(IceCreamFlavour.VANILLA) -> Constants.VANILLA_CRATE
+        IceCreamCrate(IceCreamFlavour.CHOCOLATE) -> Constants.CHOCOLATE_CRATE
+        IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH) -> Constants.BUTTERSCOTCH_CRATE
         else -> throw Exception("Uncoded equipment: $equipment")
       }
 
@@ -111,6 +113,7 @@ class Referee : AbstractReferee() {
 
   override fun gameTurn(turn: Int) {
     board.tick()
+    queue.tick()
 
     fun describeItem(item: Item?): Int = when(item) {
       is Dish -> Constants.DISH + item.contents.map(::describeItem).sum()

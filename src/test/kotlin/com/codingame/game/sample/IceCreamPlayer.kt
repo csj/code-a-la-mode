@@ -1,8 +1,14 @@
-package players
+package com.codingame.game.sample
 
 import com.codingame.game.Constants
+import sample.BaseCALMPlayer
 import java.io.InputStream
 import java.io.PrintStream
+
+fun main(args: Array<String>) {
+  IceCreamPlayer(System.`in`, System.out, System.err)
+}
+
 
 class IceCreamPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream) : BaseCALMPlayer(stdin, stdout, stderr) {
   init {

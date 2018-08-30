@@ -1,0 +1,27 @@
+read width:int height:int numOurTables:int
+loop numOurTables read x:int y:int equipment:int
+gameloop
+loop 4 read playerX:int playerY:int playerCarry:int playerType:int
+read numAllTables:int
+loop numAllTables read tableX:int tableY:int equipment:int item:int
+read numCustomers:int
+loop numCustomers read award:int item:int
+write WAIT
+
+INPUT
+width: the width of OUR SIDE of the restaurant
+height: the height of the restaurant
+numOurTables: the number of tables accessible to us
+numAllTables: the total number of tables in the restaurant
+playerX: when x>0, our side of the restaurant. x<0, enemy side
+tableX: when x>0, our side of the restaurant. x<0, enemy side
+numCustomers: the number of customers currently waiting for food
+award: the number of points awarded for delivering the food
+item: the food the customer is waiting for
+
+OUTPUT
+MOVE x y
+USE x y
+TAKE x y
+DROP x y
+WAIT

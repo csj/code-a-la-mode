@@ -1,6 +1,9 @@
 package specs
 
 import com.codingame.game.*
+import com.codingame.game.Board
+import com.codingame.game.Player
+import com.codingame.game.negafyCellName
 import io.kotlintest.matchers.beLessThan
 import io.kotlintest.should
 import io.kotlintest.shouldBe

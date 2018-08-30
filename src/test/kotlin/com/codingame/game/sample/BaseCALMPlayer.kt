@@ -1,4 +1,4 @@
-package players
+package sample
 
 import java.io.InputStream
 import java.io.PrintStream

@@ -1,6 +1,7 @@
 package specs
 
 import com.codingame.game.*
+import com.codingame.game.buildEmptyBoard
 import io.kotlintest.matchers.beEmpty
 import io.kotlintest.matchers.collections.contain
 import io.kotlintest.matchers.containAll

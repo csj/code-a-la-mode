@@ -238,8 +238,10 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
     state = when (curState) {
       OvenState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
       is OvenState.Cooking -> throw Exception("Cannot take from $this: pie is cooking!")
-      is OvenState.Cooked -> { player.heldItem = Pie(curState.flavour); OvenState.Empty }
-      OvenState.Burnt -> { player.heldItem = BurntPie; OvenState.Empty }
+      is OvenState.Cooked -> { player.heldItem = Pie(curState.flavour); OvenState.Empty
+      }
+      OvenState.Burnt -> { player.heldItem = BurntPie; OvenState.Empty
+      }
     }
   }
 }
@@ -275,8 +277,10 @@ data class WaffleIron(private val cookTime: Int, private val burnTime: Int, priv
     state = when (curState) {
       WaffleState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
       is WaffleState.Cooking -> throw Exception("Cannot take from $this: waffle is cooking!")
-      is WaffleState.Cooked -> { player.heldItem = Waffle; WaffleState.Empty }
-      WaffleState.Burnt -> { player.heldItem = BurntWaffle; WaffleState.Empty }
+      is WaffleState.Cooked -> { player.heldItem = Waffle; WaffleState.Empty
+      }
+      WaffleState.Burnt -> { player.heldItem = BurntWaffle; WaffleState.Empty
+      }
     }
   }
 
@@ -378,10 +382,32 @@ class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<
       remove(it)
     }
 
+  val possibleOrders = listOf(
+      Dish(IceCreamBall(IceCreamFlavour.VANILLA)),
+      Dish(IceCreamBall(IceCreamFlavour.CHOCOLATE)),
+      Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
+  )
+
+  private val rand = Random()
+  private fun <E> List<E>.random(): E {
+    val index = rand.nextInt(size)
+    return this[index]
+  }
+
+  fun tick() {
+    repeat(size - 3) {
+      if (rand.nextDouble() < 0.2) {
+        val newOrder = (possibleOrders - this.map { it.item }).random()
+        this += Customer(newOrder, 1000)
+      }
+    }
+    forEach { it.age() }
+  }
+
 }
 
 data class Customer(val item: Item, var award: Int) {
-  fun age() { award = award*9/10 }
+  fun age() { award = award * 9/10 }
 }
 
 fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
@@ -502,4 +528,6 @@ object Constants {
   val WINDOW = 0
   val DISH_RETURN = 1
   val VANILLA_CRATE = 2
+  val CHOCOLATE_CRATE = 3
+  val BUTTERSCOTCH_CRATE = 4
 }

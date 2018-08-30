@@ -31,6 +31,8 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   // For other equipment, it's sufficient to add it to one side only (a clone will go on the other side)
   // Temporary: Make this random in the future
   board["I2"].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
+  board["I3"].equipment = IceCreamCrate(IceCreamFlavour.CHOCOLATE)
+  board["I4"].equipment = IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH)
 
   // Items need to be added to both sides
   listOf("F2", "F3", "E3", "E4")

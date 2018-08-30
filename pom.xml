@@ -83,6 +83,8 @@
                             <sourceDirs>
                                 <source>src/main/java</source>
                                 <source>src/main/kotlin</source>
+                                <source>src/test/kotlin/com/codingame/game/sample</source>
+                                <source>src/test/java</source>
                             </sourceDirs>
                         </configuration>
                     </execution>
@@ -94,8 +96,8 @@
                         </goals>
                         <configuration>
                             <sourceDirs>
-                                <source>src/test/java</source>
                                 <source>src/test/kotlin</source>
+                                <source>src/test/java</source>
                             </sourceDirs>
                         </configuration>
                     </execution>

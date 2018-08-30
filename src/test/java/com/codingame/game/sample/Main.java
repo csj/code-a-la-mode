@@ -1,7 +1,6 @@
+package com.codingame.game.sample;
+
 import com.codingame.gameengine.runner.MultiplayerGameRunner;
-import players.IceCreamPlayer;
-import players.MovePlayer;
-import players.WaitPlayer;
 
 public class Main {
     public static void main(String[] args) {

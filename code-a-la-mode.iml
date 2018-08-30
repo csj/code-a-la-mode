@@ -7,6 +7,7 @@
         <option value="src/main/kotlin" />
         <option value="src/test/java" />
         <option value="src/test/kotlin" />
+        <option value="src/test/kotlin/com/codingame/game/sample" />
       </list>
     </option>
   </component>
