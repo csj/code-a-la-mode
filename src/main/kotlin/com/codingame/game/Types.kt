@@ -1,5 +1,6 @@
 package com.codingame.game
 
+import com.codingame.game.Constants.CUSTOMER_VALUE_DECAY
 import com.codingame.gameengine.module.entities.Rectangle
 import java.util.*
 
@@ -377,12 +378,14 @@ data class DishReturn(val location: Cell) : TimeSensitiveEquipment() {
 
 class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<Customer>() {
   fun delivery(item: Item, teamIndex: Int) =
-    this.find { it.item == item }?.let {
-      onPointsAwarded(teamIndex, it.award)
-      remove(it)
+    println("Delivery: $item; current queue: $this").also {
+      this.find { it.item == item }?.also {
+        onPointsAwarded(teamIndex, it.award)
+        remove(it)
+      } ?: onPointsAwarded(teamIndex, 0)
     }
 
-  val possibleOrders = listOf(
+  private val possibleOrders = listOf(
       Dish(IceCreamBall(IceCreamFlavour.VANILLA)),
       Dish(IceCreamBall(IceCreamFlavour.CHOCOLATE)),
       Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
@@ -395,19 +398,23 @@ class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<
   }
 
   fun tick() {
-    repeat(size - 3) {
+    repeat(3 - size) {
       if (rand.nextDouble() < 0.2) {
         val newOrder = (possibleOrders - this.map { it.item }).random()
         this += Customer(newOrder, 1000)
       }
     }
-    forEach { it.age() }
+    removeIf { !it.stillWaiting() }
   }
-
 }
 
-data class Customer(val item: Item, var award: Int) {
-  fun age() { award = award * 9/10 }
+
+data class Customer(val item: DeliverableItem, var award: Int) {
+  val originalAward = award
+  fun stillWaiting(): Boolean {
+    award = award * (CUSTOMER_VALUE_DECAY - 1) / CUSTOMER_VALUE_DECAY
+    return award > originalAward / 10
+  }
 }
 
 fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
@@ -512,6 +519,8 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
 }
 
 object Constants {
+  val CUSTOMER_VALUE_DECAY = 20   // higher => slower decay
+
   val VANILLA_BALL = 1
   val CHOCOLATE_BALL = 2
   val BUTTERSCOTCH_BALL = 4

@@ -1,6 +1,5 @@
 package com.codingame.game
 
-import com.codingame.game.Constants
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.GraphicEntityModule
@@ -16,6 +15,36 @@ class Referee : AbstractReferee() {
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
+
+  private fun Equipment?.describe() = when (this) {
+    null -> -1
+    is Window -> Constants.WINDOW
+    is DishReturn -> Constants.DISH_RETURN
+    IceCreamCrate(IceCreamFlavour.VANILLA) -> Constants.VANILLA_CRATE
+    IceCreamCrate(IceCreamFlavour.CHOCOLATE) -> Constants.CHOCOLATE_CRATE
+    IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH) -> Constants.BUTTERSCOTCH_CRATE
+    else -> throw Exception("Uncoded equipment: $this")
+  }
+
+  val edibleEncoding: Map<EdibleItem, Int> = mapOf(
+      IceCreamBall(IceCreamFlavour.VANILLA) to Constants.VANILLA_BALL,
+      IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.CHOCOLATE_BALL,
+      IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.BUTTERSCOTCH_BALL,
+      Strawberries to Constants.STRAWBERRIES,
+      Blueberries to Constants.BLUEBERRIES,
+      ChoppedBananas to Constants.CHOPPED_BANANAS,
+      PieSlice(PieFlavour.Strawberry) to Constants.STRAWBERRY_PIE,
+      PieSlice(PieFlavour.Blueberry) to Constants.BLUEBERRY_PIE,
+      Waffle to Constants.WAFFLE
+  )
+
+  private fun Item?.describe(): Int = when(this) {
+    is Dish -> Constants.DISH + contents.map { it.describe() }.sum()
+    is Milkshake -> Constants.MILKSHAKE + contents.map { it.describe() }.sum()
+    in edibleEncoding.keys -> edibleEncoding[this]!!
+    else -> -1
+  }
+
 
   override fun init() {
     fun teamMap() =
@@ -76,15 +105,6 @@ class Referee : AbstractReferee() {
 
     fun describeMap(player: Player) {
       // Describe the table cells on YOUR HALF of the board (width, height, location of equipment)
-      fun equipmentTypeMap(equipment: Equipment?) = when (equipment) {
-        null -> -1
-        is Window -> Constants.WINDOW
-        is DishReturn -> Constants.DISH_RETURN
-        IceCreamCrate(IceCreamFlavour.VANILLA) -> Constants.VANILLA_CRATE
-        IceCreamCrate(IceCreamFlavour.CHOCOLATE) -> Constants.CHOCOLATE_CRATE
-        IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH) -> Constants.BUTTERSCOTCH_CRATE
-        else -> throw Exception("Uncoded equipment: $equipment")
-      }
 
       player.sendInputLine("${board.width} ${board.height}")
       board.allCells
@@ -92,41 +112,16 @@ class Referee : AbstractReferee() {
           .filter { it.isTable }
           .also { player.sendInputLine(it.size.toString()) }
           .also { it.forEach { cell ->
-            player.sendInputLine("${cell.x} ${cell.y} ${equipmentTypeMap(cell.equipment)}")
+            player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment.describe()}")
           }}
     }
 
     gameManager.activePlayers.forEach(::describeMap)
   }
 
-  val edibleEncoding: Map<EdibleItem, Int> = mapOf(
-      IceCreamBall(IceCreamFlavour.VANILLA) to Constants.VANILLA_BALL,
-      IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.CHOCOLATE_BALL,
-      IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.BUTTERSCOTCH_BALL,
-      Strawberries to Constants.STRAWBERRIES,
-      Blueberries to Constants.BLUEBERRIES,
-      ChoppedBananas to Constants.CHOPPED_BANANAS,
-      PieSlice(PieFlavour.Strawberry) to Constants.STRAWBERRY_PIE,
-      PieSlice(PieFlavour.Blueberry) to Constants.BLUEBERRY_PIE,
-      Waffle to Constants.WAFFLE
-  )
-
   override fun gameTurn(turn: Int) {
     board.tick()
     queue.tick()
-
-    fun describeItem(item: Item?): Int = when(item) {
-      is Dish -> Constants.DISH + item.contents.map(::describeItem).sum()
-      is Milkshake -> Constants.MILKSHAKE + item.contents.map(::describeItem).sum()
-      in edibleEncoding.keys -> edibleEncoding[item]!!
-      else -> -1
-    }
-
-    fun describeEquipment(equipment: Equipment?): Int = when(equipment) {
-      is Window -> Constants.WINDOW
-      is IceCreamCrate -> Constants.VANILLA_CRATE
-      else -> -1
-    }
 
     fun sendGameState(player: Player) {
       val xMult = if (player.isLeftTeam) -1 else 1  // make sure to invert x for left team
@@ -137,7 +132,7 @@ class Referee : AbstractReferee() {
         val toks = listOf(
             it.location.x * xMult,
             it.location.y,
-            describeItem(it.heldItem),
+            it.heldItem.describe(),
             when {
               it == player -> 0    // self
               it.isLeftTeam == player.isLeftTeam -> 1   // friend
@@ -154,8 +149,8 @@ class Referee : AbstractReferee() {
         val toks = listOf(
             it.x * xMult,
             it.y,
-            describeEquipment(it.equipment),
-            describeItem(it.item)
+            it.equipment.describe(),
+            it.item.describe()
         )
         player.sendInputLine(toks)
       }
@@ -164,7 +159,7 @@ class Referee : AbstractReferee() {
       queue
           .also { player.sendInputLine(it.size) }
           .also { it.forEach {
-            val toks = listOf(it.award) + describeItem(it.item)
+            val toks = listOf(it.award) + it.item.describe()
             player.sendInputLine(toks)
           }}
 
@@ -216,5 +211,6 @@ class Referee : AbstractReferee() {
     }
   }
 }
+
 
 

@@ -5,7 +5,7 @@ import java.io.PrintStream
 import java.util.*
 
 @Suppress("unused")
-abstract class BaseCALMPlayer(stdin: InputStream, val stdout: PrintStream, val stderr: PrintStream) {
+abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, val stderr: PrintStream) {
   val scanner = Scanner(stdin)
   val width: Int
   val height: Int
