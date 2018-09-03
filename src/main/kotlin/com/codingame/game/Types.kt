@@ -391,7 +391,6 @@ class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<
       Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
   )
 
-  private val rand = Random()
   private fun <E> List<E>.random(): E {
     val index = rand.nextInt(size)
     return this[index]

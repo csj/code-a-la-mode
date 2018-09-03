@@ -1,8 +1,12 @@
 package com.codingame.game
 
+import java.util.*
+
+val rand = Random()
+
 val boardLayout = listOf(
 //        ABCDEFGHI
-/* 0 */  "XDdXXXXXX",  // 0
+/* 0 */  "XDXXXXXXX",  // 0
 /* 1 */  "X.......X",  // 1
 /* 2 */  "X..X.W..I",  // 2
 /* 3 */  "X..XXX..X",  // 3
@@ -11,7 +15,7 @@ val boardLayout = listOf(
 /* 6 */  "X..CXX..X",  // 6
 /* 7 */  "X.......O",  // 7
 /* 8 */  "X.......X",  // 8
-/* 9 */  "XXXXXSsXX"   // 9
+/* 9 */  "XXXXXXXRX"   // 9
 //        ABCDEFGHI
 )
 
@@ -22,17 +26,27 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   val queue = CustomerQueue(scoreAwardCallback)
 
   // Both windows have to be added separately
-  val dishReturn1 = DishReturn(board["G9"]).also { board["G9"].equipment = it }
-  val dishReturn2 = DishReturn(board["g9"]).also { board["g9"].equipment = it }
+  val dishReturn1 = DishReturn(board["H9"]).also { board["H9"].equipment = it }
+  val dishReturn2 = DishReturn(board["h9"]).also { board["h9"].equipment = it }
 
   board["B0"].equipment = Window(dishReturn1) { queue.delivery(it, 0) }
   board["b0"].equipment = Window(dishReturn2) { queue.delivery(it, 1) }
 
   // For other equipment, it's sufficient to add it to one side only (a clone will go on the other side)
-  // Temporary: Make this random in the future
-  board["I2"].equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
-  board["I3"].equipment = IceCreamCrate(IceCreamFlavour.CHOCOLATE)
-  board["I4"].equipment = IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH)
+
+  val equipmentLocs = listOf(
+      "C0", "D0", "E0", "F0", "G0", "H0", "I0",
+      "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
+      "B9", "C9", "D9", "E9", "F9", "G9", "H9", "I9"
+  ).shuffled(rand)
+
+  val equipments = listOf(
+      IceCreamCrate(IceCreamFlavour.VANILLA),
+      IceCreamCrate(IceCreamFlavour.CHOCOLATE),
+      IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH)
+  )
+
+  equipments.zip(equipmentLocs).forEach { (eq, eqLoc) -> board[eqLoc].equipment = eq }
 
   // Items need to be added to both sides
   listOf("F2", "F3", "E3", "E4")
