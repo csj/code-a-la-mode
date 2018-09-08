@@ -2,7 +2,6 @@ package specs
 
 import com.codingame.game.*
 import com.codingame.game.Customer
-import com.codingame.game.sample.*
 import io.kotlintest.matchers.beEmpty
 import io.kotlintest.should
 import io.kotlintest.shouldBe
@@ -38,7 +37,7 @@ class CustomerTests: FreeSpec({
     "a team can score points by delivering" {
         setup()
         queue += Customer(aliceStuff, 100)
-        alice.drop(windowALoc)
+        alice.use(windowALoc)
         scores[0] shouldBe 100
         scores[1] shouldBe 0
         queue should beEmpty()
@@ -47,7 +46,7 @@ class CustomerTests: FreeSpec({
     "a team scores no points by delivering the wrong thing" {
         setup()
         queue += Customer(aliceStuff, 100)
-        andrew.drop(windowALoc)
+        andrew.use(windowALoc)
         scores[0] shouldBe 0
         scores[1] shouldBe 0
         queue shouldNot beEmpty()

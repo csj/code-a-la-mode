@@ -30,11 +30,11 @@ class BlenderTests: FreeSpec({
       setup()
       player.heldItem = item
       if (isOk) {
-        player.drop(blenderLoc)
+        player.use(blenderLoc)
         (blenderLoc.equipment as Blender).contents shouldBe mutableSetOf(item)
       } else {
         shouldThrowAny {
-          player.drop(blenderLoc)
+          player.use(blenderLoc)
         }
       }
     }
@@ -43,7 +43,7 @@ class BlenderTests: FreeSpec({
   "you can drop a full ice cream scoop (Vanilla)" {
     setup()
     player.heldItem = IceCreamBall(IceCreamFlavour.VANILLA)
-    player.drop(blenderLoc)
+    player.use(blenderLoc)
     player.heldItem shouldBe null
     (blenderLoc.equipment as Blender).contents should contain(IceCreamBall(IceCreamFlavour.VANILLA))
   }
@@ -51,21 +51,21 @@ class BlenderTests: FreeSpec({
   "you can't use other ice cream flavours" {
     setup()
     player.heldItem = IceCreamBall(IceCreamFlavour.BUTTERSCOTCH)
-    shouldThrowAny { player.drop(blenderLoc) }
+    shouldThrowAny { player.use(blenderLoc) }
   }
 
   "you can't use a full ice cream scoop if there's already ice cream inside" {
     setup()
     blenderLoc.equipment = Blender(IceCreamBall(IceCreamFlavour.VANILLA))
     player.heldItem = IceCreamBall(IceCreamFlavour.VANILLA)
-    shouldThrowAny { player.drop(blenderLoc) }
+    shouldThrowAny { player.use(blenderLoc) }
   }
 
   "you can drop berries in directly" {
     setup()
     blenderLoc.equipment = Blender(IceCreamBall(IceCreamFlavour.VANILLA))
     player.heldItem = Strawberries
-    player.drop(blenderLoc)
+    player.use(blenderLoc)
     (blenderLoc.equipment as Blender).contents should containAll(IceCreamBall(IceCreamFlavour.VANILLA), Strawberries)
   }
 
@@ -73,7 +73,7 @@ class BlenderTests: FreeSpec({
     setup()
     val blender = blenderLoc.equipment as Blender
     blender += IceCreamBall(IceCreamFlavour.VANILLA)
-    player.take(blenderLoc)
+    player.use(blenderLoc)
     blender.contents should beEmpty()
     player.heldItem shouldBe Milkshake(IceCreamBall(IceCreamFlavour.VANILLA))
   }
@@ -83,12 +83,12 @@ class BlenderTests: FreeSpec({
     val blender = blenderLoc.equipment as Blender
     blender += IceCreamBall(IceCreamFlavour.VANILLA)
     player.heldItem = Milkshake(IceCreamBall(IceCreamFlavour.VANILLA))
-    shouldThrowAny { player.take(blenderLoc) }
+    shouldThrowAny { player.use(blenderLoc) }
   }
 
-  "you cannot pick up an empty blender" {
+  "you cannot use an empty blender if not holding anything" {
     setup()
-    shouldThrowAny { player.take(blenderLoc) }
+    shouldThrowAny { player.use(blenderLoc) }
   }
 
   "a milkshake is not a milkshake unless it contains ice cream" {
@@ -96,12 +96,12 @@ class BlenderTests: FreeSpec({
     val blender = blenderLoc.equipment as Blender
     blender += Strawberries
     blender += ChoppedBananas
-    shouldThrowAny { player.take(blenderLoc) }
+    shouldThrowAny { player.use(blenderLoc) }
   }
 
   "blenders cannot blend whole bananas" {
     setup()
     player.heldItem = Banana
-    shouldThrowAny { player.drop(blenderLoc) }
+    shouldThrowAny { player.use(blenderLoc) }
   }
 })

@@ -2,7 +2,6 @@ package specs
 
 import com.codingame.game.*
 import com.codingame.game.Player
-import com.codingame.game.sample.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec
@@ -10,7 +9,7 @@ import io.kotlintest.specs.FreeSpec
 class ChoppingBoardTests: FreeSpec({
 
   val board = buildEmptyBoard()
-  val choppingBoardLoc = board["C7"]
+  val choppingBoardLoc = board["D6"]
   val player = Player()
 
   fun setup() {
@@ -37,33 +36,25 @@ class ChoppingBoardTests: FreeSpec({
     listOf(Dish(), Strawberries, BurntPie, RawPie(PieFlavour.Blueberry), ChoppedBananas).forEach { item ->
       setup()
       player.heldItem = item
-      shouldThrowAny { player.drop(choppingBoardLoc) }
+      shouldThrowAny { player.use(choppingBoardLoc) }
     }
   }
 
   "a player can put a cooked pie on a chopping board" {
     setup()
     player.heldItem = Pie(PieFlavour.Strawberry)
-    player.drop(choppingBoardLoc)
+    player.use(choppingBoardLoc)
   }
 
   "a player cannot put a cooked pie on a chopping board if there's already pie there (no combining!)" {
     setup()
     choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Blueberry))
     player.heldItem = Pie(PieFlavour.Strawberry)
-    shouldThrowAny { player.drop(choppingBoardLoc) }
+    shouldThrowAny { player.use(choppingBoardLoc) }
   }
 
   "chopping board with full pie" - {
-    "a player can take it" {
-      setup()
-      choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Blueberry))
-      player.take(choppingBoardLoc)
-      player.heldItem shouldBe Pie(PieFlavour.Blueberry)
-      (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe null
-    }
-
-    "a player can use it" {
+    "a player can take a slice" {
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Blueberry))
       player.use(choppingBoardLoc)
@@ -73,15 +64,7 @@ class ChoppingBoardTests: FreeSpec({
   }
 
   "chopping board with partial pie" - {
-    "a player can take it" {
-      setup()
-      choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
-      player.take(choppingBoardLoc)
-      player.heldItem shouldBe Pie(PieFlavour.Strawberry, 2)
-      (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe null
-    }
-
-    "a player can use it" {
+    "a player can take a slice" {
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
       player.use(choppingBoardLoc)
@@ -89,10 +72,18 @@ class ChoppingBoardTests: FreeSpec({
       (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe Pie(PieFlavour.Strawberry, 1)
     }
 
-    "a player cannot use it with his hands full" {
+    "a player can insta-plate a slice" {
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
       player.heldItem = Dish()
+      player.use(choppingBoardLoc)
+      player.heldItem shouldBe Dish(PieSlice(PieFlavour.Strawberry))
+    }
+
+    "a player cannot use if his hands have something else" {
+      setup()
+      choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
+      player.heldItem = Milkshake(IceCreamBall(IceCreamFlavour.VANILLA), ChoppedBananas)
       shouldThrowAny { player.use(choppingBoardLoc) }
     }
   }
@@ -101,15 +92,9 @@ class ChoppingBoardTests: FreeSpec({
     "a player can take it" {
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 1))
-      player.take(choppingBoardLoc)
+      player.use(choppingBoardLoc)
       player.heldItem shouldBe PieSlice(PieFlavour.Strawberry)
       (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe null
-    }
-
-    "a player cannot use it (nothing to chop!)" {
-      setup()
-      choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 1))
-      shouldThrowAny { player.use(choppingBoardLoc) }
     }
   }
 

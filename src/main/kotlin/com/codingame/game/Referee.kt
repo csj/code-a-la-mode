@@ -181,8 +181,6 @@ class Referee : AbstractReferee() {
         when (command) {
           "MOVE" -> player.moveTo(target)
           "USE" -> player.use(target)
-          "TAKE" -> player.take(target)
-          "DROP" -> player.drop(target)
         }
       }
 

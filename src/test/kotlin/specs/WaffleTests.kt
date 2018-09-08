@@ -38,14 +38,14 @@ class WaffleTests: FreeSpec({
     setup()
     player.use(waffleLoc)
     repeat(cookTime-1) { board.tick() }
-    shouldThrowAny { player.take(waffleLoc) }
+    shouldThrowAny { player.use(waffleLoc) }
   }
 
   "player can take off a waffle that is cooked (#1)" {
     setup()
     player.use(waffleLoc)
     repeat(cookTime) { board.tick() }
-    player.take(waffleLoc)
+    player.use(waffleLoc)
     player.heldItem shouldBe Waffle
   }
 
@@ -53,7 +53,7 @@ class WaffleTests: FreeSpec({
     setup()
     player.use(waffleLoc)
     repeat(totalBurnTime-1) { board.tick() }
-    player.take(waffleLoc)
+    player.use(waffleLoc)
     player.heldItem shouldBe Waffle
   }
 
@@ -61,7 +61,7 @@ class WaffleTests: FreeSpec({
     setup()
     player.use(waffleLoc)
     repeat(totalBurnTime) { board.tick() }
-    player.take(waffleLoc)
+    player.use(waffleLoc)
     player.heldItem shouldBe BurntWaffle
   }
 

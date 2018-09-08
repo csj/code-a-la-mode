@@ -33,7 +33,7 @@ class DeliverySpec: FreeSpec({
       "can be done with an ice cream dish (after dropping, there should be nothing there!)" {
         setup()
         player.heldItem = Dish(IceCreamBall(IceCreamFlavour.VANILLA))
-        player.drop(window)
+        player.use(window)
         window.item shouldBe null
         deliveredItem shouldBe Dish(IceCreamBall(IceCreamFlavour.VANILLA))
       }
@@ -41,7 +41,7 @@ class DeliverySpec: FreeSpec({
       "can be done with a Milkshake (after dropping, there should be nothing there!)" {
         setup()
         player.heldItem = Milkshake(IceCreamBall(IceCreamFlavour.VANILLA))
-        player.drop(window)
+        player.use(window)
         window.item shouldBe null
         deliveredItem shouldBe Milkshake(IceCreamBall(IceCreamFlavour.VANILLA))
       }
@@ -49,7 +49,7 @@ class DeliverySpec: FreeSpec({
       "can be done with an empty dish" {
         setup()
         player.heldItem = Dish()
-        player.drop(window)
+        player.use(window)
         System.err.println(deliveredItem)
         deliveredItem shouldBe Dish()
       }
@@ -58,7 +58,7 @@ class DeliverySpec: FreeSpec({
         setup()
         player.heldItem = Banana
         shouldThrowAny {
-          player.drop(window)
+          player.use(window)
         }
       }
     }

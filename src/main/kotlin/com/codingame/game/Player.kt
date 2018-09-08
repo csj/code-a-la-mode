@@ -16,26 +16,43 @@ class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
 
   fun use(cell: Cell) {
-    val equipment = cell.equipment ?: throw Exception("Cannot use: no equipment!")
-    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
-    equipment.use(this)
-  }
-
-  fun drop(cell: Cell) {
-    val item = heldItem ?: throw Exception("Cannot drop: not holding anything!")
+    if (!cell.isTable) throw Exception("Cannot use $cell: not a table!")
     if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
     val equipment = cell.equipment
-    if (equipment != null) return item.dropOntoEquipment(this, equipment)
-    item.drop(this, cell)
+    if (equipment != null) {
+      equipment.use(this)
+      return
+    }
+
+    // try drop
+    if (heldItem != null) {
+      cell.item?.also { return it.receiveItem(this, heldItem!!) }
+      cell.item = heldItem
+      heldItem = null
+      return
+    }
+
+    // try take
+    cell.item?.also { return it.take(this, cell) }
+
+    throw Exception("Cannot use this table, nothing to do!")
   }
 
-  fun take(cell: Cell) {
-    if (heldItem != null) throw Exception("Cannot take: already holding something!")
-    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
-    cell.item?.let { return it.take(this, cell) }
-    cell.equipment?.let { return it.takeFrom(this) }
-    throw Exception("Cannot take: nothing here!")
-  }
+//  fun drop(cell: Cell) {
+//    val item = heldItem ?: throw Exception("Cannot drop: not holding anything!")
+//    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
+//    val equipment = cell.equipment
+//    if (equipment != null) return item.dropOntoEquipment(this, equipment)
+//    item.drop(this, cell)
+//  }
+//
+//  fun take(cell: Cell) {
+//    if (heldItem != null) throw Exception("Cannot take: already holding something!")
+//    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
+//    cell.item?.let { return it.take(this, cell) }
+//    cell.equipment?.let { return it.takeFrom(this) }
+//    throw Exception("Cannot take: nothing here!")
+//  }
 
   fun moveTo(cell: Cell) {
     val fromSource = location.buildDistanceMap()

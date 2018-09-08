@@ -56,7 +56,7 @@
         <dependency>
             <groupId>io.kotlintest</groupId>
             <artifactId>kotlintest-runner-junit5</artifactId>
-            <version>3.1.0</version>
+            <version>3.1.9</version>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -97,6 +97,7 @@
                         <configuration>
                             <sourceDirs>
                                 <source>src/test/kotlin</source>
+                                <source>src/test/kotlin/specs</source>
                                 <source>src/test/java</source>
                             </sourceDirs>
                         </configuration>

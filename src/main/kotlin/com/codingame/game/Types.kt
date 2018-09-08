@@ -11,20 +11,8 @@ enum class IceCreamFlavour {
 }
 
 abstract class Item {
-  open fun drop(player: Player, cell: Cell) {
-    val item = cell.item
-    if (item is Dish) return dropOntoDish(player, item)
-    if (!cell.isTable) throw Exception("Cannot drop: not a table!")
-    cell.item = this
-    player.heldItem = null
-  }
-
-  open fun dropOntoDish(player: Player, dish: Dish) {
-    throw Exception("Cannot drop $this onto a dish")
-  }
-
-  open fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    throw Exception("Cannot drop $this onto $equipment!")
+  open fun receiveItem(player: Player, item: Item) {
+    throw Exception("Cannot drop $item onto $this!")
   }
 
   open fun take(player: Player, cell: Cell) {
@@ -33,22 +21,7 @@ abstract class Item {
   }
 }
 
-abstract class EdibleItem: Item() {
-  override fun dropOntoDish(player: Player, dish: Dish) { dish += this; player.heldItem = null }
-  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    if (equipment is Blender) {
-      equipment += this
-      player.heldItem = null
-      return
-    }
-
-    if (equipment is DishReturn && equipment.location.item is Dish) {
-      dropOntoDish(player, equipment.location.item as Dish)
-      return
-    }
-    super.dropOntoEquipment(player, equipment)
-  }
-}
+abstract class EdibleItem: Item()
 
 object Strawberries: EdibleItem()
 object Blueberries: EdibleItem()
@@ -91,17 +64,18 @@ data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
 //  }
 //}
 
-abstract class DeliverableItem : Item() {
-  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    when (equipment) {
-      is Window -> { equipment.deliver(this); player.heldItem = null }
-      else -> super.dropOntoEquipment(player, equipment)
-    }
-  }
-}
+abstract class DeliverableItem : Item()
 
 data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), HasContents {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
+
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is EdibleItem) {
+      this += item
+      return
+    }
+    super.receiveItem(player, item)
+  }
 }
 
 /**
@@ -109,11 +83,16 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
  */
 abstract class Equipment {
   open fun use(player: Player) {
-    throw Exception("Cannot use $this at this time!")
+    player.heldItem?.also { return receiveItem(player, it) }
+    return takeFrom(player)
   }
 
   open fun takeFrom(player: Player) {
     throw Exception("$this cannot be taken directly!")
+  }
+
+  open fun receiveItem(player: Player, item: Item) {
+    throw Exception("Cannot drop $item onto $this!")
   }
 
   open fun clone(): Equipment {
@@ -152,26 +131,9 @@ enum class PieFlavour {
   Blueberry
 }
 
-data class RawPie(private val pieFlavour: PieFlavour): Item() {
-  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    if (equipment is Oven) {
-      equipment.insertRawPie(pieFlavour)
-      player.heldItem = null
-      return
-    }
-    super.dropOntoEquipment(player, equipment)
-  }
-}
+data class RawPie(val pieFlavour: PieFlavour): Item()
 
-data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item() {
-  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
-    if (equipment is ChoppingBoard) {
-      equipment.putPie(this)
-      return
-    }
-    super.dropOntoEquipment(player, equipment)
-  }
-}
+data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item()
 
 data class PieSlice(val pieFlavour: PieFlavour): EdibleItem()
 
@@ -188,6 +150,15 @@ data class Blender(override val contents: MutableSet<EdibleItem> = mutableSetOf(
     if (IceCreamBall(IceCreamFlavour.VANILLA) !in contents) throw Exception("Not ready for taking: no ice cream!")
     player.heldItem = Milkshake(contents.toMutableSet())
     contents.clear()
+  }
+
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is EdibleItem) {
+      this += item
+      player.heldItem = null
+      return
+    }
+    super.receiveItem(player, item)
   }
 
   infix operator fun plusAssign(item: EdibleItem) {
@@ -228,7 +199,16 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
     }
   }
 
-  fun insertRawPie(flavour: PieFlavour) {
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is RawPie) {
+      insertRawPie(item.pieFlavour)
+      player.heldItem = null
+      return
+    }
+    super.receiveItem(player, item)
+  }
+
+  private fun insertRawPie(flavour: PieFlavour) {
     if (state === OvenState.Empty)
       state = OvenState.Cooking(flavour, cookTime)
     else throw Exception("Cannot insert pie: oven not empty!")
@@ -286,50 +266,53 @@ data class WaffleIron(private val cookTime: Int, private val burnTime: Int, priv
   }
 
   override fun use(player: Player) {
-    if (state != WaffleState.Empty) throw Exception("Cannot use $this now: not empty!")
-    state = WaffleState.Cooking(cookTime)
+    if (state == WaffleState.Empty) {
+      state = WaffleState.Cooking(cookTime)
+      return
+    }
+    super.use(player)
   }
 }
 
 data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
   override fun clone() = copy()
 
-  override fun use(player: Player) {
-    if (player.heldItem === Banana) {
+  private fun checkVacant() {
+    if (pieOnBoard != null) throw Exception("Chopping board is not vacant")
+  }
+
+  private fun getSlice(): PieSlice {
+    val pie = pieOnBoard ?: throw Exception("No pie slices to get!")
+    pieOnBoard = when (pie.pieces) {
+      1 -> null
+      else -> pie.copy(pieces = pie.pieces - 1)
+    }
+    return PieSlice(pie.pieFlavour)
+  }
+
+  override fun takeFrom(player: Player) {
+    player.heldItem = getSlice()
+  }
+
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is Pie) {
+      putPie(item)
+      return
+    }
+
+    if (item === Banana) {
       checkVacant()
       player.heldItem = ChoppedBananas
       return
     }
 
-    val pie = pieOnBoard
-    if (player.heldItem == null && pie != null) {
-      player.heldItem = PieSlice(pie.pieFlavour)
-      pieOnBoard = when (pie.pieces) {
-        1 -> throw Exception("Cannot chop: only one piece left!")
-        else -> pie.copy(pieces = pie.pieces - 1)
-      }
+    if (item is Dish) {
+      // try to insta-plate
+      item.receiveItem(player, getSlice())
+      player.heldItem = item
       return
     }
-
-    super.use(player)
-  }
-
-  private fun checkVacant() {
-    if (pieOnBoard != null) throw Exception("Chopping board is not vacant")
-  }
-
-  override fun takeFrom(player: Player) {
-    val pie = pieOnBoard
-    if (player.heldItem == null && pie != null) {
-      player.heldItem = when(pie.pieces) {
-        1 -> PieSlice(pie.pieFlavour)
-        else -> pie
-      }
-      pieOnBoard = null
-      return
-    }
-
-    super.takeFrom(player)
+    super.receiveItem(player, item)
   }
 
   fun putPie(pie: Pie) {
@@ -344,13 +327,19 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
  * this will be a scorekeeper function of some sort.
  */
 class Window(private val dishReturn: DishReturn? = null, private val onDelivery: (Item) -> Unit = { }) : Equipment() {
-  override fun use(player: Player) {
-    throw Exception("Cannot use a delivery window")
-  }
 
-  fun deliver(food: DeliverableItem) {
+  private fun deliver(food: DeliverableItem) {
     onDelivery(food)
     dishReturn?.addDishToQueue()
+  }
+
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is DeliverableItem) {
+      deliver(item)
+      player.heldItem = null
+      return
+    }
+    super.receiveItem(player, item)
   }
 }
 
