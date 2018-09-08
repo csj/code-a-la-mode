@@ -26,8 +26,8 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   val queue = CustomerQueue(scoreAwardCallback)
 
   // Both windows have to be added separately
-  val dishReturn1 = DishReturn(board["H9"]).also { board["H9"].equipment = it }
-  val dishReturn2 = DishReturn(board["h9"]).also { board["h9"].equipment = it }
+  val dishReturn1 = DishReturn().also { board["H9"].equipment = it }
+  val dishReturn2 = DishReturn().also { board["h9"].equipment = it }
 
   board["B0"].equipment = Window(dishReturn1) { queue.delivery(it, 0) }
   board["b0"].equipment = Window(dishReturn2) { queue.delivery(it, 1) }

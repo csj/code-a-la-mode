@@ -7,6 +7,7 @@ import com.codingame.game.Constants.CHOCOLATE_BALL
 import com.codingame.game.Constants.CHOCOLATE_CRATE
 import com.codingame.game.Constants.VANILLA_BALL
 import com.codingame.game.Constants.VANILLA_CRATE
+import com.codingame.game.Dish
 import com.codingame.game.IceCreamFlavour
 import sample.BaseCALMPlayer
 import java.io.InputStream
@@ -46,36 +47,29 @@ open class IceCreamPlayer(
 
       val iceCreamLoc = inputs.tables.first { it.x >= 0 && it.equipment == crateVal }
       val window = inputs.tables.first { it.x >= 0 && it.equipment == Constants.WINDOW }
-      val emptyDish = inputs.tables.firstOrNull { it.x >= 0 && it.item == Constants.DISH }
-      val iceCreamDish = inputs.tables.firstOrNull { it.x >= 0 && it.item == Constants.DISH + ballVal }
+      val dishReturn = inputs.tables.first { it.x >= 0 && it.equipment == Constants.DISH_RETURN }
+      val emptyDishes = inputs.tables.filter { it.x >= 0 && it.item == Constants.DISH }
+      val emptyDish = emptyDishes.firstOrNull() ?: dishReturn
 
-      // if holding a plate of ice cream, head for the window
-      if (me.carrying == Constants.DISH + ballVal) {
-        stdout.println("DROP ${window.x} ${window.y}")
-        continue
-      }
-
-      // if holding a ball of ice cream, head for an empty dish
-      if (me.carrying == ballVal) {
-        if (emptyDish == null) {
-          stdout.println("WAIT")
-          continue  // no empty dishes :(
+      when (me.carrying) {
+        // if holding a plate of ice cream, head for the window
+        Constants.DISH + ballVal -> {
+          stderr.println("I'm holding a plate of ice cream: going to window")
+          stdout.println("USE ${window.x} ${window.y}")
         }
 
-        stdout.println("DROP ${emptyDish.x} ${emptyDish.y}")
-        continue
+        // if holding an empty plate, go get some ice cream
+        Constants.DISH -> {
+          stderr.println("I'm holding an empty dish, going for ice cream")
+          stdout.println("USE ${iceCreamLoc.x} ${iceCreamLoc.y}")
+        }
+
+        // go get an empty plate
+        else -> {
+          stderr.println("I'm going to get a plate")
+          stdout.println("USE ${emptyDish.x} ${emptyDish.y}")
+        }
       }
-
-      // so I'm holding nothing.
-
-      // if there's a dish with ice cream around, get it
-      if (iceCreamDish != null) {
-        stdout.println("TAKE ${iceCreamDish.x} ${iceCreamDish.y}")
-        continue
-      }
-
-      // go get some ice cream
-      stdout.println("USE ${iceCreamLoc.x} ${iceCreamLoc.y}")
     }
   }
 }

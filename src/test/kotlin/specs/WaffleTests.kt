@@ -27,6 +27,12 @@ class WaffleTests: FreeSpec({
     player.use(waffleLoc)
   }
 
+  "player can start a new waffle even with his hands full" {
+    setup()
+    player.heldItem = Dish()
+    player.use(waffleLoc)
+  }
+
   "player cannot start a new waffle if there's already one on" {
     setup()
     player.use(waffleLoc)
@@ -49,6 +55,15 @@ class WaffleTests: FreeSpec({
     player.heldItem shouldBe Waffle
   }
 
+  "player can insta-plate a waffle that is cooked (#1)" {
+    setup()
+    player.use(waffleLoc)
+    repeat(cookTime) { board.tick() }
+    player.heldItem = Dish()
+    player.use(waffleLoc)
+    player.heldItem shouldBe Dish(Waffle)
+  }
+
   "player can take off a waffle that is cooked (#2)" {
     setup()
     player.use(waffleLoc)
@@ -63,6 +78,14 @@ class WaffleTests: FreeSpec({
     repeat(totalBurnTime) { board.tick() }
     player.use(waffleLoc)
     player.heldItem shouldBe BurntWaffle
+  }
+
+  "once cleared, a waffle iron can be started again" {
+    setup()
+    player.use(waffleLoc)  // turn it on
+    repeat(totalBurnTime-1) { board.tick() }
+    player.use(waffleLoc)  // take a waffle
+    player.use(waffleLoc)  // turn it on again
   }
 
 })

@@ -72,6 +72,7 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
   override fun receiveItem(player: Player, item: Item) {
     if (item is EdibleItem) {
       this += item
+      player.heldItem = null
       return
     }
     super.receiveItem(player, item)
@@ -84,10 +85,10 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
 abstract class Equipment {
   open fun use(player: Player) {
     player.heldItem?.also { return receiveItem(player, it) }
-    return takeFrom(player)
+    player.heldItem = takeFrom(player)
   }
 
-  open fun takeFrom(player: Player) {
+  open fun takeFrom(player: Player): Item {
     throw Exception("$this cannot be taken directly!")
   }
 
@@ -110,10 +111,16 @@ abstract class TimeSensitiveEquipment: Equipment() {
 data class IceCreamCrate(val flavour: IceCreamFlavour) : Equipment() {
   override fun clone(): Equipment = copy()
 
-  override fun use(player: Player) {
-    if (player.heldItem != null) throw Exception("Cannot use this now; hands full!")
-    player.heldItem = IceCreamBall(flavour)
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is Dish) {
+      item.receiveItem(player, IceCreamBall(flavour))
+      player.heldItem = item
+      return
+    }
+    super.receiveItem(player, item)
   }
+
+  override fun takeFrom(player: Player) = IceCreamBall(flavour)
 }
 
 
@@ -146,10 +153,9 @@ data class Blender(override val contents: MutableSet<EdibleItem> = mutableSetOf(
 
   override fun clone(): Equipment = copy()
 
-  override fun takeFrom(player: Player) {
+  override fun takeFrom(player: Player): Milkshake {
     if (IceCreamBall(IceCreamFlavour.VANILLA) !in contents) throw Exception("Not ready for taking: no ice cream!")
-    player.heldItem = Milkshake(contents.toMutableSet())
-    contents.clear()
+    return Milkshake(contents.toMutableSet()).also { contents.clear() }
   }
 
   override fun receiveItem(player: Player, item: Item) {
@@ -214,16 +220,16 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
     else throw Exception("Cannot insert pie: oven not empty!")
   }
 
-  override fun takeFrom(player: Player) {
+  override fun takeFrom(player: Player): Item {
+    lateinit var retVal: Item
     val curState = state
     state = when (curState) {
       OvenState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
       is OvenState.Cooking -> throw Exception("Cannot take from $this: pie is cooking!")
-      is OvenState.Cooked -> { player.heldItem = Pie(curState.flavour); OvenState.Empty
-      }
-      OvenState.Burnt -> { player.heldItem = BurntPie; OvenState.Empty
-      }
+      is OvenState.Cooked -> OvenState.Empty.also { retVal = Pie(curState.flavour) }
+      OvenState.Burnt -> OvenState.Empty.also { retVal = BurntPie }
     }
+    return retVal
   }
 }
 
@@ -253,16 +259,25 @@ data class WaffleIron(private val cookTime: Int, private val burnTime: Int, priv
     }
   }
 
-  override fun takeFrom(player: Player) {
+  override fun takeFrom(player: Player): Item {
+    lateinit var retVal: Item
     val curState = state
     state = when (curState) {
       WaffleState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
       is WaffleState.Cooking -> throw Exception("Cannot take from $this: waffle is cooking!")
-      is WaffleState.Cooked -> { player.heldItem = Waffle; WaffleState.Empty
-      }
-      WaffleState.Burnt -> { player.heldItem = BurntWaffle; WaffleState.Empty
-      }
+      is WaffleState.Cooked -> WaffleState.Empty.also { retVal = Waffle }
+      WaffleState.Burnt -> WaffleState.Empty.also { retVal = BurntWaffle }
     }
+    return retVal
+  }
+
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is Dish) {
+      item.receiveItem(player, takeFrom(player))
+      player.heldItem = item
+      return
+    }
+    super.receiveItem(player, item)
   }
 
   override fun use(player: Player) {
@@ -290,9 +305,7 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
     return PieSlice(pie.pieFlavour)
   }
 
-  override fun takeFrom(player: Player) {
-    player.heldItem = getSlice()
-  }
+  override fun takeFrom(player: Player) = getSlice()
 
   override fun receiveItem(player: Player, item: Item) {
     if (item is Pie) {
@@ -315,7 +328,7 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
     super.receiveItem(player, item)
   }
 
-  fun putPie(pie: Pie) {
+  private fun putPie(pie: Pie) {
     checkVacant()
     pieOnBoard = pie
   }
@@ -343,9 +356,18 @@ class Window(private val dishReturn: DishReturn? = null, private val onDelivery:
   }
 }
 
-data class DishReturn(val location: Cell) : TimeSensitiveEquipment() {
+class DishReturn : TimeSensitiveEquipment() {
 
   private val dishQueue = LinkedList<Boolean>(List(40) { false })
+  var dishes: Int = 0
+
+  override fun takeFrom(player: Player): Item {
+    if (dishes > 0) {
+      dishes--
+      return Dish()
+    }
+    return super.takeFrom(player)
+  }
 
   fun addDishToQueue() {
     dishQueue.add(true)
@@ -355,29 +377,24 @@ data class DishReturn(val location: Cell) : TimeSensitiveEquipment() {
     while (dishQueue.pop()!!) {
       dishes++
     }
-    if (location.item !is Dish && dishes > 0) {
-      location.item = Dish()
-      dishes--
-    }
     dishQueue.add(false)
   }
 
-  var dishes: Int = 0
 }
 
 class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<Customer>() {
-  fun delivery(item: Item, teamIndex: Int) =
-    println("Delivery: $item; current queue: $this").also {
-      this.find { it.item == item }?.also {
-        onPointsAwarded(teamIndex, it.award)
-        remove(it)
-      } ?: onPointsAwarded(teamIndex, 0)
-    }
+  fun delivery(item: Item, teamIndex: Int) {
+    println("Delivery: $item; current queue: $this")
+    this.find { it.item == item }?.also {
+      onPointsAwarded(teamIndex, it.award)
+      remove(it)
+    } ?: onPointsAwarded(teamIndex, 0)
+  }
 
   private val possibleOrders = listOf(
-      Dish(IceCreamBall(IceCreamFlavour.VANILLA)),
-      Dish(IceCreamBall(IceCreamFlavour.CHOCOLATE)),
-      Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
+    Dish(IceCreamBall(IceCreamFlavour.VANILLA)),
+    Dish(IceCreamBall(IceCreamFlavour.CHOCOLATE)),
+    Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
   )
 
   private fun <E> List<E>.random(): E {
@@ -386,7 +403,7 @@ class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<
   }
 
   fun tick() {
-    repeat(3 - size) {
+    repeat(3 - size) { _ ->
       if (rand.nextDouble() < 0.2) {
         val newOrder = (possibleOrders - this.map { it.item }).random()
         this += Customer(newOrder, 1000)
@@ -483,11 +500,8 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
     allCells.forEach { cell -> (cell.equipment as? TimeSensitiveEquipment)?.tick() }
   }
 
-  val IntRange.inclusiveLength get() = this.endInclusive - this.start + 1
-
-  val xRange = -(width-1)..(width-1)
-  val yRange = 0 until height
-  val numCells = xRange.inclusiveLength * yRange.inclusiveLength
+  private val xRange = -(width-1)..(width-1)
+  private val yRange = 0 until height
 
   init {
     for (x in xRange) {
@@ -507,24 +521,24 @@ class Board(val width: Int, val height: Int, layout: List<String>? = null) {
 }
 
 object Constants {
-  val CUSTOMER_VALUE_DECAY = 20   // higher => slower decay
+  const val CUSTOMER_VALUE_DECAY = 20   // higher => slower decay
 
-  val VANILLA_BALL = 1
-  val CHOCOLATE_BALL = 2
-  val BUTTERSCOTCH_BALL = 4
-  val STRAWBERRIES = 8
-  val BLUEBERRIES = 16
-  val CHOPPED_BANANAS = 32
-  val STRAWBERRY_PIE = 64
-  val BLUEBERRY_PIE = 128
-  val WAFFLE = 256
+  const val VANILLA_BALL = 1
+  const val CHOCOLATE_BALL = 2
+  const val BUTTERSCOTCH_BALL = 4
+  const val STRAWBERRIES = 8
+  const val BLUEBERRIES = 16
+  const val CHOPPED_BANANAS = 32
+  const val STRAWBERRY_PIE = 64
+  const val BLUEBERRY_PIE = 128
+  const val WAFFLE = 256
 
-  val DISH = 1024
-  val MILKSHAKE = 2048
+  const val DISH = 1024
+  const val MILKSHAKE = 2048
 
-  val WINDOW = 0
-  val DISH_RETURN = 1
-  val VANILLA_CRATE = 2
-  val CHOCOLATE_CRATE = 3
-  val BUTTERSCOTCH_CRATE = 4
+  const val WINDOW = 0
+  const val DISH_RETURN = 1
+  const val VANILLA_CRATE = 2
+  const val CHOCOLATE_CRATE = 3
+  const val BUTTERSCOTCH_CRATE = 4
 }

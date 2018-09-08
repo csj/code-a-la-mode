@@ -104,4 +104,20 @@ class BlenderTests: FreeSpec({
     player.heldItem = Banana
     shouldThrowAny { player.use(blenderLoc) }
   }
+
+  "the same thing can't be added twice to a blender" {
+    setup()
+    val blender = blenderLoc.equipment as Blender
+    blender += IceCreamBall(IceCreamFlavour.VANILLA)
+    shouldThrowAny { blender.plusAssign(IceCreamBall(IceCreamFlavour.VANILLA)) }
+  }
+
+  "after clearing a blender, it can be used again" {
+    setup()
+    val blender = blenderLoc.equipment as Blender
+    blender += IceCreamBall(IceCreamFlavour.VANILLA)
+    player.use(blenderLoc)
+    // ...
+    blender += IceCreamBall(IceCreamFlavour.VANILLA)
+  }
 })
