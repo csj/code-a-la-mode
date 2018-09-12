@@ -1,7 +1,7 @@
 package com.codingame.game
 
 import com.codingame.game.Constants.CUSTOMER_VALUE_DECAY
-import com.codingame.gameengine.module.entities.Rectangle
+import com.codingame.gameengine.module.entities.*
 import java.util.*
 
 enum class IceCreamFlavour {
@@ -430,6 +430,8 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   private val diagonalNeighbours = mutableListOf<Cell>()
   lateinit var oppositeCell: Cell
   lateinit var visualRect: Rectangle
+  lateinit var visualContent: Text
+  lateinit var sprite: Group
 
   val neighbours by lazy { straightNeighbours.map {it to 2} + diagonalNeighbours.map {it to 3} }
 
@@ -541,4 +543,5 @@ object Constants {
   const val VANILLA_CRATE = 2
   const val CHOCOLATE_CRATE = 3
   const val BUTTERSCOTCH_CRATE = 4
+  const val BLENDER = 5
 }

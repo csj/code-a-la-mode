@@ -4,6 +4,7 @@ import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Rectangle
+import com.codingame.gameengine.module.entities.Sprite
 import com.google.inject.Inject
 
 @Suppress("unused")  // injected by magic
@@ -15,6 +16,8 @@ class Referee : AbstractReferee() {
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
+
+  private var cellWidth: Int = 0
 
   private fun Equipment?.describe() = when (this) {
     null -> -1
@@ -38,7 +41,21 @@ class Referee : AbstractReferee() {
       Waffle to Constants.WAFFLE
   )
 
-  private fun Item?.describe(): Int = when(this) {
+  val equipmentColoring: Map<Int, Int> = mapOf(
+      Constants.BLENDER to 0x000000,
+      Constants.WINDOW to 0x0C428C,
+      Constants.VANILLA_CRATE to 0xF7F7F7,
+      Constants.BUTTERSCOTCH_CRATE to 0xDEC319,
+      Constants.CHOCOLATE_CRATE to 0x3F1111,
+      Constants.DISH_RETURN to 0x939393
+  )
+
+  private fun GetColor(equipmentId: Int): Int = when (equipmentId) {
+    in equipmentColoring.keys -> equipmentColoring[equipmentId]!!
+    else -> 0xeeeeee
+  }
+
+  private fun Item?.describe(): Int = when (this) {
     is Dish -> Constants.DISH + contents.map { it.describe() }.sum()
     is Milkshake -> Constants.MILKSHAKE + contents.map { it.describe() }.sum()
     in edibleEncoding.keys -> edibleEncoding[this]!!
@@ -48,7 +65,7 @@ class Referee : AbstractReferee() {
 
   override fun init() {
     fun teamMap() =
-        when(gameManager.activePlayers.size) {
+        when (gameManager.activePlayers.size) {
           2 -> mapOf(0 to listOf(0), 1 to listOf(1))
           4 -> mapOf(0 to listOf(0, 3), 1 to listOf(2, 3))
           else -> throw Exception("Expected 2 or 4 players!")
@@ -60,7 +77,7 @@ class Referee : AbstractReferee() {
           .forEach { gameManager.players[it].score += points }
     }
 
-    val (b,q) = buildBoardAndQueue(::awardTeamPoints)
+    val (b, q) = buildBoardAndQueue(::awardTeamPoints)
     board = b
     queue = q
 
@@ -84,7 +101,7 @@ class Referee : AbstractReferee() {
     val xOffset = 100
     val gridHeight = worldHeight - yOffset
     val gridWidth = worldWidth - xOffset
-    val cellWidth = Math.min(gridHeight / board.height, gridWidth / board.width) - cellSpacing
+    cellWidth = Math.min(gridHeight / board.height, gridWidth / board.width) - cellSpacing
 
     for (cellCol in board.cells) {
       val indexX = cellCol[0].x + board.width - 1
@@ -95,12 +112,23 @@ class Referee : AbstractReferee() {
         val y = cell.y * (cellWidth + cellSpacing) + yOffset / 2
 //        println("$x-$y")
 //        println("$cellWidth $x $y")
-        cell.visualRect = graphicEntityModule.createRectangle().setHeight(cellWidth).setWidth(cellWidth).setX(x).setY(y).setFillColor(if (!cell.isTable) fill else tableFill)
+        cell.visualRect = graphicEntityModule.createRectangle().setHeight(cellWidth).setWidth(cellWidth).setFillColor(if (cell.isTable && cell.equipment === null) tableFill else GetColor(cell.equipment.describe()))
+        cell.visualContent = graphicEntityModule.createText(if (cell.item.describe() > 0) cell.item.describe().toString() else "")
+        cell.sprite = graphicEntityModule.createGroup(cell.visualRect, cell.visualContent).setX(x).setY(y)
       }
     }
 
     for (player in gameManager.activePlayers) {
-      player.sprite = graphicEntityModule.createRectangle().setHeight(cellWidth - 10).setWidth(cellWidth - 10).setFillColor(player.colorToken).setX(player.location.visualRect.x + 5).setY(player.location.visualRect.y + 5)
+      player.charaterSprite = graphicEntityModule.createRectangle()
+          .setHeight(cellWidth - 10)
+          .setWidth(cellWidth - 10)
+          .setFillColor(player.colorToken)
+
+      player.itemSprite = graphicEntityModule.createText("0").setAlpha(0.0)
+
+      player.sprite = graphicEntityModule.createGroup(player.charaterSprite, player.itemSprite)
+          .setX(player.location.sprite.x + 5)
+          .setY(player.location.sprite.y + 5)
     }
 
     fun describeMap(player: Player) {
@@ -111,9 +139,11 @@ class Referee : AbstractReferee() {
           .filter { it.x >= 0 }
           .filter { it.isTable }
           .also { player.sendInputLine(it.size.toString()) }
-          .also { it.forEach { cell ->
-            player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment.describe()}")
-          }}
+          .also {
+            it.forEach { cell ->
+              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment.describe()}")
+            }
+          }
     }
 
     gameManager.activePlayers.forEach(::describeMap)
@@ -146,22 +176,26 @@ class Referee : AbstractReferee() {
       board.allCells.filter { it.isTable }
           .also { player.sendInputLine(it.size) }
           .forEach {
-        val toks = listOf(
-            it.x * xMult,
-            it.y,
-            it.equipment.describe(),
-            it.item.describe()
-        )
-        player.sendInputLine(toks)
-      }
+            val toks = listOf(
+                it.x * xMult,
+                it.y,
+                it.equipment.describe(),
+                it.item.describe()
+            )
+            player.sendInputLine(toks)
+
+            it.visualContent.text = if (it.item.describe() > 0) it.item.describe().toString() else ""
+          }
 
       // 3. Describe customer queue
       queue
           .also { player.sendInputLine(it.size) }
-          .also { it.forEach {
-            val toks = listOf(it.award) + it.item.describe()
-            player.sendInputLine(toks)
-          }}
+          .also {
+            it.forEach {
+              val toks = listOf(it.award) + it.item.describe()
+              player.sendInputLine(toks)
+            }
+          }
 
       player.execute()
     }
@@ -184,20 +218,29 @@ class Referee : AbstractReferee() {
         }
       }
 
+      var heldItem = graphicEntityModule
+          .createSprite()
+
+      if (player.heldItem != null) {
+        player.itemSprite.setText(player.heldItem.describe().toString()).setAlpha(1.0)
+      } else {
+        player.itemSprite.setAlpha(0.0)
+      }
+
       player.sprite
-          .setX(board[player.location.x, player.location.y].visualRect.x + 5)
-          .setY(board[player.location.x, player.location.y].visualRect.y + 5)
+          .setX(board[player.location.x, player.location.y].sprite.x + 5)
+          .setY(board[player.location.x, player.location.y].sprite.y + 5)
 
       graphicEntityModule.commitEntityState(0.5, player.sprite)
 
     }
 
     val thePlayers =
-      when (gameManager.playerCount) {
-        2 -> gameManager.activePlayers
-        4 -> if (turn % 2 == 0) gameManager.activePlayers.take(2) else gameManager.activePlayers.takeLast(2)
-        else -> throw Exception("Expected 2 or 4 players!")
-      }
+        when (gameManager.playerCount) {
+          2 -> gameManager.activePlayers
+          4 -> if (turn % 2 == 0) gameManager.activePlayers.take(2) else gameManager.activePlayers.takeLast(2)
+          else -> throw Exception("Expected 2 or 4 players!")
+        }
 
     thePlayers.forEach(::sendGameState)
     thePlayers.forEach {

@@ -2,7 +2,10 @@ package com.codingame.game
 
 import com.codingame.gameengine.core.AbstractMultiplayerPlayer
 import com.codingame.gameengine.core.AbstractPlayer
+import com.codingame.gameengine.module.entities.Group
 import com.codingame.gameengine.module.entities.Rectangle
+import com.codingame.gameengine.module.entities.Sprite
+import com.codingame.gameengine.module.entities.Text
 
 const val REACH_DISTANCE = 3
 const val WALK_DISTANCE = 7
@@ -10,7 +13,9 @@ operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo
 
 class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
   override fun getExpectedOutputLines() = 1
-  lateinit var sprite:Rectangle
+  lateinit var sprite:Group
+  lateinit var itemSprite: Text
+  lateinit var charaterSprite: Rectangle
 
   fun sendInputLine(toks: List<Int>) = sendInputLine(toks.joinToString(" "))
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
