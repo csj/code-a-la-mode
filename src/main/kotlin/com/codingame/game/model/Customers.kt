@@ -2,6 +2,7 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 import com.codingame.game.rand
+import com.codingame.game.random
 import java.util.ArrayList
 
 abstract class DeliverableItem : Item()
@@ -15,22 +16,10 @@ class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<
     } ?: onPointsAwarded(teamIndex, 0)
   }
 
-  private val possibleOrders = listOf(
-      Dish(IceCreamBall(IceCreamFlavour.VANILLA)),
-      Dish(IceCreamBall(IceCreamFlavour.CHOCOLATE)),
-      Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
-  )
-
-  private fun <E> List<E>.random(): E {
-    val index = rand.nextInt(size)
-    return this[index]
-  }
-
   fun tick() {
     repeat(3 - size) { _ ->
       if (rand.nextDouble() < 0.2) {
-        val newOrder = (possibleOrders - this.map { it.item }).random()
-        this += Customer(newOrder, 1000)
+        this += Customer.randomCustomer()
       }
     }
     removeIf { !it.stillWaiting() }
@@ -43,6 +32,47 @@ data class Customer(val item: DeliverableItem, var award: Int) {
   fun stillWaiting(): Boolean {
     award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
     return award > originalAward / 10
+  }
+
+  companion object {
+    private val possiblePlateContents = mapOf(
+        IceCreamBall(IceCreamFlavour.VANILLA) to 200,
+        IceCreamBall(IceCreamFlavour.CHOCOLATE) to 250,
+        IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to 300,
+        Strawberries to 300,
+        Blueberries to 250,
+        ChoppedBananas to 500,
+        PieSlice(PieFlavour.Strawberry) to 800,
+        PieSlice(PieFlavour.Blueberry) to 900,
+        Waffle to 600
+    )
+
+    private val possibleMilkshakeContents = listOf(
+        // vanilla ice cream goes without saying
+        Strawberries,
+        Blueberries,
+        ChoppedBananas
+    )
+
+    private fun randomOrder(): DeliverableItem =
+      if (rand.nextDouble() < 0.75) {
+        // plate
+        val itemCount = when (rand.nextDouble()) {
+          in 0.0 .. 0.25 -> 4
+          in 0.25 .. 0.5 -> 3
+          else -> 2
+        }
+        Dish(possiblePlateContents.keys.shuffled(rand).take(itemCount).toMutableSet())
+      } else {
+        // milkshake
+        Milkshake(IceCreamBall(IceCreamFlavour.VANILLA), possibleMilkshakeContents.random())
+      }
+
+    fun randomCustomer(): Customer {
+      val order = randomOrder()
+      val price = if (order is Milkshake) 800 else 300 + (order as Dish).contents.sumBy { possiblePlateContents[it]!! }
+      return Customer(order, price)
+    }
   }
 }
 

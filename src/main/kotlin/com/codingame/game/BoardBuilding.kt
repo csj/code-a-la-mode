@@ -4,6 +4,10 @@ import com.codingame.game.model.*
 import java.util.*
 
 val rand = Random()
+fun <E> List<E>.random(): E {
+  val index = rand.nextInt(size)
+  return this[index]
+}
 
 val boardLayout = listOf(
 //        ABCDEFGHI
