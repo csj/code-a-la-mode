@@ -25,4 +25,6 @@ object Constants {
   const val OVEN_COOKTIME = 10
   const val OVEN_BURNTIME = 10
   const val PIE_FRUITS_NEEDED = 3
+  const val WAFFLE_COOKTIME = 8
+  const val WAFFLE_BURNTIME = 5
 }

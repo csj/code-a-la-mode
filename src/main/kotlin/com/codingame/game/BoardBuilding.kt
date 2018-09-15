@@ -40,7 +40,7 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
       "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
       "B9", "C9", "D9", "E9", "F9", "G9", "I9",
       "D2", "D3", "D6", "E5", "E6", "F6"
-  ).shuffled(rand)
+  ).shuffled(rand).iterator()
 
   val equipments = listOf(
       IceCreamCrate(IceCreamFlavour.VANILLA),
@@ -52,11 +52,14 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
       BananaCrate(),
       Blender(),
       Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME),
-      ChoppingBoard()
+      ChoppingBoard(),
+      WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME)
   )
 
-  equipments.zip(equipmentLocs).forEach { (eq, eqLoc) -> board[eqLoc].equipment = eq }
+  val items = List(4) { { Dish() } }
 
+  equipments.forEach { eq -> board[equipmentLocs.next()].equipment = eq }
+  items.forEach {}
   // Items need to be added to both sides
   listOf("F2", "F3", "E3", "E4")
       .flatMap { listOf(it, negafyCellName(it)) }
