@@ -1,10 +1,10 @@
 package com.codingame.game
 
+import com.codingame.game.model.*
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Rectangle
-import com.codingame.gameengine.module.entities.Sprite
 import com.google.inject.Inject
 
 @Suppress("unused")  // injected by magic
@@ -19,16 +19,6 @@ class Referee : AbstractReferee() {
 
   private var cellWidth: Int = 0
 
-  private fun Equipment?.describe() = when (this) {
-    null -> -1
-    is Window -> Constants.WINDOW
-    is DishReturn -> Constants.DISH_RETURN
-    IceCreamCrate(IceCreamFlavour.VANILLA) -> Constants.VANILLA_CRATE
-    IceCreamCrate(IceCreamFlavour.CHOCOLATE) -> Constants.CHOCOLATE_CRATE
-    IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH) -> Constants.BUTTERSCOTCH_CRATE
-    else -> throw Exception("Uncoded equipment: $this")
-  }
-
   val edibleEncoding: Map<EdibleItem, Int> = mapOf(
       IceCreamBall(IceCreamFlavour.VANILLA) to Constants.VANILLA_BALL,
       IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.CHOCOLATE_BALL,
@@ -42,17 +32,17 @@ class Referee : AbstractReferee() {
   )
 
   val equipmentColoring: Map<Int, Int> = mapOf(
-      Constants.BLENDER to 0x000000,
-      Constants.WINDOW to 0x0C428C,
-      Constants.VANILLA_CRATE to 0xF7F7F7,
-      Constants.BUTTERSCOTCH_CRATE to 0xDEC319,
-      Constants.CHOCOLATE_CRATE to 0x3F1111,
-      Constants.DISH_RETURN to 0x939393
-  )
+      Constants.EQUIPMENT.BLENDER to 0x000000,
+      Constants.EQUIPMENT.WINDOW to 0x0C428C,
+      Constants.EQUIPMENT.VANILLA_CRATE to 0xF7F7F7,
+      Constants.EQUIPMENT.BUTTERSCOTCH_CRATE to 0xDEC319,
+      Constants.EQUIPMENT.CHOCOLATE_CRATE to 0x3F1111,
+      Constants.EQUIPMENT.DISH_RETURN to 0x939393
+  ).mapKeys { it.value }
 
   private fun GetColor(equipmentId: Int): Int = when (equipmentId) {
     in equipmentColoring.keys -> equipmentColoring[equipmentId]!!
-    else -> 0xeeeeee
+    else -> 0x000000
   }
 
   private fun Item?.describe(): Int = when (this) {
@@ -112,7 +102,7 @@ class Referee : AbstractReferee() {
         val y = cell.y * (cellWidth + cellSpacing) + yOffset / 2
 //        println("$x-$y")
 //        println("$cellWidth $x $y")
-        cell.visualRect = graphicEntityModule.createRectangle().setHeight(cellWidth).setWidth(cellWidth).setFillColor(if (cell.isTable && cell.equipment === null) tableFill else GetColor(cell.equipment.describe()))
+        cell.visualRect = graphicEntityModule.createRectangle().setHeight(cellWidth).setWidth(cellWidth).setFillColor(if (cell.isTable && cell.equipment === null) tableFill else GetColor(cell.equipment?.describeAsNumber() ?: -1))
         cell.visualContent = graphicEntityModule.createText(if (cell.item.describe() > 0) cell.item.describe().toString() else "")
         cell.sprite = graphicEntityModule.createGroup(cell.visualRect, cell.visualContent).setX(x).setY(y)
       }
@@ -141,7 +131,7 @@ class Referee : AbstractReferee() {
           .also { player.sendInputLine(it.size.toString()) }
           .also {
             it.forEach { cell ->
-              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment.describe()}")
+              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.describeAsNumber() ?: -1}")
             }
           }
     }
@@ -179,7 +169,7 @@ class Referee : AbstractReferee() {
             val toks = listOf(
                 it.x * xMult,
                 it.y,
-                it.equipment.describe(),
+                it.equipment?.describeAsNumber() ?: -1,
                 it.item.describe()
             )
             player.sendInputLine(toks)

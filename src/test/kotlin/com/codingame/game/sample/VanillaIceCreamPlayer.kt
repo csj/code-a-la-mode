@@ -1,14 +1,10 @@
 package com.codingame.game.sample
 
-import com.codingame.game.Constants
-import com.codingame.game.Constants.BUTTERSCOTCH_BALL
-import com.codingame.game.Constants.BUTTERSCOTCH_CRATE
-import com.codingame.game.Constants.CHOCOLATE_BALL
-import com.codingame.game.Constants.CHOCOLATE_CRATE
-import com.codingame.game.Constants.VANILLA_BALL
-import com.codingame.game.Constants.VANILLA_CRATE
-import com.codingame.game.Dish
-import com.codingame.game.IceCreamFlavour
+import com.codingame.game.model.Constants
+import com.codingame.game.model.Constants.BUTTERSCOTCH_BALL
+import com.codingame.game.model.Constants.CHOCOLATE_BALL
+import com.codingame.game.model.Constants.VANILLA_BALL
+import com.codingame.game.model.IceCreamFlavour
 import sample.BaseCALMPlayer
 import java.io.InputStream
 import java.io.PrintStream
@@ -29,9 +25,9 @@ open class IceCreamPlayer(
   : BaseCALMPlayer(stdin, stdout, stderr) {
 
   private val crateVal = when (iceCreamFlavour) {
-    IceCreamFlavour.VANILLA -> VANILLA_CRATE
-    IceCreamFlavour.CHOCOLATE -> CHOCOLATE_CRATE
-    IceCreamFlavour.BUTTERSCOTCH -> BUTTERSCOTCH_CRATE
+    IceCreamFlavour.VANILLA -> Constants.EQUIPMENT.VANILLA_CRATE.ordinal
+    IceCreamFlavour.CHOCOLATE -> Constants.EQUIPMENT.CHOCOLATE_CRATE.ordinal
+    IceCreamFlavour.BUTTERSCOTCH -> Constants.EQUIPMENT.BUTTERSCOTCH_CRATE.ordinal
   }
 
   private val ballVal = when (iceCreamFlavour) {
@@ -45,9 +41,12 @@ open class IceCreamPlayer(
       val inputs = readInputs()
       val me = inputs.myPlayer
 
-      val iceCreamLoc = inputs.tables.first { it.x >= 0 && it.equipment == crateVal }
-      val window = inputs.tables.first { it.x >= 0 && it.equipment == Constants.WINDOW }
-      val dishReturn = inputs.tables.first { it.x >= 0 && it.equipment == Constants.DISH_RETURN }
+      val iceCreamLoc = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == crateVal }
+        ?: throw Exception("Couldn't find ice cream crate")
+      val window = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == Constants.EQUIPMENT.WINDOW.ordinal }
+        ?: throw Exception("Couldn't find window")
+      val dishReturn = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == Constants.EQUIPMENT.DISH_RETURN.ordinal }
+        ?: throw Exception("Couldn't find dish return")
       val emptyDishes = inputs.tables.filter { it.x >= 0 && it.item == Constants.DISH }
       val emptyDish = emptyDishes.firstOrNull() ?: dishReturn
 

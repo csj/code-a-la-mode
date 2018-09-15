@@ -2,6 +2,7 @@ package specs
 
 import com.codingame.game.*
 import com.codingame.game.Player
+import com.codingame.game.model.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec

@@ -2,6 +2,7 @@ package specs
 
 import com.codingame.game.*
 import com.codingame.game.Player
+import com.codingame.game.model.*
 import io.kotlintest.shouldBe
 import io.kotlintest.shouldThrowAny
 import io.kotlintest.specs.FreeSpec
@@ -10,6 +11,8 @@ class PieTests: FreeSpec({
 
   val board = buildEmptyBoard()
   val ovenLoc = board["I7"]
+  val tableLoc = board["I6"]
+  val crateLoc = board["I8"]
   val cookTime = 5
   val burnTime = 5
   val totalBurnTime = cookTime + burnTime
@@ -17,8 +20,56 @@ class PieTests: FreeSpec({
 
   fun setup() {
     ovenLoc.equipment = Oven(cookTime, burnTime)
+    crateLoc.equipment = StrawberryCrate()
+    tableLoc.item = null
     player.location = board["H7"]
     player.heldItem = null
+  }
+
+  "player can start assembling a pie by adding fruit to an empty shell" {
+    setup()
+    tableLoc.item = RawPie()
+    player.heldItem = Strawberries
+    player.use(tableLoc)
+    player.heldItem shouldBe null
+    tableLoc.item shouldBe RawPie(PieFlavour.Strawberry, Constants.PIE_FRUITS_NEEDED - 1)
+  }
+
+  "player can start assembling a pie by insta-shelling an empty pie shell from a crate" {
+    setup()
+    player.heldItem = RawPie()
+    player.use(crateLoc)
+    player.heldItem shouldBe RawPie(PieFlavour.Strawberry, Constants.PIE_FRUITS_NEEDED - 1)
+  }
+
+  "player cannot insta-shell an empty pie shell from a table (squish)" {
+    setup()
+    tableLoc.item = Strawberries
+    player.heldItem = RawPie()
+    shouldThrowAny { player.use(tableLoc) }
+  }
+
+  "player cannot add more than one kind of fruit to a pie" {
+    setup()
+    tableLoc.item = RawPie(PieFlavour.Strawberry, Constants.PIE_FRUITS_NEEDED - 1)
+    player.heldItem = Blueberries
+    shouldThrowAny { player.use(tableLoc) }
+  }
+
+  "player can finish assembling a pie by adding the last fruit" {
+    setup()
+    tableLoc.item = RawPie(PieFlavour.Blueberry, 1)
+    player.heldItem = Blueberries
+    player.use(tableLoc)
+    player.heldItem shouldBe null
+    tableLoc.item shouldBe RawPie(PieFlavour.Blueberry)
+  }
+
+  "player cannot add more fruits than necessary" {
+    setup()
+    tableLoc.item = RawPie(PieFlavour.Strawberry)
+    player.heldItem = Strawberries
+    shouldThrowAny { player.use(tableLoc) }
   }
 
   "player can start cooking a pie" {

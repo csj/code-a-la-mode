@@ -1,5 +1,6 @@
 package com.codingame.game
 
+import com.codingame.game.model.*
 import java.util.*
 
 val rand = Random()
@@ -37,13 +38,21 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   val equipmentLocs = listOf(
       "C0", "D0", "E0", "F0", "G0", "H0", "I0",
       "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
-      "B9", "C9", "D9", "E9", "F9", "G9", "H9", "I9"
+      "B9", "C9", "D9", "E9", "F9", "G9", "I9",
+      "D2", "D3", "D6", "E5", "E6", "F6"
   ).shuffled(rand)
 
   val equipments = listOf(
       IceCreamCrate(IceCreamFlavour.VANILLA),
       IceCreamCrate(IceCreamFlavour.CHOCOLATE),
-      IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH)
+      IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH),
+      PieCrustCrate(),
+      StrawberryCrate(),
+      BlueberryCrate(),
+      BananaCrate(),
+      Blender(),
+      Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME),
+      ChoppingBoard()
   )
 
   equipments.zip(equipmentLocs).forEach { (eq, eqLoc) -> board[eqLoc].equipment = eq }

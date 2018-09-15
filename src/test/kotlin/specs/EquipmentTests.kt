@@ -1,7 +1,7 @@
 package specs
 
-import com.codingame.game.IceCreamCrate
-import com.codingame.game.IceCreamFlavour
+import com.codingame.game.model.IceCreamCrate
+import com.codingame.game.model.IceCreamFlavour
 import com.codingame.game.buildEmptyBoard
 import io.kotlintest.shouldBe
 import io.kotlintest.specs.FreeSpec

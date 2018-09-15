@@ -1,7 +1,7 @@
 package specs
 
 import com.codingame.game.*
-import com.codingame.game.Customer
+import com.codingame.game.model.*
 import io.kotlintest.matchers.beEmpty
 import io.kotlintest.should
 import io.kotlintest.shouldBe
