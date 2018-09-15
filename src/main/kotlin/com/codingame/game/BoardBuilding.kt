@@ -39,7 +39,7 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
       "C0", "D0", "E0", "F0", "G0", "H0", "I0",
       "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
       "B9", "C9", "D9", "E9", "F9", "G9", "I9",
-      "D2", "D3", "D6", "E5", "E6", "F6"
+      "F2", "F3", "E3", "E4", "D2", "D3", "D6", "E5", "E6", "F6"
   ).shuffled(rand).iterator()
 
   val equipments = listOf(
@@ -59,12 +59,12 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   val items = List(4) { { Dish() } }
 
   equipments.forEach { eq -> board[equipmentLocs.next()].equipment = eq }
-  items.forEach {}
-  // Items need to be added to both sides
-  listOf("F2", "F3", "E3", "E4")
-      .flatMap { listOf(it, negafyCellName(it)) }
-      .forEach { board[it].item = Dish() }
-
+  items.forEach { item ->
+    val loc = equipmentLocs.next()
+    board[loc].item = item()
+    board[negafyCellName(loc)].item = item()
+    // Items need to be added to both sides
+  }
   return Pair(board, queue)
 }
 
