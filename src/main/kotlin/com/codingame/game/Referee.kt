@@ -5,6 +5,7 @@ import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Rectangle
+import com.codingame.gameengine.module.entities.Text
 import com.google.inject.Inject
 
 @Suppress("unused")  // injected by magic
@@ -16,6 +17,8 @@ class Referee : AbstractReferee() {
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
+
+  private var scores = mutableMapOf<Int, Text>()
 
   private var cellWidth: Int = 0
 
@@ -31,16 +34,23 @@ class Referee : AbstractReferee() {
       Waffle to Constants.WAFFLE
   )
 
-  val equipmentColoring: Map<Int, Int> = mapOf(
+  private val equipmentColoring: Map<Int, Int> = mapOf(
+      Constants.EQUIPMENT.BANANA_CRATE to 0xffffff,
       Constants.EQUIPMENT.BLENDER to 0x000000,
-      Constants.EQUIPMENT.WINDOW to 0x0C428C,
-      Constants.EQUIPMENT.VANILLA_CRATE to 0xF7F7F7,
+      Constants.EQUIPMENT.BLUEBERRY_CRATE to 0xffffff,
       Constants.EQUIPMENT.BUTTERSCOTCH_CRATE to 0xDEC319,
       Constants.EQUIPMENT.CHOCOLATE_CRATE to 0x3F1111,
-      Constants.EQUIPMENT.DISH_RETURN to 0x939393
-  ).mapKeys { it.value }
+      Constants.EQUIPMENT.CHOPPINGBOARD to 0xffffff,
+      Constants.EQUIPMENT.DISH_RETURN to 0x939393,
+      Constants.EQUIPMENT.OVEN to 0xffffff,
+      Constants.EQUIPMENT.PIECRUST_CRATE to 0xffffff,
+      Constants.EQUIPMENT.STRAWBERRY_CRATE to 0xffffff,
+      Constants.EQUIPMENT.VANILLA_CRATE to 0xF7F7F7,
+      Constants.EQUIPMENT.WAFFLEIRON to 0xffffff,
+      Constants.EQUIPMENT.WINDOW to 0x0C428C
+  ).mapKeys { it.key.ordinal }
 
-  private fun GetColor(equipmentId: Int): Int = when (equipmentId) {
+  private fun getEquipmentColor(equipmentId: Int): Int = when (equipmentId) {
     in equipmentColoring.keys -> equipmentColoring[equipmentId]!!
     else -> 0x000000
   }
@@ -57,14 +67,17 @@ class Referee : AbstractReferee() {
     fun teamMap() =
         when (gameManager.activePlayers.size) {
           2 -> mapOf(0 to listOf(0), 1 to listOf(1))
-          4 -> mapOf(0 to listOf(0, 3), 1 to listOf(2, 3))
+          4 -> mapOf(1 to listOf(0, 3), 0 to listOf(1, 2))
           else -> throw Exception("Expected 2 or 4 players!")
         }
 
     fun awardTeamPoints(teamIndex: Int, points: Int) {
       println("Team $teamIndex gets $points points")
       teamMap()[teamIndex]!!
-          .forEach { gameManager.players[it].score += points }
+          .forEach {
+            gameManager.players[it].score += points
+            scores[gameManager.players[it].colorToken]!!.text = gameManager.players[it].score.toString()
+          }
     }
 
     val (b, q) = buildBoardAndQueue(::awardTeamPoints)
@@ -80,6 +93,11 @@ class Referee : AbstractReferee() {
     gameManager.activePlayers[2].apply { isLeftTeam = false; location = board["B5"] }
     gameManager.activePlayers[3].apply { isLeftTeam = true; location = board["b5"] }
 
+    scores[gameManager.activePlayers[0].colorToken] = graphicEntityModule.createText("0").setX(0).setY(10).setFillColor(gameManager.activePlayers[0].colorToken)
+    scores[gameManager.activePlayers[3].colorToken] = graphicEntityModule.createText("0").setX(200).setY(10).setFillColor(gameManager.activePlayers[3].colorToken)
+    scores[gameManager.activePlayers[1].colorToken] = graphicEntityModule.createText("0").setX(400).setY(10).setFillColor(gameManager.activePlayers[1].colorToken)
+    scores[gameManager.activePlayers[2].colorToken] = graphicEntityModule.createText("0").setX(600).setY(10).setFillColor(gameManager.activePlayers[2].colorToken)
+
     var fill = 0xeeeeee
     var tableFill = 0x8B4513
 
@@ -87,22 +105,37 @@ class Referee : AbstractReferee() {
     val worldHeight = 1080
 
     val cellSpacing = 5
-    val yOffset = 0
-    val xOffset = 100
+    val yOffset = 100
+    val xOffset = 200
     val gridHeight = worldHeight - yOffset
     val gridWidth = worldWidth - xOffset
     cellWidth = Math.min(gridHeight / board.height, gridWidth / board.width) - cellSpacing
 
     for (cellCol in board.cells) {
-      val indexX = cellCol[0].x + board.width - 1
 
       for (cell in cellCol) {
         val x = (cell.x + board.width - 1) * (cellWidth + cellSpacing) + xOffset / 2
 
-        val y = cell.y * (cellWidth + cellSpacing) + yOffset / 2
+        val y = cell.y * (cellWidth + cellSpacing) + yOffset
 //        println("$x-$y")
 //        println("$cellWidth $x $y")
-        cell.visualRect = graphicEntityModule.createRectangle().setHeight(cellWidth).setWidth(cellWidth).setFillColor(if (cell.isTable && cell.equipment === null) tableFill else GetColor(cell.equipment?.describeAsNumber() ?: -1))
+
+        var fillColor = fill //start with floor color
+
+        if (cell.isTable) {
+          fillColor = tableFill
+        }
+
+        if (cell.equipment !== null) {
+          fillColor = getEquipmentColor(cell.equipment?.describeAsNumber()!!)
+        }
+
+        cell.visualRect = graphicEntityModule
+            .createRectangle()
+            .setHeight(cellWidth)
+            .setWidth(cellWidth)
+            .setFillColor(fillColor)
+
         cell.visualContent = graphicEntityModule.createText(if (cell.item.describe() > 0) cell.item.describe().toString() else "")
         cell.sprite = graphicEntityModule.createGroup(cell.visualRect, cell.visualContent).setX(x).setY(y)
       }
@@ -208,9 +241,6 @@ class Referee : AbstractReferee() {
         }
       }
 
-      var heldItem = graphicEntityModule
-          .createSprite()
-
       if (player.heldItem != null) {
         player.itemSprite.setText(player.heldItem.describe().toString()).setAlpha(1.0)
       } else {
@@ -222,7 +252,6 @@ class Referee : AbstractReferee() {
           .setY(board[player.location.x, player.location.y].sprite.y + 5)
 
       graphicEntityModule.commitEntityState(0.5, player.sprite)
-
     }
 
     val thePlayers =
@@ -233,7 +262,7 @@ class Referee : AbstractReferee() {
         }
 
     thePlayers.forEach(::sendGameState)
-    thePlayers.forEach {
+    thePlayers.forEachIndexed { index, it ->
       try {
         processPlayerActions(it)
       } catch (ex: Exception) {

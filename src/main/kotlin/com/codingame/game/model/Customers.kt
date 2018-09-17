@@ -13,7 +13,7 @@ class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<
     this.find { it.item == item }?.also {
       onPointsAwarded(teamIndex, it.award)
       remove(it)
-    } ?: onPointsAwarded(teamIndex, 0)
+    } ?: onPointsAwarded(teamIndex, 1)
   }
 
   fun tick() {
