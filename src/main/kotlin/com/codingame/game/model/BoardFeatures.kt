@@ -1,20 +1,22 @@
 package com.codingame.game.model
 
-import com.codingame.gameengine.module.entities.Group
-import com.codingame.gameengine.module.entities.Rectangle
-import com.codingame.gameengine.module.entities.Text
+import com.codingame.gameengine.module.entities.*
 import java.util.*
 
 fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.substring(1)
+
+class CellView(val cell: Cell) {
+  lateinit var background: Rectangle
+  lateinit var content: Sprite
+  lateinit var group: Group
+}
 
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
   lateinit var oppositeCell: Cell
-  lateinit var visualRect: Rectangle
-  lateinit var visualContent: Text
-  lateinit var sprite: Group
+  lateinit var view: CellView
 
   val neighbours by lazy { straightNeighbours.map {it to 2} + diagonalNeighbours.map {it to 3} }
 
