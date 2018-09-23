@@ -152,11 +152,7 @@ class Referee : AbstractReferee() {
         }
       }
 
-      if (player.heldItem != null) {
-        player.itemSprite.setText(player.heldItem.describe().toString()).setAlpha(1.0)
-      } else {
-        player.itemSprite.setAlpha(0.0)
-      }
+      player.itemSprite.update(player.heldItem)
 
       player.sprite
           .setX(board[player.location.x, player.location.y].view.group.x + 5)
@@ -180,6 +176,8 @@ class Referee : AbstractReferee() {
         System.err.println("${it.nicknameToken}: $ex")
       }
     }
+
+    board.allCells.forEach { it.view.itemSpriteGroup.update(it.item) }
   }
 }
 

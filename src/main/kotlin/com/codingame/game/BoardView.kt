@@ -2,10 +2,12 @@ package com.codingame.game
 
 import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.GraphicEntityModule
+import com.codingame.gameengine.module.entities.Sprite
 import com.codingame.gameengine.module.entities.Text
 
+var cellWidth: Int = 0
+
 class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, players: List<Player>) {
-  private var cellWidth: Int = 0
   private var scores = mutableMapOf<Int, Text>()
 
   init {
@@ -70,7 +72,9 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
             setY(cellWidth / 2)
           }
 
-          group = graphicEntityModule.createGroup(background, content, secondaryContent)
+          itemSpriteGroup = ItemSpriteGroup(graphicEntityModule)
+
+          group = graphicEntityModule.createGroup(background, content, secondaryContent, itemSpriteGroup.group)
               .setX(x).setY(y)
 
         }
@@ -79,14 +83,17 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
     }
 
     for (player in players) {
-      player.charaterSprite = graphicEntityModule.createRectangle()
-          .setHeight(cellWidth - 10)
-          .setWidth(cellWidth - 10)
-          .setFillColor(player.colorToken)
+      player.charaterSprite = graphicEntityModule.createSprite().apply {
+        image = "chef.png"
+        baseHeight = cellWidth
+        baseWidth = cellWidth
+        center()
+        tint = player.colorToken
+      }
 
-      player.itemSprite = graphicEntityModule.createText("0").setAlpha(0.0)
+      player.itemSprite = ItemSpriteGroup(graphicEntityModule)
 
-      player.sprite = graphicEntityModule.createGroup(player.charaterSprite, player.itemSprite)
+      player.sprite = graphicEntityModule.createGroup(player.charaterSprite, player.itemSprite.group)
 //          .setX(player.location.view.group.x + 5)
 //          .setY(player.location.view.group.y + 5)
     }
@@ -97,4 +104,59 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
     scores[players[1].colorToken] = graphicEntityModule.createText("0").setX(400).setY(10).setFillColor(players[1].colorToken)
     scores[players[2].colorToken] = graphicEntityModule.createText("0").setX(600).setY(10).setFillColor(players[2].colorToken)
   }
+}
+
+class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule) {
+  val mainSprite = graphicEntityModule.createSprite().apply {
+    center()
+    baseHeight = cellWidth + 4
+    baseWidth = cellWidth + 4
+    zIndex = 50
+    isVisible = false
+  }
+
+  val subSprites = List(4) { i ->
+    graphicEntityModule.createSprite().apply {
+      center()
+      baseHeight = cellWidth / 2
+      baseWidth = cellWidth / 2
+      zIndex = 50 + i
+      x = ((i - 1.5) * 8 + cellWidth / 2).toInt()
+      y = ((i - 1.5) * 8 + cellWidth / 2).toInt()
+      isVisible = false
+    }
+  }
+
+  val group = graphicEntityModule.createGroup(*(subSprites + mainSprite).toTypedArray())
+
+  fun update(item: Item?) {
+    subSprites.forEach { it.isVisible = false }
+    mainSprite.isVisible = false
+
+    when(item) {
+      is Dish -> {
+        mainSprite.apply { image = "dish.png"; isVisible = true }
+        item.contents.zip(subSprites).forEach { (edible, subSprite) ->
+          subSprite.apply {
+            isVisible = true
+            when (edible) {
+              is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+              is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
+              is Strawberries -> image = "strawberry.png"
+              is Blueberries -> image = "blueberries.png"
+              is Waffle -> image = "waffle.png"
+              is ChoppedBananas -> image = "open-banana.png"
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+private fun Sprite.center() {
+  anchorY = 0.5
+  anchorX = 0.5
+  x = cellWidth / 2
+  y = cellWidth / 2
 }

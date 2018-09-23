@@ -4,8 +4,7 @@ import com.codingame.game.model.Cell
 import com.codingame.game.model.Item
 import com.codingame.gameengine.core.AbstractMultiplayerPlayer
 import com.codingame.gameengine.module.entities.Group
-import com.codingame.gameengine.module.entities.Rectangle
-import com.codingame.gameengine.module.entities.Text
+import com.codingame.gameengine.module.entities.Sprite
 
 const val REACH_DISTANCE = 3
 const val WALK_DISTANCE = 7
@@ -14,8 +13,8 @@ operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo
 class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
-  lateinit var itemSprite: Text
-  lateinit var charaterSprite: Rectangle
+  lateinit var itemSprite: ItemSpriteGroup
+  lateinit var charaterSprite: Sprite
 
   fun sendInputLine(toks: List<Int>) = sendInputLine(toks.joinToString(" "))
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
@@ -42,22 +41,6 @@ class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
 
     throw Exception("Cannot use this table, nothing to do!")
   }
-
-//  fun drop(cell: Cell) {
-//    val item = heldItem ?: throw Exception("Cannot drop: not holding anything!")
-//    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
-//    val equipment = cell.equipment
-//    if (equipment != null) return item.dropOntoEquipment(this, equipment)
-//    item.drop(this, cell)
-//  }
-//
-//  fun take(cell: Cell) {
-//    if (heldItem != null) throw Exception("Cannot take: already holding something!")
-//    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
-//    cell.item?.let { return it.take(this, cell) }
-//    cell.equipment?.let { return it.takeFrom(this) }
-//    throw Exception("Cannot take: nothing here!")
-//  }
 
   fun moveTo(cell: Cell) {
     val fromSource = location.buildDistanceMap()
