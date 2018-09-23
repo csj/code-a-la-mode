@@ -48,11 +48,29 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
             }
             baseHeight = cellWidth - 8
             baseWidth = cellWidth - 8
-            setX(4)
-            setY(4)
+            anchorX = 0.5
+            anchorY = 0.5
+            setX(cellWidth / 2)
+            setY(cellWidth / 2)
+          }
+          secondaryContent = graphicEntityModule.createSprite().apply {
+            when (equipment) {
+              is BananaCrate -> image = "banana.png"
+              is BlueberryCrate -> image = "blueberries.png"
+              is StrawberryCrate -> image = "strawberry.png"
+              is IceCreamCrate -> image = "ice-cream.png"
+              is PieCrustCrate -> image = "pie.png"
+              else -> isVisible = false
+            }
+            baseHeight = cellWidth / 2
+            baseWidth = cellWidth / 2
+            anchorX = 0.5
+            anchorY = 0.5
+            setX(cellWidth / 2)
+            setY(cellWidth / 2)
           }
 
-          group = graphicEntityModule.createGroup(background, content)
+          group = graphicEntityModule.createGroup(background, content, secondaryContent)
               .setX(x).setY(y)
 
         }

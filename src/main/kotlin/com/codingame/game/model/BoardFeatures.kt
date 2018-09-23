@@ -8,6 +8,7 @@ fun negafyCellName(cellName: String) = ('a' + (cellName[0] - 'A')) + cellName.su
 class CellView(val cell: Cell) {
   lateinit var background: Rectangle
   lateinit var content: Sprite
+  lateinit var secondaryContent: Sprite
   lateinit var group: Group
 }
 
