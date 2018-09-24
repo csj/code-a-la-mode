@@ -3,19 +3,22 @@ package com.codingame.game.model
 object Constants {
   const val CUSTOMER_VALUE_DECAY = 20   // higher => slower decay
 
-  const val VANILLA_BALL = 1
-  const val CHOCOLATE_BALL = 2
-  const val BUTTERSCOTCH_BALL = 4
-  const val STRAWBERRIES = 8
-  const val BLUEBERRIES = 16
-  const val CHOPPED_BANANAS = 32
-  const val STRAWBERRY_PIE = 64
-  const val BLUEBERRY_PIE = 128
-  const val WAFFLE = 256
-
-  const val DISH = 1024
-  const val MILKSHAKE = 2048
-
+  enum class ITEM {
+    FOOD, DISH, MILKSHAKE, BANANA, RAW_PIE, RUBBLE
+  }
+  
+  enum class FOOD(val value: Int) {
+    VANILLA_BALL(1),
+    CHOCOLATE_BALL(2),
+    BUTTERSCOTCH_BALL(4),
+    STRAWBERRIES(8),
+    BLUEBERRIES(16),
+    CHOPPED_BANANAS(32),
+    STRAWBERRY_PIE(64),
+    BLUEBERRY_PIE(128),
+    WAFFLE(256)
+  }
+  
   enum class EQUIPMENT {
     WINDOW, DISH_RETURN, VANILLA_CRATE, CHOCOLATE_CRATE, BUTTERSCOTCH_CRATE,
     PIECRUST_CRATE, STRAWBERRY_CRATE, BLUEBERRY_CRATE, BANANA_CRATE,

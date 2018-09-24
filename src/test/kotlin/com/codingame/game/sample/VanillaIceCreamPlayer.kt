@@ -1,9 +1,6 @@
 package com.codingame.game.sample
 
 import com.codingame.game.model.Constants
-import com.codingame.game.model.Constants.BUTTERSCOTCH_BALL
-import com.codingame.game.model.Constants.CHOCOLATE_BALL
-import com.codingame.game.model.Constants.VANILLA_BALL
 import com.codingame.game.model.IceCreamFlavour
 import sample.BaseCALMPlayer
 import java.io.InputStream
@@ -31,9 +28,9 @@ open class IceCreamPlayer(
   }
 
   private val ballVal = when (iceCreamFlavour) {
-    IceCreamFlavour.VANILLA -> VANILLA_BALL
-    IceCreamFlavour.CHOCOLATE -> CHOCOLATE_BALL
-    IceCreamFlavour.BUTTERSCOTCH -> BUTTERSCOTCH_BALL
+    IceCreamFlavour.VANILLA -> Constants.FOOD.VANILLA_BALL.value
+    IceCreamFlavour.CHOCOLATE -> Constants.FOOD.CHOCOLATE_BALL.value
+    IceCreamFlavour.BUTTERSCOTCH -> Constants.FOOD.BUTTERSCOTCH_BALL.value
   }
 
   init {
@@ -47,18 +44,18 @@ open class IceCreamPlayer(
         ?: throw Exception("Couldn't find window")
       val dishReturn = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == Constants.EQUIPMENT.DISH_RETURN.ordinal }
         ?: throw Exception("Couldn't find dish return")
-      val emptyDishes = inputs.tables.filter { it.x >= 0 && it.item == Constants.DISH }
+      val emptyDishes = inputs.tables.filter { it.x >= 0 && it.item == Constants.ITEM.DISH.ordinal && it.itemState == 0 }
       val emptyDish = emptyDishes.firstOrNull() ?: dishReturn
 
-      when (me.carrying) {
+      when {
         // if holding a plate of ice cream, head for the window
-        Constants.DISH + ballVal -> {
+        me.carrying == Constants.ITEM.DISH.ordinal && me.carryingState == ballVal -> {
           stderr.println("I'm holding a plate of ice cream: going to window")
           stdout.println("USE ${window.x} ${window.y}")
         }
 
         // if holding an empty plate, go get some ice cream
-        Constants.DISH -> {
+        me.carrying == Constants.ITEM.DISH.ordinal -> {
           stderr.println("I'm holding an empty dish, going for ice cream")
           stdout.println("USE ${iceCreamLoc.x} ${iceCreamLoc.y}")
         }

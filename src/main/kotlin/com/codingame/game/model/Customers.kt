@@ -41,10 +41,10 @@ data class Customer(val item: DeliverableItem, var award: Int) {
         IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to 300,
         Strawberries to 300,
         Blueberries to 250,
-        ChoppedBananas to 500,
-        PieSlice(PieFlavour.Strawberry) to 800,
-        PieSlice(PieFlavour.Blueberry) to 900,
-        Waffle to 600
+        ChoppedBananas to 500
+//        PieSlice(PieFlavour.Strawberry) to 800,
+//        PieSlice(PieFlavour.Blueberry) to 900,
+//        Waffle to 600
     )
 
     private val possibleMilkshakeContents = listOf(
@@ -55,7 +55,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
     )
 
     private fun randomOrder(): DeliverableItem =
-      if (rand.nextDouble() < 0.75) {
+      if (rand.nextDouble() < 0.75 || true) {   // TODO: Temporary!!
         // plate
         val itemCount = when (rand.nextDouble()) {
           in 0.0 .. 0.25 -> 4

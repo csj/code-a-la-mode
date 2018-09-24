@@ -51,7 +51,7 @@ class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
           cell.neighbours.map { it.first }
               .filter { !it.isTable }
               .filter { it in fromSource.keys }
-              .minBy { fromSource[it]!! } ?: throw Exception("Cannot move to table; no available neighbour!")
+              .minBy { fromSource[it]!! } ?: throw Exception("Cannot move from $location to table $cell; no available neighbour!")
 
     if (target !in fromSource.keys) throw Exception("Cannot move: no path!")
 

@@ -134,6 +134,8 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule) {
     mainSprite.isVisible = false
 
     when(item) {
+      is Banana -> mainSprite.apply { image = "banana.png"; isVisible = true }
+      is ChoppedBananas -> mainSprite.apply { image = "open-banana.png"; isVisible = true }
       is Dish -> {
         mainSprite.apply { image = "dish.png"; isVisible = true }
         item.contents.zip(subSprites).forEach { (edible, subSprite) ->

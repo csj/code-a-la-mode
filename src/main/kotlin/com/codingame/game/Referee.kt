@@ -19,22 +19,29 @@ class Referee : AbstractReferee() {
   private lateinit var players: List<Player>
 
   private val edibleEncoding: Map<EdibleItem, Int> = mapOf(
-      IceCreamBall(IceCreamFlavour.VANILLA) to Constants.VANILLA_BALL,
-      IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.CHOCOLATE_BALL,
-      IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.BUTTERSCOTCH_BALL,
-      Strawberries to Constants.STRAWBERRIES,
-      Blueberries to Constants.BLUEBERRIES,
-      ChoppedBananas to Constants.CHOPPED_BANANAS,
-      PieSlice(PieFlavour.Strawberry) to Constants.STRAWBERRY_PIE,
-      PieSlice(PieFlavour.Blueberry) to Constants.BLUEBERRY_PIE,
-      Waffle to Constants.WAFFLE
+      IceCreamBall(IceCreamFlavour.VANILLA) to Constants.FOOD.VANILLA_BALL.value,
+      IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.FOOD.CHOCOLATE_BALL.value,
+      IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.FOOD.BUTTERSCOTCH_BALL.value,
+      Strawberries to Constants.FOOD.STRAWBERRIES.value,
+      Blueberries to Constants.FOOD.BLUEBERRIES.value,
+      ChoppedBananas to Constants.FOOD.CHOPPED_BANANAS.value,
+      PieSlice(PieFlavour.Strawberry) to Constants.FOOD.STRAWBERRY_PIE.value,
+      PieSlice(PieFlavour.Blueberry) to Constants.FOOD.BLUEBERRY_PIE.value,
+      Waffle to Constants.FOOD.WAFFLE.value
   )
 
-  private fun Item?.describe(): Int = when (this) {
-    is Dish -> Constants.DISH + contents.map { it.describe() }.sum()
-    is Milkshake -> Constants.MILKSHAKE + contents.map { it.describe() }.sum()
-    in edibleEncoding.keys -> edibleEncoding[this]!!
-    else -> -1
+  private fun Item?.describe(): List<Int> = when (this) {
+    is Dish -> listOf(Constants.ITEM.DISH.ordinal, contents.map { edibleEncoding[it]!! }.sum())
+    is Milkshake -> listOf(Constants.ITEM.MILKSHAKE.ordinal, contents.map { edibleEncoding[it]!! }.sum())
+    is Banana -> listOf(Constants.ITEM.BANANA.ordinal, -1)
+    is RawPie -> listOf(Constants.ITEM.RAW_PIE.ordinal, when (this) {
+      RawPie(null) -> -1
+      RawPie(PieFlavour.Strawberry) -> 10 + this.fruitsMissing
+      RawPie(PieFlavour.Blueberry) -> 20 + this.fruitsMissing
+      else -> 30
+    })
+    in edibleEncoding.keys -> listOf(Constants.ITEM.FOOD.ordinal, edibleEncoding[this]!!)
+    else -> listOf(-1,-1)
   }
 
 
@@ -95,10 +102,12 @@ class Referee : AbstractReferee() {
       // 1. Describe all players, including self
       gameManager.activePlayers.forEach {
 
+        val (item1, item2) = it.heldItem.describe()
+
         val toks = listOf(
             it.location.x * xMult,
             it.location.y,
-            it.heldItem.describe(),
+            item1, item2,
             when {
               it == player -> 0    // self
               it.isLeftTeam == player.isLeftTeam -> 1   // friend
@@ -115,9 +124,8 @@ class Referee : AbstractReferee() {
             val toks = listOf(
                 it.x * xMult,
                 it.y,
-                it.equipment?.describeAsNumber() ?: -1,
-                it.item.describe()
-            )
+                it.equipment?.describeAsNumber() ?: -1
+            ) + it.item.describe()
             player.sendInputLine(toks)
           }
 
