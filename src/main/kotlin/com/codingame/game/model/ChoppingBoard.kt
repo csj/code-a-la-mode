@@ -37,7 +37,7 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
 
     if (item is Dish) {
       // try to insta-plate
-      item.receiveItem(player, getSlice())
+      item.receiveItem(player, getSlice(), null)
       player.heldItem = item
       return
     }

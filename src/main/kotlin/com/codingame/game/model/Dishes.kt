@@ -6,13 +6,13 @@ import java.util.*
 data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
 
-  override fun receiveItem(player: Player, item: Item) {
+  override fun receiveItem(player: Player, item: Item, cell: Cell?) {
     if (item is EdibleItem) {
       this += item
       player.heldItem = null
       return
     }
-    super.receiveItem(player, item)
+    super.receiveItem(player, item, cell)
   }
 }
 

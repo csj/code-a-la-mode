@@ -2,7 +2,16 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-object ChoppedBananas: EdibleItem()
+object ChoppedBananas: EdibleItem() {
+  override fun receiveItem(player: Player, item: Item, cell: Cell?) {
+    if (item is Dish) {
+      item += this
+      cell!!.item = null
+      return
+    }
+    return super.receiveItem(player, item, cell)
+  }
+}
 
 data class Milkshake(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))

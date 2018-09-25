@@ -75,7 +75,7 @@ data class RawPie(var pieFlavour: PieFlavour? = null, var fruitsMissing: Int = 0
       Blueberries to PieFlavour.Blueberry
   )
 
-  override fun receiveItem(player: Player, item: Item) {
+  override fun receiveItem(player: Player, item: Item, cell: Cell?) {
     val flavour = flavourMap[item] ?: throw Exception("Cannot add $item to $this: it's not a fruit!")
     when (pieFlavour) {
       null -> {

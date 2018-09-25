@@ -46,7 +46,7 @@ data class WaffleIron(private val cookTime: Int, private val burnTime: Int, priv
 
   override fun receiveItem(player: Player, item: Item) {
     if (item is Dish) {
-      item.receiveItem(player, takeFrom(player))
+      item.receiveItem(player, takeFrom(player), null)
       player.heldItem = item
       return
     }

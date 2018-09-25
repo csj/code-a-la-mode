@@ -3,7 +3,7 @@ package com.codingame.game.model
 import com.codingame.game.Player
 
 abstract class Item {
-  open fun receiveItem(player: Player, item: Item) {
+  open fun receiveItem(player: Player, item: Item, cell: Cell?) {
     throw Exception("Cannot drop $item onto $this!")
   }
 

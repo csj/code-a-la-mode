@@ -83,7 +83,9 @@ class NaiveAllItemsPlayer(
           crateLoc.use()
         }
         else -> {
-          val tableLoc = inputs.tables.find { it.item == missingItem }
+          val tableLoc = inputs.tables.find {
+            it.x > 0 && it.item == Constants.ITEM.FOOD.ordinal && it.itemState == missingItem
+          }
           if (tableLoc != null) tableLoc.use()
           else useEmptyTable()  // put down the dish
         }
@@ -120,10 +122,9 @@ class NaiveAllItemsPlayer(
   private fun isReady(item: Int): Boolean = item in crates.keys || inputs.tables.any {
     it.x > 0 && it.item == Constants.ITEM.FOOD.ordinal && it.itemState == item }
 
-  private fun getEmptyPlate(): String {
-    return (inputs.tables.find { it.x >= 0 && it.item == Constants.ITEM.DISH.ordinal && it.itemState == 0 }
-        ?: findEquipment(Constants.EQUIPMENT.DISH_RETURN)).use()
-  }
+  private fun getEmptyPlate(): String = (
+      inputs.tables.find { it.x >= 0 && it.item == Constants.ITEM.DISH.ordinal }
+          ?: findEquipment(Constants.EQUIPMENT.DISH_RETURN)).use()
 
   private fun useEmptyTable(): String {
     return inputs.myPlayer.run {

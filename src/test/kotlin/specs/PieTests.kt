@@ -26,6 +26,15 @@ class PieTests: FreeSpec({
     player.heldItem = null
   }
 
+  "a player can insta-plate chopped bananas" {
+    setup()
+    player.heldItem = Dish()
+    tableLoc.item = ChoppedBananas
+    player.use(tableLoc)
+    player.heldItem shouldBe Dish(ChoppedBananas)
+
+  }
+
   "player can start assembling a pie by adding fruit to an empty shell" {
     setup()
     tableLoc.item = RawPie()

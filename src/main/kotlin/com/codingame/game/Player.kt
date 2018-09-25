@@ -30,7 +30,7 @@ class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
 
     // try drop
     if (heldItem != null) {
-      cell.item?.also { return it.receiveItem(this, heldItem!!) }
+      cell.item?.also { return it.receiveItem(this, heldItem!!, cell) }
       cell.item = heldItem
       heldItem = null
       return

@@ -40,7 +40,7 @@ abstract class AllInstancesAreConsideredEqual: Equipment() {
 
 abstract class GeneralCrate(val newItem: () -> Item) : AllInstancesAreConsideredEqual() {
   override fun receiveItem(player: Player, item: Item) {
-    item.receiveItem(player, newItem())
+    item.receiveItem(player, newItem(), null)
     player.heldItem = item
   }
 
