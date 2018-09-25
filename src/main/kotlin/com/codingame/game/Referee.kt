@@ -33,15 +33,17 @@ class Referee : AbstractReferee() {
   private fun Item?.describe(): List<Int> = when (this) {
     is Dish -> listOf(Constants.ITEM.DISH.ordinal, contents.map { edibleEncoding[it]!! }.sum())
     is Milkshake -> listOf(Constants.ITEM.MILKSHAKE.ordinal, contents.map { edibleEncoding[it]!! }.sum())
-    is Banana -> listOf(Constants.ITEM.BANANA.ordinal, -1)
+    is Banana -> listOf(Constants.ITEM.BANANA.ordinal, 0)
     is RawPie -> listOf(Constants.ITEM.RAW_PIE.ordinal, when (this) {
       RawPie(null) -> -1
       RawPie(PieFlavour.Strawberry) -> 10 + this.fruitsMissing
       RawPie(PieFlavour.Blueberry) -> 20 + this.fruitsMissing
       else -> 30
     })
+    is BurntPie -> listOf(Constants.ITEM.BURNT_PIE.ordinal, 0)
+    is BurntWaffle -> listOf(Constants.ITEM.BURNT_WAFFLE.ordinal, 0)
     in edibleEncoding.keys -> listOf(Constants.ITEM.FOOD.ordinal, edibleEncoding[this]!!)
-    else -> listOf(-1,-1)
+    else -> listOf(-1,0)
   }
 
 

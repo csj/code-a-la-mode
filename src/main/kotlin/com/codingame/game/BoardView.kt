@@ -47,6 +47,7 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
               is Window -> image = "window.png"
               is WaffleIron -> image = "waffle-iron.png"
               is DishReturn -> image = "dishwasher.png"
+              is Jarbage -> image = "trash.png"
             }
             baseHeight = cellWidth - 8
             baseWidth = cellWidth - 8

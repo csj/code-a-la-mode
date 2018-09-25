@@ -30,7 +30,7 @@ class BananaCrate: GeneralCrate({ Banana }) {
 
 class PieCrustCrate: GeneralCrate({ RawPie() }) {
   override fun clone(): Equipment = PieCrustCrate()
-  override fun describeAsNumber() = Constants.EQUIPMENT.STRAWBERRY_CRATE.ordinal
+  override fun describeAsNumber() = Constants.EQUIPMENT.PIECRUST_CRATE.ordinal
 }
 
 abstract class AllInstancesAreConsideredEqual: Equipment() {

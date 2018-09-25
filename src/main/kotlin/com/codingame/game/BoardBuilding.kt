@@ -57,7 +57,8 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
       Blender(),
       Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME),
       ChoppingBoard(),
-      WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME)
+      WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME),
+      Jarbage()
   )
 
   val items = List(4) { { Dish() } }

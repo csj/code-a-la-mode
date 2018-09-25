@@ -67,6 +67,10 @@ class NaiveAllItemsPlayer(
     if (carrying == Constants.ITEM.DISH.ordinal) {
       stderr.println("we are carrying a plate")
 
+      // if it has anything we don't need, jarbage it
+      if (carryingState and goal != carryingState)
+        return findEquipment(Constants.EQUIPMENT.JARBAGE).use()
+
       // find next missing item from dish
       val missingItem = items.firstOrNull { carryingState doesntHave it } ?:
         return findEquipment(Constants.EQUIPMENT.WINDOW).use()
@@ -75,6 +79,7 @@ class NaiveAllItemsPlayer(
       return when (missingItem) {
         in crates.keys -> {
           val crateLoc = crates[missingItem]!!
+          stderr.println("going for crate at $crateLoc")
           crateLoc.use()
         }
         else -> {
@@ -113,7 +118,7 @@ class NaiveAllItemsPlayer(
   }
 
   private fun isReady(item: Int): Boolean = item in crates.keys || inputs.tables.any {
-    it.item == Constants.ITEM.FOOD.ordinal && it.itemState == item }
+    it.x > 0 && it.item == Constants.ITEM.FOOD.ordinal && it.itemState == item }
 
   private fun getEmptyPlate(): String {
     return (inputs.tables.find { it.x >= 0 && it.item == Constants.ITEM.DISH.ordinal && it.itemState == 0 }
