@@ -2,16 +2,7 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-object ChoppedBananas: EdibleItem() {
-  override fun receiveItem(player: Player, item: Item, cell: Cell?) {
-    if (item is Dish) {
-      item += this
-      cell!!.item = null
-      return
-    }
-    return super.receiveItem(player, item, cell)
-  }
-}
+object ChoppedBananas: EdibleItem()
 
 data class Milkshake(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
@@ -19,7 +10,7 @@ data class Milkshake(override val contents: MutableSet<EdibleItem> = mutableSetO
 
 data class Blender(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : Equipment(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
-  override fun describeAsNumber() = Constants.EQUIPMENT.BLENDER.ordinal
+  override fun basicNumber() = Constants.EQUIPMENT.BLENDER.ordinal
 
   override fun clone(): Equipment = copy()
 

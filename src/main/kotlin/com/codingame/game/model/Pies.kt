@@ -13,17 +13,32 @@ data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item()
 data class PieSlice(val pieFlavour: PieFlavour): EdibleItem()
 object BurntPie: Item()
 
-sealed class OvenState {
-  object Empty: OvenState()
-  data class Cooking(val flavour: PieFlavour, val timeUntilCooked: Int): OvenState()
-  data class Cooked(val flavour: PieFlavour, val timeUntilBurnt: Int): OvenState()
-  object Burnt: OvenState()
+sealed class OvenState(val stateVal: Int) {
+  object Empty: OvenState(0)
+  data class Cooking(val flavour: PieFlavour, val timeUntilCooked: Int): OvenState(
+      if (flavour == PieFlavour.Blueberry) 1 else 2
+  )
+  data class Cooked(val flavour: PieFlavour, val timeUntilBurnt: Int): OvenState(
+      if (flavour == PieFlavour.Blueberry) 3 else 4
+  )
+  object Burnt: OvenState(5)
 }
 
 data class Oven(private val cookTime: Int, private val burnTime: Int, private var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
   override fun clone(): Equipment = copy()
-  override fun describeAsNumber() = Constants.EQUIPMENT.OVEN.ordinal
-
+  override fun basicNumber() = Constants.EQUIPMENT.OVEN.ordinal
+  override fun extras(): List<Int> {
+    val currentState = state
+    return listOf(
+        currentState.stateVal,
+        when(currentState) {
+          is OvenState.Empty -> -1
+          is OvenState.Cooking -> currentState.timeUntilCooked
+          is OvenState.Cooked -> currentState.timeUntilBurnt
+          is OvenState.Burnt -> -1
+        }
+    )
+  }
   override fun tick() {
     val curState = state
     state = when (curState) {

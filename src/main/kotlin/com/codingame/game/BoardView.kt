@@ -132,26 +132,36 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule) {
 
   fun update(item: Item?) {
     subSprites.forEach { it.isVisible = false }
-    mainSprite.isVisible = false
+    mainSprite.apply {
+      isVisible = true
 
-    when(item) {
-      is Banana -> mainSprite.apply { image = "banana.png"; isVisible = true }
-      is ChoppedBananas -> mainSprite.apply { image = "open-banana.png"; isVisible = true }
-      is Dish -> {
-        mainSprite.apply { image = "dish.png"; isVisible = true }
-        item.contents.zip(subSprites).forEach { (edible, subSprite) ->
-          subSprite.apply {
-            isVisible = true
-            when (edible) {
-              is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
-              is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
-              is Strawberries -> image = "strawberry.png"
-              is Blueberries -> image = "blueberries.png"
-              is Waffle -> image = "waffle.png"
-              is ChoppedBananas -> image = "open-banana.png"
+      when(item) {
+        is Banana -> image = "banana.png"
+        is ChoppedBananas -> image = "open-banana.png"
+        is Waffle -> image = "waffle.png"
+        is RawPie -> image = "pie.png"  // TODO: Add flavour
+        is Pie -> image = "pie.png"  // TODO: Add flavour and tint
+        is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+        is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
+        is Strawberries -> image = "strawberry.png"
+        is Blueberries -> image = "blueberries.png"
+        is Dish -> {
+          image = "dish.png"
+          item.contents.zip(subSprites).forEach { (edible, subSprite) ->
+            subSprite.apply {
+              isVisible = true
+              when (edible) {
+                is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+                is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
+                is Strawberries -> image = "strawberry.png"
+                is Blueberries -> image = "blueberries.png"
+                is Waffle -> image = "waffle.png"
+                is ChoppedBananas -> image = "open-banana.png"
+              }
             }
           }
         }
+        else -> mainSprite.isVisible = false
       }
     }
   }

@@ -45,6 +45,7 @@ class ChoppingBoardTests: FreeSpec({
     setup()
     player.heldItem = Pie(PieFlavour.Strawberry)
     player.use(choppingBoardLoc)
+    player.heldItem shouldBe null
   }
 
   "a player cannot put a cooked pie on a chopping board if there's already pie there (no combining!)" {

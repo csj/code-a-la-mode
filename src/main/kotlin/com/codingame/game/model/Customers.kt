@@ -31,7 +31,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
   val originalAward = award
   fun stillWaiting(): Boolean {
     award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
-    return award > originalAward / 10
+    return award > 10
   }
 
   companion object {
@@ -41,10 +41,10 @@ data class Customer(val item: DeliverableItem, var award: Int) {
         IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to 300,
         Strawberries to 300,
         Blueberries to 250,
-        ChoppedBananas to 500
-//        PieSlice(PieFlavour.Strawberry) to 800,
-//        PieSlice(PieFlavour.Blueberry) to 900,
-//        Waffle to 600
+        ChoppedBananas to 500,
+        PieSlice(PieFlavour.Strawberry) to 800,
+        PieSlice(PieFlavour.Blueberry) to 900,
+        Waffle to 600
     )
 
     private val possibleMilkshakeContents = listOf(
@@ -81,7 +81,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
  * this will be a scorekeeper function of some sort.
  */
 class Window(private val dishReturn: DishReturn? = null, private val onDelivery: (Item) -> Unit = { }) : Equipment() {
-  override fun describeAsNumber() = Constants.EQUIPMENT.WINDOW.ordinal
+  override fun basicNumber() = Constants.EQUIPMENT.WINDOW.ordinal
 
   private fun deliver(food: DeliverableItem) {
     onDelivery(food)

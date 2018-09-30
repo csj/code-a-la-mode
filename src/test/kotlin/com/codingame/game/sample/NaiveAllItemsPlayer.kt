@@ -40,6 +40,17 @@ class NaiveAllItemsPlayer(
   }
 
   private fun chaseGoal(): String? {
+    // be responsible with the cutting board
+    findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD).let {
+      if (it.equipmentState != -1) {
+        stderr.println("clearing cutting board")
+        return if (inputs.myPlayer.carrying == -1)
+          it.use()
+        else
+          useEmptyTable()
+      }
+    }
+
     val (item, itemState) = nextGoal ?: return null
     stderr.println("Current goal is: $item/$itemState")
     return when (item) {
@@ -103,6 +114,10 @@ class NaiveAllItemsPlayer(
         else -> throw Exception("Unrecognized item: $item")
       }
     }
+
+    // 3. if we're holding something we shouldn't, put it down.
+    if (carrying != -1) return useEmptyTable()
+
     return getEmptyPlate()
   }
 
@@ -115,7 +130,7 @@ class NaiveAllItemsPlayer(
       me.carrying == Constants.ITEM.FOOD.ordinal &&
           me.carryingState == Constants.FOOD.CHOPPED_BANANAS.value ->
         useEmptyTable()
-      else -> { stderr.println("uhhh, holding: $pair"); return null }
+      else -> { stderr.println("uhhh, holding: $pair"); return useEmptyTable() }
     }
   }
 
@@ -134,13 +149,60 @@ class NaiveAllItemsPlayer(
   }
 
   private fun buildWaffle(): String? {
-    stderr.println("building waffle, obv")
-    return null
+    return if (inputs.myPlayer.carrying == -1)
+      findEquipment(Constants.EQUIPMENT.WAFFLEIRON).use()
+    else useEmptyTable()
   }
 
   private fun buildPie(isStrawberry: Boolean): String? {
-    stderr.println("building pie, obv")
-    return null
+    stderr.println("building pie")
+    val x = inputs.myPlayer.x
+    val y = inputs.myPlayer.y
+
+    findEquipment(Constants.EQUIPMENT.OVEN).let {
+      if (it.equipmentState != 0) {
+        stderr.println("waiting for pie in oven")
+        return it.use()
+      }
+    }
+
+    when (inputs.myPlayer.carrying) {
+      -1 -> // find the closest pie shell that will work, or get one from the box
+      {
+        stderr.println("looking for shell")
+        val pie = inputs.tables.filter {
+          it.x >= 0 && it.item == Constants.ITEM.RAW_PIE.ordinal && (
+              it.itemState == 0 ||
+                  (it.itemState in 10..19 && isStrawberry) ||
+                  (it.itemState in 20..29 && !isStrawberry)
+              )
+        }.minBy { abs(it.x - x) + abs(it.y - y) } ?: findEquipment(Constants.EQUIPMENT.PIECRUST_CRATE)
+        return pie.use()
+      }
+
+      Constants.ITEM.RAW_PIE.ordinal -> {
+        stderr.println("doing stuff: carryingState = ${inputs.myPlayer.carryingState}")
+        return when {
+          inputs.myPlayer.carryingState in 11..12 -> findEquipment(Constants.EQUIPMENT.STRAWBERRY_CRATE).use()
+          inputs.myPlayer.carryingState in 21..22 -> findEquipment(Constants.EQUIPMENT.BLUEBERRY_CRATE).use()
+          inputs.myPlayer.carryingState == -1 ->
+            findEquipment(if (isStrawberry) Constants.EQUIPMENT.STRAWBERRY_CRATE else
+              Constants.EQUIPMENT.BLUEBERRY_CRATE).use()
+          inputs.myPlayer.carryingState in listOf(20, 10) -> {
+            stderr.println("pie is complete; heading for oven")
+            findEquipment(Constants.EQUIPMENT.OVEN).use()
+          }
+          else -> useEmptyTable()
+        }
+      }
+
+      Constants.ITEM.WHOLE_PIE.ordinal -> {
+        stderr.println("holding whole pie; heading for chopping board")
+        return findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD).use()
+      }
+
+      else -> return useEmptyTable()
+    }
   }
 
   private fun Table.use(): String = "USE $x $y"

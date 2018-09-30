@@ -4,7 +4,7 @@ object Constants {
   const val CUSTOMER_VALUE_DECAY = 30   // higher => slower decay
 
   enum class ITEM {
-    FOOD, DISH, MILKSHAKE, BANANA, RAW_PIE, BURNT_WAFFLE, BURNT_PIE
+    FOOD, DISH, MILKSHAKE, BANANA, RAW_PIE, WHOLE_PIE, BURNT_WAFFLE, BURNT_PIE
   }
   
   enum class FOOD(val value: Int) {

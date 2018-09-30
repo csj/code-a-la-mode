@@ -35,7 +35,8 @@ abstract class Equipment {
     throw Exception("$this cannot be cloned!")
   }
 
-  abstract fun describeAsNumber(): Int
+  abstract fun basicNumber(): Int
+  open fun extras(): List<Int> = listOf(-1, -1)
 }
 
 /**

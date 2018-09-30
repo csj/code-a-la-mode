@@ -17,7 +17,7 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
 }
 
 class DishReturn : TimeSensitiveEquipment() {
-  override fun describeAsNumber() = Constants.EQUIPMENT.DISH_RETURN.ordinal
+  override fun basicNumber() = Constants.EQUIPMENT.DISH_RETURN.ordinal
 
   private val dishQueue = LinkedList<Boolean>(List(40) { false })
   var dishes: Int = 0

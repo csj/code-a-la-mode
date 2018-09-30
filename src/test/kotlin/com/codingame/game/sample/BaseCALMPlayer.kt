@@ -30,7 +30,7 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
     height = scanner.nextInt()
     numTables = scanner.nextInt()
     List(numTables) {
-      Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
+      Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), -1, -1)
     }
 
   }
@@ -51,7 +51,8 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
 
     val rendering = List(height) { List(width) { "." }.toMutableList() }
     val tables = List(scanner.nextInt()) {
-      Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt()).also {
+      Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(),
+          scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt()).also {
         if (it.x >= 0) {
           val desc = when (it.equipment) {
             0 -> "I"
@@ -88,6 +89,9 @@ data class GameState(
     val queue: List<Customer>)
 
 
-data class Table(val x: Int, val y: Int, val equipment: Int, val item: Int = -1, val itemState: Int = -1)
+data class Table(
+    val x: Int, val y: Int,
+    val equipment: Int, val equipmentState: Int, val equipmentTimer: Int,
+    val item: Int = -1, val itemState: Int = -1)
 data class Player(val x: Int, val y: Int, val carrying: Int = -1, val carryingState: Int = -1)
 data class Customer(val award: Int, val item: Int, val itemState: Int)

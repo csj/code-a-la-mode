@@ -36,10 +36,9 @@ class Referee : AbstractReferee() {
     is Banana -> listOf(Constants.ITEM.BANANA.ordinal, 0)
     is RawPie -> listOf(Constants.ITEM.RAW_PIE.ordinal, when (this) {
       RawPie(null) -> -1
-      RawPie(PieFlavour.Strawberry) -> 10 + this.fruitsMissing
-      RawPie(PieFlavour.Blueberry) -> 20 + this.fruitsMissing
-      else -> 30
+      else -> (if (pieFlavour == PieFlavour.Strawberry) 10 else 20) + this.fruitsMissing
     })
+    is Pie -> listOf(Constants.ITEM.WHOLE_PIE.ordinal, if (this.pieFlavour == PieFlavour.Strawberry) 0 else 1)
     is BurntPie -> listOf(Constants.ITEM.BURNT_PIE.ordinal, 0)
     is BurntWaffle -> listOf(Constants.ITEM.BURNT_WAFFLE.ordinal, 0)
     in edibleEncoding.keys -> listOf(Constants.ITEM.FOOD.ordinal, edibleEncoding[this]!!)
@@ -86,7 +85,7 @@ class Referee : AbstractReferee() {
           .also { player.sendInputLine(it.size.toString()) }
           .also {
             it.forEach { cell ->
-              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.describeAsNumber() ?: -1}")
+              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.basicNumber() ?: -1}")
             }
           }
     }
@@ -126,8 +125,11 @@ class Referee : AbstractReferee() {
             val toks = listOf(
                 it.x * xMult,
                 it.y,
-                it.equipment?.describeAsNumber() ?: -1
-            ) + it.item.describe()
+                it.equipment?.basicNumber() ?: -1
+            ) + (
+                it.equipment?.extras() ?: listOf(-1,-1)
+            ) +
+                it.item.describe()
             player.sendInputLine(toks)
           }
 

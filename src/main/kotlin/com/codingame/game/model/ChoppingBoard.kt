@@ -6,7 +6,13 @@ object Banana: Item()
 
 data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
   override fun clone() = copy()
-  override fun describeAsNumber() = Constants.EQUIPMENT.CHOPPINGBOARD.ordinal
+  override fun basicNumber() = Constants.EQUIPMENT.CHOPPINGBOARD.ordinal
+  override fun extras(): List<Int> {
+    return when(pieOnBoard) {
+      is Pie -> listOf(if (pieOnBoard!!.pieFlavour == PieFlavour.Strawberry) 0 else 1, pieOnBoard!!.pieces)
+      else -> listOf(-1, -1)
+    }
+  }
 
   private fun checkVacant() {
     if (pieOnBoard != null) throw Exception("Chopping board is not vacant")
@@ -26,6 +32,7 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
   override fun receiveItem(player: Player, item: Item) {
     if (item is Pie) {
       putPie(item)
+      player.heldItem = null
       return
     }
 

@@ -5,17 +5,28 @@ import com.codingame.game.Player
 object Waffle: EdibleItem()
 object BurntWaffle: Item()
 
-sealed class WaffleState {
-  object Empty : WaffleState()
-  data class Cooking(val timeUntilCooked: Int): WaffleState()
-  data class Cooked(val timeUntilBurnt: Int): WaffleState()
-  object Burnt: WaffleState()
+sealed class WaffleState(val stateVal: Int) {
+  object Empty : WaffleState(0)
+  data class Cooking(val timeUntilCooked: Int): WaffleState(1)
+  data class Cooked(val timeUntilBurnt: Int): WaffleState(2)
+  object Burnt: WaffleState(3)
 }
 
 data class WaffleIron(private val cookTime: Int, private val burnTime: Int, private var state: WaffleState = WaffleState.Empty) : TimeSensitiveEquipment() {
   override fun clone(): Equipment = copy()
-  override fun describeAsNumber() = Constants.EQUIPMENT.WAFFLEIRON.ordinal
-
+  override fun basicNumber() = Constants.EQUIPMENT.WAFFLEIRON.ordinal
+  override fun extras(): List<Int> {
+    val currentState = state
+    return listOf(
+        currentState.stateVal,
+        when(currentState) {
+          is WaffleState.Empty -> -1
+          is WaffleState.Cooking -> currentState.timeUntilCooked
+          is WaffleState.Cooked -> currentState.timeUntilBurnt
+          is WaffleState.Burnt -> -1
+        }
+    )
+  }
   override fun tick() {
     val curState = state
     state = when (curState) {
