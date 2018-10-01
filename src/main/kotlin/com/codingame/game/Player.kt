@@ -19,25 +19,26 @@ class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
   fun sendInputLine(toks: List<Int>) = sendInputLine(toks.joinToString(" "))
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
 
-  fun use(cell: Cell) {
+  // Returns true if the use was successful
+  fun use(cell: Cell): Boolean {
     if (!cell.isTable) throw Exception("Cannot use $cell: not a table!")
-    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return }
+    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return false }
     val equipment = cell.equipment
     if (equipment != null) {
       equipment.use(this)
-      return
+      return true
     }
 
     // try drop
     if (heldItem != null) {
-      cell.item?.also { return it.receiveItem(this, heldItem!!, cell) }
+      cell.item?.also { it.receiveItem(this, heldItem!!, cell); return true }
       cell.item = heldItem
       heldItem = null
-      return
+      return true
     }
 
     // try take
-    cell.item?.also { return it.take(this, cell) }
+    cell.item?.also { it.take(this, cell); return true }
 
     throw Exception("Cannot use this table, nothing to do!")
   }

@@ -3,6 +3,7 @@ package com.codingame.game
 import com.codingame.game.model.*
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
+import com.codingame.gameengine.module.entities.Entity
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.google.inject.Inject
 
@@ -140,6 +141,7 @@ class Referee : AbstractReferee() {
       val line = player.outputs[0].trim()
       val toks = line.split(" ").iterator()
       val command = toks.next()
+      var useTarget: Cell? = null
 
       if (command != "WAIT") {
         val cellx = toks.next().toInt() * xMult
@@ -148,15 +150,28 @@ class Referee : AbstractReferee() {
 
         when (command) {
           "MOVE" -> player.moveTo(target)
-          "USE" -> player.use(target)
+          "USE" -> {
+            if (player.use(target))
+              useTarget = target
+          }
         }
       }
 
       player.itemSprite.update(player.heldItem)
 
-      player.sprite
-          .setX(board[player.location.x, player.location.y].view.group.x + 5)
-          .setY(board[player.location.x, player.location.y].view.group.y + 5)
+      fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell) {
+        x = cell.view.group.x + 5
+        y = cell.view.group.y + 5
+      }
+
+      if (useTarget == null) {
+        player.sprite.setLocation(board[player.location.x, player.location.y])
+      } else {
+        player.sprite.setLocation(useTarget)
+        graphicEntityModule.commitEntityState(0.3, player.sprite)
+        player.sprite.setLocation(board[player.location.x, player.location.y])
+        graphicEntityModule.commitEntityState(0.6, player.sprite)
+      }
 
       graphicEntityModule.commitEntityState(0.5, player.sprite)
     }
