@@ -4,11 +4,12 @@ import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Sprite
 import com.codingame.gameengine.module.entities.Text
+import java.io.Console
 
 var cellWidth: Int = 0
 
-class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, players: List<Player>) {
-  private var scores = mutableMapOf<Int, Text>()
+class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, players: List<Player>, queue: CustomerQueue) {
+  var scores = mutableMapOf<Int, Text>()
 
   init {
     val floorColor = 0xe0e0eb
@@ -100,18 +101,21 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
     }
 
     // TODO: Replace this
-    scores[players[0].colorToken] = graphicEntityModule.createText("0").setX(0).setY(10).setFillColor(players[0].colorToken)
-    scores[players[3].colorToken] = graphicEntityModule.createText("0").setX(200).setY(10).setFillColor(players[3].colorToken)
-    scores[players[1].colorToken] = graphicEntityModule.createText("0").setX(400).setY(10).setFillColor(players[1].colorToken)
-    scores[players[2].colorToken] = graphicEntityModule.createText("0").setX(600).setY(10).setFillColor(players[2].colorToken)
+    graphicEntityModule.createRectangle().setX(0).setY(10).setFillColor(players[0].colorToken).setHeight(15).setWidth(15)
+    graphicEntityModule.createRectangle().setX(0).setY(30).setFillColor(players[3].colorToken).setHeight(15).setWidth(15)
+    scores[0] = graphicEntityModule.createText("0").setX(20).setY(20).setFillColor(0xffffff)
+
+    graphicEntityModule.createRectangle().setX(400).setY(10).setFillColor(players[1].colorToken).setHeight(15).setWidth(15)
+    graphicEntityModule.createRectangle().setX(400).setY(30).setFillColor(players[2].colorToken).setHeight(15).setWidth(15)
+    scores[1] = graphicEntityModule.createText("0").setX(420).setY(20).setFillColor(0xffffff)
   }
 }
 
-class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule) {
+class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule, width: Int = cellWidth) {
   val mainSprite = graphicEntityModule.createSprite().apply {
     center()
-    baseHeight = cellWidth + 4
-    baseWidth = cellWidth + 4
+    baseHeight = width + 4
+    baseWidth = width + 4
     zIndex = 50
     isVisible = false
   }
@@ -119,11 +123,11 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule) {
   val subSprites = List(4) { i ->
     graphicEntityModule.createSprite().apply {
       center()
-      baseHeight = cellWidth / 2
-      baseWidth = cellWidth / 2
+      baseHeight = width / 2
+      baseWidth = width / 2
       zIndex = 50 + i
-      x = ((i - 1.5) * 8 + cellWidth / 2).toInt()
-      y = ((i - 1.5) * 8 + cellWidth / 2).toInt()
+      x = ((i - 1.5) * 8 + width / 2).toInt()
+      y = ((i - 1.5) * 8 + width / 2).toInt()
       isVisible = false
     }
   }

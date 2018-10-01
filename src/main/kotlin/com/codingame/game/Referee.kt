@@ -3,8 +3,7 @@ package com.codingame.game
 import com.codingame.game.model.*
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
-import com.codingame.gameengine.module.entities.Entity
-import com.codingame.gameengine.module.entities.GraphicEntityModule
+import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
 
 @Suppress("unused")  // injected by magic
@@ -18,6 +17,8 @@ class Referee : AbstractReferee() {
   private lateinit var queue: CustomerQueue
   private lateinit var view: BoardView
   private lateinit var players: List<Player>
+  private lateinit var queueSprites: List<ItemSpriteGroup>
+  private lateinit var queueAwards: List<Text>
 
   private fun Item?.describe(): List<Int> = when (this) {
     is Dish -> listOf(Constants.ITEM.DISH.ordinal, contents.map { edibleEncoding[it]!! }.sum())
@@ -37,6 +38,13 @@ class Referee : AbstractReferee() {
 
   override fun init() {
     players = gameManager.players
+    queueSprites = List(3) { _ ->
+      ItemSpriteGroup(graphicEntityModule, 50)
+    }
+
+    queueAwards = List(3) { _ ->
+      graphicEntityModule.createText("0").setFillColor(0xffffff)
+    }
 
     fun teamMap() =
         when (players.size) {
@@ -46,18 +54,19 @@ class Referee : AbstractReferee() {
         }
 
     fun awardTeamPoints(teamIndex: Int, points: Int) {
-      println("Team $teamIndex gets $points points")
+      // println("Team $teamIndex gets $points points")
       teamMap()[teamIndex]!!
           .forEach {
             players[it].score += points
-
           }
+
+      view.scores[teamIndex]!!.text = players[teamMap()[teamIndex]!!.first()].score.toString()
     }
 
     val (b, q) = buildBoardAndQueue(::awardTeamPoints)
     board = b
     queue = q
-    view = BoardView(graphicEntityModule, board, players)
+    view = BoardView(graphicEntityModule, board, players, queue)
 
     players[0].apply { isLeftTeam = true; location = board["b3"] }
     players[1].apply { isLeftTeam = false; location = board["B3"] }
@@ -154,6 +163,22 @@ class Referee : AbstractReferee() {
             if (player.use(target))
               useTarget = target
           }
+        }
+      }
+
+      queueSprites.forEachIndexed { index, sprite ->
+        sprite.group.apply { x = 500 + (100 * index); y = 10 }
+
+        if(queue.size > index) {
+          queueAwards[index].setText(queue[index].award.toString())
+          queueAwards[index].apply { x = 500 + (100 * index); y = 55 }
+          queueAwards[index].isVisible = true
+
+          sprite.update(queue[index].item)
+          sprite.group.isVisible = queue[index].award > 0
+        } else {
+          sprite.group.isVisible = false
+          queueAwards[index].isVisible = false
         }
       }
 

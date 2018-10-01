@@ -9,11 +9,11 @@ abstract class DeliverableItem : Item()
 
 class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<Customer>() {
   fun delivery(item: Item, teamIndex: Int) {
-    println("Delivery: $item; current queue: $this")
+    // println("Delivery: $item; current queue: $this")
     this.find { it.item == item }?.also {
       onPointsAwarded(teamIndex, it.award)
       remove(it)
-    } ?: onPointsAwarded(teamIndex, 1)
+    } ?: onPointsAwarded(teamIndex, 0)
   }
 
   fun tick() {
