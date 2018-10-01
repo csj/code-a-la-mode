@@ -34,8 +34,8 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   val dishReturn1 = DishReturn().also { board["H9"].equipment = it }
   val dishReturn2 = DishReturn().also { board["h9"].equipment = it }
 
-  board["B0"].equipment = Window(dishReturn1) { queue.delivery(it, 0) }
-  board["b0"].equipment = Window(dishReturn2) { queue.delivery(it, 1) }
+  board["B0"].equipment = Window(dishReturn1) { queue.delivery(it, 1) }
+  board["b0"].equipment = Window(dishReturn2) { queue.delivery(it, 0) }
 
   // For other equipment, it's sufficient to add it to one side only (a clone will go on the other side)
 
