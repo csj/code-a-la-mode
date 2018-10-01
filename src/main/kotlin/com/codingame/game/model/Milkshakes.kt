@@ -8,11 +8,14 @@ data class Milkshake(override val contents: MutableSet<EdibleItem> = mutableSetO
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
 }
 
-data class Blender(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : Equipment(), Container {
+class Blender(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : AllInstancesAreConsideredEqual(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
   override fun basicNumber() = Constants.EQUIPMENT.BLENDER.ordinal
+  override fun extras(): List<Int> {
+    return listOf(contents.map { edibleEncoding[it]!! }.sum(), -1)
+  }
 
-  override fun clone(): Equipment = copy()
+  override fun clone(): Equipment = Blender()
 
   override fun takeFrom(player: Player): Milkshake {
     if (IceCreamBall(IceCreamFlavour.VANILLA) !in contents) throw Exception("Not ready for taking: no ice cream!")

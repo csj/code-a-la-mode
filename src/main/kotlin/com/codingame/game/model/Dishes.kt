@@ -3,6 +3,18 @@ package com.codingame.game.model
 import com.codingame.game.Player
 import java.util.*
 
+val edibleEncoding: Map<EdibleItem, Int> = mapOf(
+    IceCreamBall(IceCreamFlavour.VANILLA) to Constants.FOOD.VANILLA_BALL.value,
+    IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.FOOD.CHOCOLATE_BALL.value,
+    IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.FOOD.BUTTERSCOTCH_BALL.value,
+    Strawberries to Constants.FOOD.STRAWBERRIES.value,
+    Blueberries to Constants.FOOD.BLUEBERRIES.value,
+    ChoppedBananas to Constants.FOOD.CHOPPED_BANANAS.value,
+    PieSlice(PieFlavour.Strawberry) to Constants.FOOD.STRAWBERRY_PIE.value,
+    PieSlice(PieFlavour.Blueberry) to Constants.FOOD.BLUEBERRY_PIE.value,
+    Waffle to Constants.FOOD.WAFFLE.value
+)
+
 data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
 

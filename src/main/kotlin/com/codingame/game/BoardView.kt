@@ -145,6 +145,7 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule) {
         is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
         is Strawberries -> image = "strawberry.png"
         is Blueberries -> image = "blueberries.png"
+        is Milkshake -> image  = "shake.png"
         is Dish -> {
           image = "dish.png"
           item.contents.zip(subSprites).forEach { (edible, subSprite) ->

@@ -113,6 +113,14 @@ class BlenderTests: FreeSpec({
     shouldThrowAny { blender.plusAssign(IceCreamBall(IceCreamFlavour.VANILLA)) }
   }
 
+  "adding items to a blender does not add the same to its clone" {
+    setup()
+    val blender1 = Blender()
+    val blender2 = blender1.clone() as Blender
+    blender1 += IceCreamBall(IceCreamFlavour.VANILLA)
+    blender2.contents should beEmpty()
+  }
+
   "after clearing a blender, it can be used again" {
     setup()
     val blender = blenderLoc.equipment as Blender

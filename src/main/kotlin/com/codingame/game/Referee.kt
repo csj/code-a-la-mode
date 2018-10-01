@@ -18,18 +18,6 @@ class Referee : AbstractReferee() {
   private lateinit var view: BoardView
   private lateinit var players: List<Player>
 
-  private val edibleEncoding: Map<EdibleItem, Int> = mapOf(
-      IceCreamBall(IceCreamFlavour.VANILLA) to Constants.FOOD.VANILLA_BALL.value,
-      IceCreamBall(IceCreamFlavour.CHOCOLATE) to Constants.FOOD.CHOCOLATE_BALL.value,
-      IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to Constants.FOOD.BUTTERSCOTCH_BALL.value,
-      Strawberries to Constants.FOOD.STRAWBERRIES.value,
-      Blueberries to Constants.FOOD.BLUEBERRIES.value,
-      ChoppedBananas to Constants.FOOD.CHOPPED_BANANAS.value,
-      PieSlice(PieFlavour.Strawberry) to Constants.FOOD.STRAWBERRY_PIE.value,
-      PieSlice(PieFlavour.Blueberry) to Constants.FOOD.BLUEBERRY_PIE.value,
-      Waffle to Constants.FOOD.WAFFLE.value
-  )
-
   private fun Item?.describe(): List<Int> = when (this) {
     is Dish -> listOf(Constants.ITEM.DISH.ordinal, contents.map { edibleEncoding[it]!! }.sum())
     is Milkshake -> listOf(Constants.ITEM.MILKSHAKE.ordinal, contents.map { edibleEncoding[it]!! }.sum())

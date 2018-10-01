@@ -55,7 +55,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
     )
 
     private fun randomOrder(): DeliverableItem =
-      if (rand.nextDouble() < 0.75 || true) {   // TODO: Temporary!!
+      if (rand.nextDouble() < 0.75) {
         // plate
         val itemCount = when (rand.nextDouble()) {
           in 0.0 .. 0.25 -> 4

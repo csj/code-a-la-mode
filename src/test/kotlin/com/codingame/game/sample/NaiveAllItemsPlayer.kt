@@ -1,5 +1,6 @@
 package com.codingame.game.sample
 
+import arrow.core.constant
 import com.codingame.game.model.*
 import sample.*
 import java.io.InputStream
@@ -61,7 +62,37 @@ class NaiveAllItemsPlayer(
   }
 
   private fun chaseShake(goal: Int): String? {
-    return null
+    stderr.println("making a shake")
+    val carrying = inputs.myPlayer.carrying
+    val carryingState = inputs.myPlayer.carryingState
+    val blender = findEquipment(Constants.EQUIPMENT.BLENDER)
+    val contents = blender.equipmentState.toFlags().toList()
+
+    // make all the items and throw them in the blender
+    val targetContents = goal.toFlags().toList()
+    val shakeIsBusted = contents.any { it !in targetContents }
+
+    when (carrying) {
+      Constants.ITEM.MILKSHAKE.ordinal -> return findEquipment(
+          if (shakeIsBusted) Constants.EQUIPMENT.JARBAGE else Constants.EQUIPMENT.WINDOW).use()
+      Constants.ITEM.BANANA.ordinal -> return findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD).use()
+      Constants.ITEM.FOOD.ordinal ->
+        return if (carryingState in targetContents && carryingState !in contents) blender.use()
+        else useEmptyTable()
+      -1 -> { }
+      else -> return useEmptyTable()
+    }
+
+    if (contents == targetContents || shakeIsBusted) return blender.use()
+    stderr.println("contents: $contents; targetContents: $targetContents")
+    val missingFood = targetContents.first { it !in contents }
+    return when(missingFood) {
+      Constants.FOOD.CHOPPED_BANANAS.value -> Constants.EQUIPMENT.BANANA_CRATE
+      Constants.FOOD.BLUEBERRIES.value -> Constants.EQUIPMENT.BLUEBERRY_CRATE
+      Constants.FOOD.STRAWBERRIES.value -> Constants.EQUIPMENT.STRAWBERRY_CRATE
+      Constants.FOOD.VANILLA_BALL.value -> Constants.EQUIPMENT.VANILLA_CRATE
+      else -> { stderr.println("unexpected ... $missingFood"); return null }
+    }.let { findEquipment(it).use() }
   }
 
   private fun chaseDish(goal: Int): String? {
