@@ -22,7 +22,6 @@ class Referee : AbstractReferee() {
 
   private fun Item?.describe(): List<Int> = when (this) {
     is Dish -> listOf(Constants.ITEM.DISH.ordinal, contents.map { edibleEncoding[it]!! }.sum())
-    is Milkshake -> listOf(Constants.ITEM.MILKSHAKE.ordinal, contents.map { edibleEncoding[it]!! }.sum())
     is Banana -> listOf(Constants.ITEM.BANANA.ordinal, 0)
     is RawPie -> listOf(Constants.ITEM.RAW_PIE.ordinal, when (this) {
       RawPie(null) -> -1

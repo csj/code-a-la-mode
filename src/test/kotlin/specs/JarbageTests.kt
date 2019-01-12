@@ -21,8 +21,8 @@ class JarbageTests: FreeSpec({
   "a player can throw out most items" {
     setup()
     listOf(
-        IceCreamBall(IceCreamFlavour.VANILLA), Banana, ChoppedBananas, Milkshake(Strawberries, Blueberries),
-        Blueberries, RawPie(PieFlavour.Strawberry, 1), Waffle, BurntPie, BurntWaffle
+        IceCreamBall(IceCreamFlavour.VANILLA), Banana, ChoppedBananas, Blueberries,
+        Pie(PieFlavour.Strawberry), RawPie(PieFlavour.Strawberry, 1), Waffle, BurntPie, BurntWaffle
     ).forEach {
       player.heldItem = it
       player.use(jarbageLoc)

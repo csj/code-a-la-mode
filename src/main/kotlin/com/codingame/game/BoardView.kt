@@ -4,7 +4,6 @@ import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Sprite
 import com.codingame.gameengine.module.entities.Text
-import java.io.Console
 
 var cellWidth: Int = 0
 
@@ -43,7 +42,6 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
             when (equipment) {
               is ChoppingBoard -> image = "board.png"
               is GeneralCrate -> image = "crate.png"
-              is Blender -> image = "mixer.png"
               is Oven -> image = "oven.png"
               is Window -> image = "window.png"
               is WaffleIron -> image = "waffle-iron.png"
@@ -149,7 +147,6 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule, width: Int = cel
         is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
         is Strawberries -> image = "strawberry.png"
         is Blueberries -> image = "blueberries.png"
-        is Milkshake -> image  = "shake.png"
         is Dish -> {
           image = "dish.png"
           item.contents.zip(subSprites).forEach { (edible, subSprite) ->

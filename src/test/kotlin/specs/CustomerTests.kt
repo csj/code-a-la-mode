@@ -12,7 +12,7 @@ class CustomerTests: FreeSpec({
     val (alice, bonnie, bill, andrew) = buildPlayers()
     val board = buildEmptyBoard()
 
-    val aliceStuff = Milkshake(ChoppedBananas, IceCreamBall(IceCreamFlavour.VANILLA))
+    val aliceStuff = Dish(ChoppedBananas, IceCreamBall(IceCreamFlavour.VANILLA))
     val bonnieStuff = Dish(PieSlice(PieFlavour.Blueberry))
     val billStuff = Dish(Waffle, IceCreamBall(IceCreamFlavour.BUTTERSCOTCH), Strawberries)
     val andrewStuff = Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH), IceCreamBall(IceCreamFlavour.CHOCOLATE))

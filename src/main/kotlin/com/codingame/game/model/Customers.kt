@@ -2,7 +2,6 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 import com.codingame.game.rand
-import com.codingame.game.random
 import java.util.ArrayList
 
 abstract class DeliverableItem : Item()
@@ -47,30 +46,19 @@ data class Customer(val item: DeliverableItem, var award: Int) {
         Waffle to 600
     )
 
-    private val possibleMilkshakeContents = listOf(
-        // vanilla ice cream goes without saying
-        Strawberries,
-        Blueberries,
-        ChoppedBananas
-    )
-
     private fun randomOrder(): DeliverableItem =
-      if (rand.nextDouble() < 0.75) {
-        // plate
-        val itemCount = when (rand.nextDouble()) {
-          in 0.0 .. 0.25 -> 4
-          in 0.25 .. 0.5 -> 3
-          else -> 2
-        }
-        Dish(possiblePlateContents.keys.shuffled(rand).take(itemCount).toMutableSet())
-      } else {
-        // milkshake
-        Milkshake(IceCreamBall(IceCreamFlavour.VANILLA), possibleMilkshakeContents.random())
-      }
+        Dish(possiblePlateContents.keys.shuffled(rand)
+            .take(
+            when (rand.nextDouble()) {
+              in 0.0 .. 0.25 -> 4
+              in 0.25 .. 0.5 -> 3
+              else -> 2
+            }
+        ).toMutableSet())
 
     fun randomCustomer(): Customer {
       val order = randomOrder()
-      val price = if (order is Milkshake) 800 else 300 + (order as Dish).contents.sumBy { possiblePlateContents[it]!! }
+      val price = 300 + (order as Dish).contents.sumBy { possiblePlateContents[it]!! }
       return Customer(order, price)
     }
   }

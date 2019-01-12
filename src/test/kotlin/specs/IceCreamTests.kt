@@ -36,7 +36,7 @@ class IceCreamTests: FreeSpec({
 
   "a player cannot put things onto a crate" {
     setup()
-    player.heldItem = Milkshake()
+    player.heldItem = Strawberries
     shouldThrowAny { player.use(crateLoc) }
   }
 

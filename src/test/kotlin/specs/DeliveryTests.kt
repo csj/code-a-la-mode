@@ -38,14 +38,6 @@ class DeliverySpec: FreeSpec({
         deliveredItem shouldBe Dish(IceCreamBall(IceCreamFlavour.VANILLA))
       }
 
-      "can be done with a Milkshake (after dropping, there should be nothing there!)" {
-        setup()
-        player.heldItem = Milkshake(IceCreamBall(IceCreamFlavour.VANILLA))
-        player.use(window)
-        window.item shouldBe null
-        deliveredItem shouldBe Milkshake(IceCreamBall(IceCreamFlavour.VANILLA))
-      }
-
       "can be done with an empty dish" {
         setup()
         player.heldItem = Dish()

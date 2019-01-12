@@ -3,6 +3,7 @@ package com.codingame.game.model
 import com.codingame.game.Player
 
 object Banana: Item()
+object ChoppedBananas: EdibleItem()
 
 data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
   override fun clone() = copy()

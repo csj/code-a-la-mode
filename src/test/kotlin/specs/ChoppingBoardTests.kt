@@ -85,7 +85,7 @@ class ChoppingBoardTests: FreeSpec({
     "a player cannot use if his hands have something else" {
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
-      player.heldItem = Milkshake(IceCreamBall(IceCreamFlavour.VANILLA), ChoppedBananas)
+      player.heldItem = Blueberries
       shouldThrowAny { player.use(choppingBoardLoc) }
     }
   }

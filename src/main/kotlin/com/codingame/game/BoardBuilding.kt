@@ -54,7 +54,6 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
       StrawberryCrate(),
       BlueberryCrate(),
       BananaCrate(),
-      Blender(),
       Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME),
       ChoppingBoard(),
       WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME),
