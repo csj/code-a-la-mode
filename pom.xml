@@ -7,7 +7,7 @@
 	<version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>1.2.31</kotlin.version>
+        <kotlin.version>1.3.11</kotlin.version>
         <gameengine.version>2.9</gameengine.version>
     </properties>
 
@@ -15,7 +15,7 @@
         <dependency>
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-reflect</artifactId>
-            <version>1.2.31</version>
+            <version>${kotlin.version}</version>
         </dependency>
         <dependency>
             <groupId>com.codingame.gameengine</groupId>
