@@ -26,18 +26,12 @@ val boardLayout = listOf(
 
 fun buildEmptyBoard(): Board = Board(9, 10, boardLayout)
 
-fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit): Pair<Board, CustomerQueue> {
+fun buildBoardAndQueue(scoreAwardCallback: (points: Int) -> Unit): Pair<Board, CustomerQueue> {
   val board = buildEmptyBoard()
   val queue = CustomerQueue(scoreAwardCallback)
 
-  // Both windows have to be added separately
   val dishReturn1 = DishReturn().also { board["H9"].equipment = it }
-  val dishReturn2 = DishReturn().also { board["h9"].equipment = it }
-
-  board["B0"].equipment = Window(dishReturn1) { queue.delivery(it, 1) }
-  board["b0"].equipment = Window(dishReturn2) { queue.delivery(it, 0) }
-
-  // For other equipment, it's sufficient to add it to one side only (a clone will go on the other side)
+  board["B0"].equipment = Window(dishReturn1, queue::delivery)
 
   val equipmentLocs = listOf(
       "C0", "D0", "E0", "F0", "G0", "H0", "I0",
@@ -66,17 +60,13 @@ fun buildBoardAndQueue(scoreAwardCallback: (teamIndex: Int, points: Int) -> Unit
   items.forEach { item ->
     val loc = equipmentLocs.next()
     board[loc].item = item()
-    board[negafyCellName(loc)].item = item()
-    // Items need to be added to both sides
   }
   return Pair(board, queue)
 }
 
 fun buildPlayers(): List<Player> {
   return listOf(
-      Player(true),
-      Player(false),
-      Player(false),
-      Player(true)
+      Player(),
+      Player()
   )
 }

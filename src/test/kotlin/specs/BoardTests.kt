@@ -2,7 +2,6 @@ package specs
 
 import com.codingame.game.model.Board
 import com.codingame.game.Player
-import com.codingame.game.model.negafyCellName
 import io.kotlintest.matchers.beLessThan
 import io.kotlintest.should
 import io.kotlintest.shouldBe
@@ -52,7 +51,6 @@ class BoardSpec : FreeSpec({
       forAll(myTable) { c1, c2, d ->
 //        System.err.println("Verifying: $c1 $c2 $d")
         board[c1].distanceTo(board[c2]) shouldBe d
-        board[negafyCellName(c1)].distanceTo(board[negafyCellName(c2)]) shouldBe d
       }
     }
 

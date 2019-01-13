@@ -6,13 +6,13 @@ import java.util.ArrayList
 
 abstract class DeliverableItem : Item()
 
-class CustomerQueue(private val onPointsAwarded: (Int, Int) -> Unit): ArrayList<Customer>() {
-  fun delivery(item: Item, teamIndex: Int) {
+class CustomerQueue(private val onPointsAwarded: (Int) -> Unit): ArrayList<Customer>() {
+  fun delivery(item: Item) {
     // println("Delivery: $item; current queue: $this")
     this.find { it.item == item }?.also {
-      onPointsAwarded(teamIndex, it.award)
+      onPointsAwarded(it.award)
       remove(it)
-    } ?: onPointsAwarded(teamIndex, 0)
+    } ?: onPointsAwarded(0)
   }
 
   fun tick() {

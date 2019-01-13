@@ -10,7 +10,7 @@ const val REACH_DISTANCE = 3
 const val WALK_DISTANCE = 7
 operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo(other)
 
-class Player(var isLeftTeam: Boolean = true) : AbstractMultiplayerPlayer() {
+class Player : AbstractMultiplayerPlayer() {
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
   lateinit var itemSprite: ItemSpriteGroup

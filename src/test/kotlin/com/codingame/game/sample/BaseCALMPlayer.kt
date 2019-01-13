@@ -3,7 +3,6 @@ package sample
 import java.io.InputStream
 import java.io.PrintStream
 import java.util.*
-import kotlin.coroutines.experimental.buildSequence
 
 infix fun Int.has(flag: Int) = (this and flag) > 0
 infix fun Int.doesntHave(flag: Int) = !(this has flag)
@@ -11,7 +10,7 @@ infix fun Int.with(flags: Int) = this or flags
 infix fun Int.without(flags: Int) = this and flags.inv()
 fun Int.toFlags(): Sequence<Int> {
   val flags = this
-  return buildSequence {
+  return sequence {
     repeat(16) { i ->
       (1 shl i).let { if (flags has it) yield (it) }
     }
@@ -38,14 +37,12 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
   protected fun readInputs(): GameState {
     var myPlayer: Player? = null
     var myFriend: Player? = null
-    val enemyPlayers = mutableListOf<Player>()
 
-    repeat(4) {
+    repeat(2) {
       val p = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
       when (scanner.nextInt()) {
         0 -> myPlayer = p
         1 -> myFriend = p
-        else -> enemyPlayers += p
       }
     }
 
@@ -77,17 +74,15 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
 //      System.err.println()
 //    }
 
-    return GameState(myPlayer!!, myFriend!!, enemyPlayers, tables, queue)
+    return GameState(myPlayer!!, myFriend!!, tables, queue)
   }
 }
 
 data class GameState(
     val myPlayer: Player,
     val myFriend: Player,
-    val enemyPlayers: List<Player>,
     val tables: List<Table>,
     val queue: List<Customer>)
-
 
 data class Table(
     val x: Int, val y: Int,

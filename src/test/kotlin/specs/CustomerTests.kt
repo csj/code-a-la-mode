@@ -9,37 +9,29 @@ import io.kotlintest.shouldNot
 import io.kotlintest.specs.FreeSpec
 
 class CustomerTests: FreeSpec({
-    val (alice, bonnie, bill, andrew) = buildPlayers()
+    val (alice, andrew) = buildPlayers()
     val board = buildEmptyBoard()
 
     val aliceStuff = Dish(ChoppedBananas, IceCreamBall(IceCreamFlavour.VANILLA))
-    val bonnieStuff = Dish(PieSlice(PieFlavour.Blueberry))
-    val billStuff = Dish(Waffle, IceCreamBall(IceCreamFlavour.BUTTERSCOTCH), Strawberries)
     val andrewStuff = Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH), IceCreamBall(IceCreamFlavour.CHOCOLATE))
 
-    val scores = mutableListOf(0,0)
-    val queue = CustomerQueue { teamIndex, points -> scores[teamIndex] += points }
+    var score = 0
+    val queue = CustomerQueue { points -> score += points }
 
     val windowALoc = board["B0"]
-    val windowBLoc = board["b0"]
-    windowALoc.equipment = Window { queue.delivery(it, 0) }
-    windowBLoc.equipment = Window { queue.delivery(it, 1) }
+    windowALoc.equipment = Window { queue.delivery(it) }
 
     fun setup() {
         alice.heldItem = aliceStuff;   alice.location = board["B1"]
-        bonnie.heldItem = bonnieStuff; bonnie.location = board["b1"]
-        bill.heldItem = billStuff;     bill.location = board["c1"]
         andrew.heldItem = andrewStuff; andrew.location = board["C1"]
-        scores[0] = 0
-        scores[1] = 0
+        score = 0
     }
 
     "a team can score points by delivering" {
         setup()
         queue += Customer(aliceStuff, 100)
         alice.use(windowALoc)
-        scores[0] shouldBe 100
-        scores[1] shouldBe 0
+        score shouldBe 100
         queue should beEmpty()
     }
 
@@ -47,8 +39,7 @@ class CustomerTests: FreeSpec({
         setup()
         queue += Customer(aliceStuff, 100)
         andrew.use(windowALoc)
-        scores[0] shouldBe 0
-        scores[1] shouldBe 0
+        score shouldBe 0
         queue shouldNot beEmpty()
     }
 })
