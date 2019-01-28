@@ -25,7 +25,7 @@ sealed class OvenState(val stateVal: Int) {
 }
 
 data class Oven(private val cookTime: Int, private val burnTime: Int, private var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
-  override fun clone(): Equipment = copy()
+  override fun reset() { state = OvenState.Empty }
   override fun basicNumber() = Constants.EQUIPMENT.OVEN.ordinal
   override fun extras(): List<Int> {
     val currentState = state

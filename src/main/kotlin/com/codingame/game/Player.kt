@@ -11,10 +11,14 @@ const val WALK_DISTANCE = 7
 operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo(other)
 
 class Player : AbstractMultiplayerPlayer() {
+  override fun toString(): String {
+    return this.nicknameToken
+  }
+
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
   lateinit var itemSprite: ItemSpriteGroup
-  lateinit var charaterSprite: Sprite
+  lateinit var characterSprite: Sprite
 
   fun sendInputLine(toks: List<Int>) = sendInputLine(toks.joinToString(" "))
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
@@ -44,7 +48,7 @@ class Player : AbstractMultiplayerPlayer() {
   }
 
   fun moveTo(cell: Cell) {
-    val fromSource = location.buildDistanceMap()
+    val fromSource = location.buildDistanceMap(partner.location)
     val target =
         if (!cell.isTable)
           cell
@@ -56,12 +60,12 @@ class Player : AbstractMultiplayerPlayer() {
 
     if (target !in fromSource.keys) throw Exception("Cannot move: no path!")
 
-    if (location.distanceTo(target) <= WALK_DISTANCE) {
+    if (location.distanceTo(target, partner.location) <= WALK_DISTANCE) {
       location = target
       return
     }
 
-    val fromTarget = target.buildDistanceMap()
+    val fromTarget = target.buildDistanceMap(partner.location)
 
     location = fromSource
         .filter { (cell, dist) -> dist <= WALK_DISTANCE && !cell.isTable }
@@ -71,4 +75,5 @@ class Player : AbstractMultiplayerPlayer() {
 
   var heldItem: Item? = null
   lateinit var location: Cell
+  lateinit var partner: Player
 }

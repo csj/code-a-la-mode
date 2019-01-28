@@ -2,34 +2,28 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-data class IceCreamCrate(val flavour: IceCreamFlavour): GeneralCrate({ IceCreamBall(flavour) })
-{
+data class IceCreamCrate(val flavour: IceCreamFlavour): GeneralCrate({ IceCreamBall(flavour) }) {
   override fun basicNumber(): Int =
-    when(flavour) {
-      IceCreamFlavour.VANILLA -> Constants.EQUIPMENT.VANILLA_CRATE.ordinal
-      IceCreamFlavour.CHOCOLATE -> Constants.EQUIPMENT.CHOCOLATE_CRATE.ordinal
-      IceCreamFlavour.BUTTERSCOTCH -> Constants.EQUIPMENT.BUTTERSCOTCH_CRATE.ordinal
-    }
-
-  override fun clone(): Equipment = copy() }
+      when (flavour) {
+        IceCreamFlavour.VANILLA -> Constants.EQUIPMENT.VANILLA_CRATE.ordinal
+        IceCreamFlavour.CHOCOLATE -> Constants.EQUIPMENT.CHOCOLATE_CRATE.ordinal
+        IceCreamFlavour.BUTTERSCOTCH -> Constants.EQUIPMENT.BUTTERSCOTCH_CRATE.ordinal
+      }
+}
 
 class StrawberryCrate: GeneralCrate({ Strawberries }) {
   override fun basicNumber() = Constants.EQUIPMENT.STRAWBERRY_CRATE.ordinal
-  override fun clone(): Equipment = StrawberryCrate()
 }
 
 class BlueberryCrate: GeneralCrate({ Blueberries }) {
-  override fun clone(): Equipment = BlueberryCrate()
   override fun basicNumber() = Constants.EQUIPMENT.BLUEBERRY_CRATE.ordinal
 }
 
 class BananaCrate: GeneralCrate({ Banana }) {
-  override fun clone(): Equipment = BananaCrate()
   override fun basicNumber() = Constants.EQUIPMENT.BANANA_CRATE.ordinal
 }
 
 class PieCrustCrate: GeneralCrate({ RawPie() }) {
-  override fun clone(): Equipment = PieCrustCrate()
   override fun basicNumber() = Constants.EQUIPMENT.PIECRUST_CRATE.ordinal
 }
 

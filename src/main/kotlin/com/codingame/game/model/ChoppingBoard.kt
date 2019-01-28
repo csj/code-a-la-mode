@@ -6,7 +6,7 @@ object Banana: Item()
 object ChoppedBananas: EdibleItem()
 
 data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
-  override fun clone() = copy()
+  override fun reset() { pieOnBoard = null }
   override fun basicNumber() = Constants.EQUIPMENT.CHOPPINGBOARD.ordinal
   override fun extras(): List<Int> {
     return when(pieOnBoard) {

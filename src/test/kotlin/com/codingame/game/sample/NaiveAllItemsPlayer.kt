@@ -1,6 +1,5 @@
 package com.codingame.game.sample
 
-import arrow.core.constant
 import com.codingame.game.model.*
 import sample.*
 import java.io.InputStream
@@ -31,7 +30,7 @@ class NaiveAllItemsPlayer(
           Constants.FOOD.BUTTERSCOTCH_BALL to Constants.EQUIPMENT.BUTTERSCOTCH_CRATE
       )
           .mapKeys { (key, _) -> key.value }
-          .mapValues { (_, crateVal) -> inputs.tables.firstOrNull { it.x > 0 && it.equipment == crateVal.ordinal } ?:
+          .mapValues { (_, crateVal) -> inputs.tables.firstOrNull { it.equipment == crateVal.ordinal } ?:
         throw Exception("Couldn't find equipment: $crateVal")
       }
 
@@ -88,7 +87,7 @@ class NaiveAllItemsPlayer(
         }
         else -> {
           val tableLoc = inputs.tables.find {
-            it.x > 0 && it.item == Constants.ITEM.FOOD.ordinal && it.itemState == missingItem
+            it.item == Constants.ITEM.FOOD.ordinal && it.itemState == missingItem
           }
           if (tableLoc != null) tableLoc.use()
           else useEmptyTable()  // put down the dish
@@ -128,7 +127,7 @@ class NaiveAllItemsPlayer(
   }
 
   private fun isReady(item: Int): Boolean = item in crates.keys || inputs.tables.any {
-    it.x > 0 && it.item == Constants.ITEM.FOOD.ordinal && it.itemState == item }
+    it.item == Constants.ITEM.FOOD.ordinal && it.itemState == item }
 
   private fun getEmptyPlate(): String = (
       inputs.tables.find { it.x >= 0 && it.item == Constants.ITEM.DISH.ordinal }
@@ -136,7 +135,7 @@ class NaiveAllItemsPlayer(
 
   private fun useEmptyTable(): String {
     return inputs.myPlayer.run {
-      inputs.tables.filter { it.x > 0 && it.equipment == -1 && it.item == -1 }
+      inputs.tables.filter { it.equipment == -1 && it.item == -1 }
           .minBy { abs(it.x - x) + abs(it.y - y) }!!.use()
     }
   }

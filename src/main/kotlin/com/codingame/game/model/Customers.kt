@@ -16,18 +16,26 @@ class CustomerQueue(private val onPointsAwarded: (Int) -> Unit): ArrayList<Custo
   }
 
   fun tick() {
-    repeat(3 - size) { _ ->
+    repeat(3 - size) {
       if (rand.nextDouble() < 0.2) {
         this += Customer.randomCustomer()
       }
     }
     removeIf { !it.stillWaiting() }
   }
+
+  fun copy() = CustomerQueue(onPointsAwarded).also {
+    it.clear()
+    forEach { customer -> it.add(customer.copy()) }
+  }
 }
 
 
 data class Customer(val item: DeliverableItem, var award: Int) {
   val originalAward = award
+
+  fun copy() = Customer(item, originalAward)
+
   fun stillWaiting(): Boolean {
     award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
     return award > 10
@@ -69,6 +77,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
  * this will be a scorekeeper function of some sort.
  */
 class Window(private val dishReturn: DishReturn? = null, private val onDelivery: (Item) -> Unit = { }) : Equipment() {
+
   override fun basicNumber() = Constants.EQUIPMENT.WINDOW.ordinal
 
   private fun deliver(food: DeliverableItem) {

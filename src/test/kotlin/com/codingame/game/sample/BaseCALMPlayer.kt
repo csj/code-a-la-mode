@@ -40,9 +40,10 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
 
     repeat(2) {
       val p = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
+          .also { System.err.println("Received player: $it")}
       when (scanner.nextInt()) {
-        0 -> myPlayer = p
-        1 -> myFriend = p
+        0 -> { myPlayer = p; System.err.println("Found myplayer") }
+        1 -> { myFriend = p; System.err.println("Found myfriend") }
       }
     }
 
@@ -50,16 +51,15 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
     val tables = List(scanner.nextInt()) {
       Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(),
           scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt()).also {
-        if (it.x >= 0) {
-          val desc = when (it.equipment) {
-            0 -> "I"
-            else -> when (it.item) {
-              1024 -> "D"
-              else -> "X"
-            }
+        System.err.println("Received table: $it")
+        val desc = when (it.equipment) {
+          0 -> "I"
+          else -> when (it.item) {
+            1024 -> "D"
+            else -> "X"
           }
-          rendering[it.y][it.x] = desc
         }
+        rendering[it.y][it.x] = desc
       }
     }
 

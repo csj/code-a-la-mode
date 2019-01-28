@@ -1,36 +1,53 @@
 package com.codingame.game
 
 import com.codingame.game.model.*
+import com.codingame.gameengine.module.entities.Entity
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Sprite
 import com.codingame.gameengine.module.entities.Text
 
 var cellWidth: Int = 0
+val cellSpacing = 5
+val yOffset = 100
+val xOffset = 200
 
-class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, players: List<Player>, queue: CustomerQueue) {
+class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, matchPlayers: List<Player>) {
+
+  lateinit var board: Board
+  lateinit var players: List<Player>
+  lateinit var queue: CustomerQueue
+
   var scores = mutableMapOf<Int, Text>()
+  private var queueSprites: List<ItemSpriteGroup>
+  private var queueAwards: List<Text>
+  private var cellViews: MutableList<CellView> = mutableListOf()
 
   init {
+    queueSprites = List(3) {
+      ItemSpriteGroup(graphicEntityModule, 50)
+    }
+
+    queueAwards = List(3) {
+      graphicEntityModule.createText("0").setFillColor(0xffffff)
+    }
+
     val floorColor = 0xe0e0eb
     val tableColor = 0xb35900
 
     val worldWidth = 1920
     val worldHeight = 1080
 
-    val cellSpacing = 5
-    val yOffset = 100
-    val xOffset = 200
     val gridHeight = worldHeight - yOffset
     val gridWidth = worldWidth - xOffset
-    cellWidth = Math.min(gridHeight / board.height, gridWidth / board.width) - cellSpacing
+    cellWidth = Math.min(gridHeight / baseBoard.height, gridWidth / baseBoard.width) - cellSpacing
 
-    for (cellCol in board.cells) {
+    for (cellCol in baseBoard.cells) {
 
       for (cell in cellCol) {
-        val x = (cell.x + board.width - 1) * (cellWidth + cellSpacing) + xOffset / 2
+        val x = cell.x * (cellWidth + cellSpacing) + xOffset
         val y = cell.y * (cellWidth + cellSpacing) + yOffset
 
-        cell.view = CellView(cell).apply {
+        cellViews.add(CellView(cell).apply {
           background = graphicEntityModule
               .createRectangle()
               .setHeight(cellWidth)
@@ -39,6 +56,12 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
 
           val equipment = cell.equipment
           content = graphicEntityModule.createSprite().apply {
+            baseHeight = cellWidth - 8
+            baseWidth = cellWidth - 8
+            anchorX = 0.5
+            anchorY = 0.5
+            setX(cellWidth / 2)
+            setY(cellWidth / 2)
             when (equipment) {
               is ChoppingBoard -> image = "board.png"
               is GeneralCrate -> image = "crate.png"
@@ -48,12 +71,6 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
               is DishReturn -> image = "dishwasher.png"
               is Jarbage -> image = "trash.png"
             }
-            baseHeight = cellWidth - 8
-            baseWidth = cellWidth - 8
-            anchorX = 0.5
-            anchorY = 0.5
-            setX(cellWidth / 2)
-            setY(cellWidth / 2)
           }
           secondaryContent = graphicEntityModule.createSprite().apply {
             when (equipment) {
@@ -77,13 +94,12 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
           group = graphicEntityModule.createGroup(background, content, secondaryContent, itemSpriteGroup.group)
               .setX(x).setY(y)
 
-        }
-
+        })
       }
     }
 
-    for (player in players) {
-      player.charaterSprite = graphicEntityModule.createSprite().apply {
+    for (player in matchPlayers) {
+      player.characterSprite = graphicEntityModule.createSprite().apply {
         image = "chef.png"
         baseHeight = cellWidth
         baseWidth = cellWidth
@@ -93,7 +109,7 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
 
       player.itemSprite = ItemSpriteGroup(graphicEntityModule)
 
-      player.sprite = graphicEntityModule.createGroup(player.charaterSprite, player.itemSprite.group)
+      player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
 //          .setX(player.location.view.group.x + 5)
 //          .setY(player.location.view.group.y + 5)
     }
@@ -106,6 +122,59 @@ class BoardView(graphicEntityModule: GraphicEntityModule, val board: Board, play
 //    graphicEntityModule.createRectangle().setX(400).setY(10).setFillColor(players[1].colorToken).setHeight(15).setWidth(15)
 //    graphicEntityModule.createRectangle().setX(400).setY(30).setFillColor(players[2].colorToken).setHeight(15).setWidth(15)
 //    scores[1] = graphicEntityModule.createText("0").setX(420).setY(20).setFillColor(0xffffff)
+  }
+
+  fun updateQueue() {
+    queueSprites.forEachIndexed { index, sprite ->
+      sprite.group.apply { x = 500 + (100 * index); y = 10 }
+
+      if(queue.size > index) {
+        queueAwards[index].text = queue[index].award.toString()
+        queueAwards[index].apply { x = 500 + (100 * index); y = 55 }
+        queueAwards[index].isVisible = true
+
+        sprite.update(queue[index].item)
+        sprite.group.isVisible = queue[index].award > 0
+      } else {
+        sprite.group.isVisible = false
+        queueAwards[index].isVisible = false
+      }
+    }
+  }
+
+  fun updateCells(boardCells: List<Cell>) {
+    boardCells.zip(cellViews).forEach { (cell, view) ->
+      view.itemSpriteGroup.update(cell.item) }
+  }
+
+  fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell) {
+    // TODO: PLEEEASE fix me. Such hacks :(
+    x = cell.x * (cellWidth + cellSpacing) + xOffset + 5
+    y = cell.y * (cellWidth + cellSpacing) + yOffset + 5
+  }
+
+  fun updatePlayer(player: Player, useTarget: Cell?) {
+    player.characterSprite.isVisible = true
+    player.itemSprite.isVisible = true
+
+    player.itemSprite.update(player.heldItem)
+
+    if (useTarget == null) {
+      player.sprite.setLocation(board[player.location.x, player.location.y])
+    } else {
+      player.sprite.setLocation(useTarget)
+      graphicEntityModule.commitEntityState(0.3, player.sprite)
+      player.sprite.setLocation(board[player.location.x, player.location.y])
+      graphicEntityModule.commitEntityState(0.6, player.sprite)
+    }
+
+    graphicEntityModule.commitEntityState(0.5, player.sprite)
+
+  }
+
+  fun removePlayer(player: Player) {
+    player.characterSprite.isVisible = false
+    player.itemSprite.isVisible = false
   }
 }
 
@@ -131,6 +200,11 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule, width: Int = cel
   }
 
   val group = graphicEntityModule.createGroup(*(subSprites + mainSprite).toTypedArray())
+  var isVisible: Boolean = true
+  set(value) {
+    mainSprite.isVisible = value
+    subSprites.forEach { it.isVisible = value }
+  }
 
   fun update(item: Item?) {
     subSprites.forEach { it.isVisible = false }

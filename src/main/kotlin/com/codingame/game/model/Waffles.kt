@@ -13,7 +13,7 @@ sealed class WaffleState(val stateVal: Int) {
 }
 
 data class WaffleIron(private val cookTime: Int, private val burnTime: Int, private var state: WaffleState = WaffleState.Empty) : TimeSensitiveEquipment() {
-  override fun clone(): Equipment = copy()
+  override fun reset() { state = WaffleState.Empty }
   override fun basicNumber() = Constants.EQUIPMENT.WAFFLEIRON.ordinal
   override fun extras(): List<Int> {
     val currentState = state

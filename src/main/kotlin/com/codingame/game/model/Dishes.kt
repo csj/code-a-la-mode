@@ -18,6 +18,8 @@ val edibleEncoding: Map<EdibleItem, Int> = mapOf(
 data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
 
+
+
   override fun receiveItem(player: Player, item: Item, cell: Cell?) {
     if (item is EdibleItem) {
       this += item
@@ -31,8 +33,13 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
 class DishReturn : TimeSensitiveEquipment() {
   override fun basicNumber() = Constants.EQUIPMENT.DISH_RETURN.ordinal
 
+  override fun reset() {
+    repeat(40) { tick() }
+    dishes = 4
+  }
+
   private val dishQueue = LinkedList<Boolean>(List(40) { false })
-  var dishes: Int = 0
+  var dishes: Int = 4
 
   override fun takeFrom(player: Player): Item {
     if (dishes > 0) {

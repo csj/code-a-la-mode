@@ -11,16 +11,16 @@ fun <E> List<E>.random(): E {
 
 val boardLayout = listOf(
 //        ABCDEFGHI
-/* 0 */  "XDXXXXXXX",  // 0
+/* 0 */  "XXXXXXXXX",  // 0
 /* 1 */  "X.......X",  // 1
-/* 2 */  "X..X.W..I",  // 2
-/* 3 */  "X..XXX..X",  // 3
+/* 2 */  "X.XXXXX.X",  // 2
+/* 3 */  "D...X...X",  // 3
 /* 4 */  "X...X...X",  // 4
 /* 5 */  "X...X...X",  // 5
-/* 6 */  "X..CXX..X",  // 6
-/* 7 */  "X.......O",  // 7
+/* 6 */  "X...X...W",  // 6
+/* 7 */  "X.XXXXX.X",  // 7
 /* 8 */  "X.......X",  // 8
-/* 9 */  "XXXXXXXRX"   // 9
+/* 9 */  "XXXXXXXXX"   // 9
 //        ABCDEFGHI
 )
 
@@ -30,14 +30,17 @@ fun buildBoardAndQueue(scoreAwardCallback: (points: Int) -> Unit): Pair<Board, C
   val board = buildEmptyBoard()
   val queue = CustomerQueue(scoreAwardCallback)
 
-  val dishReturn1 = DishReturn().also { board["H9"].equipment = it }
-  board["B0"].equipment = Window(dishReturn1, queue::delivery)
+  val dishReturn1 = DishReturn().also { board["A3"].equipment = it }
+  board["I6"].equipment = Window(dishReturn1, queue::delivery)
 
   val equipmentLocs = listOf(
-      "C0", "D0", "E0", "F0", "G0", "H0", "I0",
-      "I1", "I2", "I3", "I4", "I5", "I6", "I7", "I8",
-      "B9", "C9", "D9", "E9", "F9", "G9", "I9",
-      "F2", "F3", "E3", "E4", "D2", "D3", "D6", "E5", "E6", "F6"
+      "A0", "B0", "C0", "D0", "E0", "F0", "G0", "H0", "I0",
+      "A1", "A2",       "A4", "A5", "A6", "A7", "A8",
+      "I1", "I2", "I3", "I4", "I5",       "I7", "I8",
+      "A9", "B9", "C9", "D9", "E9", "F9", "G9", "H9", "I9",
+      "C2", "D2", "E2", "F2", "G2",
+      "E3", "E4", "E5", "E6",
+      "C7", "D7", "E7", "F7", "G7"
   ).shuffled(rand).iterator()
 
   val equipments = listOf(
@@ -54,13 +57,7 @@ fun buildBoardAndQueue(scoreAwardCallback: (points: Int) -> Unit): Pair<Board, C
       Jarbage()
   )
 
-  val items = List(4) { { Dish() } }
-
   equipments.forEach { eq -> board[equipmentLocs.next()].equipment = eq }
-  items.forEach { item ->
-    val loc = equipmentLocs.next()
-    board[loc].item = item()
-  }
   return Pair(board, queue)
 }
 

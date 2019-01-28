@@ -16,7 +16,6 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
-  lateinit var view: CellView
 
   val neighbours by lazy { straightNeighbours.map {it to 2} + diagonalNeighbours.map {it to 3} }
 
@@ -27,7 +26,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
   var equipment: Equipment? = null
   var item: Item? = null
 
-  fun buildDistanceMap(): Map<Cell, Int> {
+  fun buildDistanceMap(blockedCell: Cell?): Map<Cell, Int> {
     val visitedCells = mutableMapOf<Cell, Int>()
     val floodedCells = PriorityQueue<Pair<Cell, Int>> { (_,d1), (_,d2) -> d1.compareTo(d2) }
     floodedCells += this to 0
@@ -37,8 +36,9 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
       val (cell, dist) = floodedCells.remove()!!
       if (cell in visitedCells) continue
       visitedCells += cell to dist
-      if (!cell.isTable || isFirst) {
+      if ((!cell.isTable && cell != blockedCell) || isFirst) {
         floodedCells += cell.neighbours
+            .filterNot { (nc, _) -> nc == blockedCell }
             .filterNot { (nc, _) -> nc in visitedCells.keys }
             .map { (nc, nd) -> nc to dist + nd }
       }
@@ -47,13 +47,18 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
     return visitedCells
   }
 
-  fun distanceTo(target: Cell): Int? {
-    return buildDistanceMap()[target]
+  fun distanceTo(target: Cell, partnerCell: Cell? = null): Int? {
+    return buildDistanceMap(partnerCell)[target]
   }
 }
 
 
-class Board(val width: Int, val height: Int, layout: List<String>? = null) {
+class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
+  fun reset() { allCells.forEach { c ->
+    c.equipment?.reset()
+    c.item = null
+  } }
+
   val cells = Array(width) { x ->
     Array(height) { y ->
       Cell(x, y, layout != null && layout[y][x] != '.')

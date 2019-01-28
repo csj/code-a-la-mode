@@ -31,9 +31,7 @@ abstract class Equipment {
     throw Exception("Cannot drop $item onto $this!")
   }
 
-  open fun clone(): Equipment {
-    throw Exception("$this cannot be cloned!")
-  }
+  open fun reset() { }
 
   abstract fun basicNumber(): Int
   open fun extras(): List<Int> = listOf(-1, -1)
