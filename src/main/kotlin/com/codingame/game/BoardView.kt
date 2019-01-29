@@ -9,7 +9,7 @@ import com.codingame.gameengine.module.entities.Text
 var cellWidth: Int = 0
 val cellSpacing = 5
 val yOffset = 100
-val xOffset = 200
+val xOffset = 50
 
 class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, matchPlayers: List<Player>) {
 

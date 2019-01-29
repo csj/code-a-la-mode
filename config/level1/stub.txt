@@ -20,6 +20,4 @@ customerItem: the food the customer is waiting for
 OUTPUT
 MOVE x y
 USE x y
-TAKE x y
-DROP x y
 WAIT
