@@ -9,7 +9,7 @@ import java.lang.Math.abs
 class NaiveAllItemsPlayer(
     stdin: InputStream, stdout: PrintStream, stderr: PrintStream): BaseCALMPlayer(stdin, stdout, stderr) {
 
-  var nextGoal: Pair<Int, Int>? = null
+  var nextGoal: Int? = null
   lateinit var inputs: GameState
   lateinit var crates: Map<Int, Table>
 
@@ -34,7 +34,7 @@ class NaiveAllItemsPlayer(
         throw Exception("Couldn't find equipment: $crateVal")
       }
 
-      nextGoal = inputs.queue.firstOrNull()?.let { Pair(it.item, it.itemState)}
+      nextGoal = inputs.queue.firstOrNull()?.itemDetail
       stdout.println(chaseGoal() ?: "WAIT")
     }
   }
@@ -51,14 +51,12 @@ class NaiveAllItemsPlayer(
       }
     }
 
-    val (item, itemState) = nextGoal ?: return null
-    stderr.println("Current goal is: $item/$itemState")
-    return chaseDish(itemState)
+    if (nextGoal == null) return null
+    stderr.println("Current goal is: $nextGoal")
+    return chaseDish(nextGoal!!)
   }
 
   private fun chaseDish(goal: Int): String? {
-    stderr.println("chasing dish")
-
     val carrying = inputs.myPlayer.carrying
     val carryingState = inputs.myPlayer.carryingState
 

@@ -1,23 +1,21 @@
-read width:int height:int numOurTables:int
-loop numOurTables read x:int y:int equipment:int
+read width:int height:int
+read numTables:int
+loop numTables read x:int y:int equipmentType:int
 gameloop
-loop 4 read playerX:int playerY:int playerCarry:int playerType:int
-read numAllTables:int
-loop numAllTables read tableX:int tableY:int equipment:int item:int
+read playerX:int playerY:int playerItemType:int playerItemDetail:int
+read partnerX:int partnerY:int partnerItemType:int partnerItemDetail:int
+loop numTables read tableX:int tableY:int equipmentType:int equipmentState:int equipmentTimer:int itemType:int itemDetail:int
 read numCustomers:int
-loop numCustomers read award:int item:int
+loop numCustomers read customerAward:int customerItem:int
 write WAIT
 
 INPUT
-width: the width of OUR SIDE of the restaurant
-height: the height of the restaurant
-numOurTables: the number of tables accessible to us
-numAllTables: the total number of tables in the restaurant
-playerX: when x>0, our side of the restaurant. x<0, enemy side
-tableX: when x>0, our side of the restaurant. x<0, enemy side
+width: the width of the kitchen
+height: the height of the kitchen
+numTables: the number of tables in the kitchen
 numCustomers: the number of customers currently waiting for food
-award: the number of points awarded for delivering the food
-item: the food the customer is waiting for
+customerAward: the number of points awarded for delivering the food
+customerItem: the food the customer is waiting for
 
 OUTPUT
 MOVE x y

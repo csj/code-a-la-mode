@@ -35,23 +35,14 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
   }
 
   protected fun readInputs(): GameState {
-    var myPlayer: Player? = null
-    var myFriend: Player? = null
-
-    repeat(2) {
-      val p = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
-          .also { System.err.println("Received player: $it")}
-      when (scanner.nextInt()) {
-        0 -> { myPlayer = p; System.err.println("Found myplayer") }
-        1 -> { myFriend = p; System.err.println("Found myfriend") }
-      }
-    }
+    val myPlayer = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
+    val myFriend = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
 
     val rendering = List(height) { List(width) { "." }.toMutableList() }
-    val tables = List(scanner.nextInt()) {
+    val tables = List(numTables) {
       Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(),
           scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt()).also {
-        System.err.println("Received table: $it")
+//        System.err.println("Received table: $it")
         val desc = when (it.equipment) {
           0 -> "I"
           else -> when (it.item) {
@@ -64,7 +55,7 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
     }
 
     val queue = List(scanner.nextInt()) {
-      Customer(scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
+      Customer(scanner.nextInt(), scanner.nextInt())
     }
 
 //    repeat(height) { i ->
@@ -89,4 +80,4 @@ data class Table(
     val equipment: Int, val equipmentState: Int, val equipmentTimer: Int,
     val item: Int = -1, val itemState: Int = -1)
 data class Player(val x: Int, val y: Int, val carrying: Int = -1, val carryingState: Int = -1)
-data class Customer(val award: Int, val item: Int, val itemState: Int)
+data class Customer(val award: Int, val itemDetail: Int)
