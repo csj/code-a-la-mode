@@ -32,7 +32,9 @@ class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, 
     }
 
     val floorColor = 0xe0e0eb
-    val tableColor = 0xb35900
+    val tableColor = 0x756b68
+//    val floorColor = 0xe0e0eb
+//    val tableColor = 0xb35900
 
     val worldWidth = 1920
     val worldHeight = 1080
