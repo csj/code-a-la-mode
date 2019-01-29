@@ -20,6 +20,40 @@ class Referee : AbstractReferee() {
   private lateinit var view: BoardView
   private lateinit var matchPlayers: MutableList<Player>
 
+  override fun init() {
+    matchPlayers = gameManager.players
+    gameManager.maxTurns = 600
+
+    fun awardTeamPoints(points: Int) {
+//      println("$points points")
+//      teamMap()[teamIndex]!!
+//          .forEach {
+//            players[it].score += points
+//          }
+//
+//      view.scores[teamIndex]!!.text = players[teamMap()[teamIndex]!!.first()].score.toString()
+    }
+
+    val (b,q) = buildBoardAndQueue(::awardTeamPoints)
+    board = b
+    baseQueue = q
+    view = BoardView(graphicEntityModule, board, matchPlayers)
+
+    matchPlayers.forEach { player ->
+      //      println("Sending board size to $player")
+      player.sendInputLine("${board.width} ${board.height}")
+      board.allCells
+          .filter { it.isTable }
+          .also { player.sendInputLine(it.size.toString()) }
+          .also {
+            it.forEach { cell ->
+              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.basicNumber() ?: -1}")
+            }
+          }
+
+    }
+  }
+
   inner class RoundReferee(private val players: List<Player>) {
     init {
       players.forEach { player ->
@@ -47,25 +81,22 @@ class Referee : AbstractReferee() {
       }
 
       fun sendGameState(player: Player) {
-        // 1. Describe all players, including self
-        players.forEach {
+        // 1. Describe self, then partner
+        players.sortedByDescending { it == player }.forEach {
           val (item1, item2) = it.heldItem.describe()
 
           val toks = listOf(
               it.location.x,
               it.location.y,
-              item1, item2,
-              if (it == player) 0 // self
-              else 1 // friend
+              item1, item2
           )
-          println("Sending player toks $toks to $player")
+//          println("Sending player toks $toks to $player")
 
           player.sendInputLine(toks)
         }
 
         // 2. Describe all table cells
         board.allCells.filter { it.isTable }
-            .also { player.sendInputLine(it.size) }
             .forEach {
               val toks = listOf(
                   it.x,
@@ -76,7 +107,7 @@ class Referee : AbstractReferee() {
                   ) +
                   it.item.describe()
               player.sendInputLine(toks)
-              println("Sending table toks $toks to $player")
+//              println("Sending table toks $toks to $player")
             }
 
         // 3. Describe customer queue
@@ -84,7 +115,7 @@ class Referee : AbstractReferee() {
             .also { player.sendInputLine(it.size) }
             .also {
               it.forEach {
-                val toks = listOf(it.award) + it.item.describe()
+                val toks = listOf(it.award) + it.item.describe()[1]
                 player.sendInputLine(toks)
               }
             }
@@ -116,7 +147,7 @@ class Referee : AbstractReferee() {
         view.updatePlayer(player, useTarget)
       }
 
-      println("Current players: ${players.map { it.nicknameToken }}")
+//      println("Current players: ${players.map { it.nicknameToken }}")
       val thePlayer = players[turn % 2]
 
       sendGameState(thePlayer)
@@ -132,39 +163,6 @@ class Referee : AbstractReferee() {
 
   private lateinit var currentRound: RoundReferee
 
-  override fun init() {
-    matchPlayers = gameManager.players
-    gameManager.maxTurns = 600
-
-    fun awardTeamPoints(points: Int) {
-      println("$points points")
-//      teamMap()[teamIndex]!!
-//          .forEach {
-//            players[it].score += points
-//          }
-//
-//      view.scores[teamIndex]!!.text = players[teamMap()[teamIndex]!!.first()].score.toString()
-    }
-
-    val (b,q) = buildBoardAndQueue(::awardTeamPoints)
-    board = b
-    baseQueue = q
-    view = BoardView(graphicEntityModule, board, matchPlayers)
-
-    matchPlayers.forEach { player ->
-      println("Sending board size to $player")
-      player.sendInputLine("${board.width} ${board.height}")
-      board.allCells
-          .filter { it.isTable }
-          .also { player.sendInputLine(it.size.toString()) }
-          .also {
-            it.forEach { cell ->
-              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.basicNumber() ?: -1}")
-            }
-          }
-
-    }
-  }
 
   private fun nextMatch() {
     val roundPlayers = matchPlayers.take(2)
@@ -183,9 +181,10 @@ class Referee : AbstractReferee() {
   }
 
   override fun gameTurn(turn: Int) {
-    println("Turn $turn")
+//    println("Turn $turn")
     if (turn % 200 == 0)
-      nextMatch().also { println("Starting new match!") }
+      nextMatch()
+          //.also { println("Starting new match!") }
     currentRound.gameTurn(turn)
   }
 }
