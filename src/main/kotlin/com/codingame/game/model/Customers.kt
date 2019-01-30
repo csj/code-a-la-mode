@@ -6,9 +6,27 @@ import java.util.ArrayList
 
 abstract class DeliverableItem : Item()
 
-class CustomerQueue(private val onPointsAwarded: (Int) -> Unit): ArrayList<Customer>() {
+var nextQueueId: Int = 0
+
+class CustomerQueue(): ArrayList<Customer>() {
+  val queueId: Int = nextQueueId++
+
+  constructor(eagerPointsAwarded: (Int) -> Unit): this() {
+    onPointsAwarded = eagerPointsAwarded
+  }
+
+  override fun toString(): String {
+    return "CustomerQueue@$queueId"
+  }
+
+  lateinit var onPointsAwarded: (Int) -> Unit
+
+  init {
+    System.err.println("It's a new queue: $this")
+  }
+
   fun delivery(item: Item) {
-    // println("Delivery: $item; current queue: $this")
+    println("Delivery: $item; current queue: $this")
     this.find { it.item == item }?.also {
       onPointsAwarded(it.award)
       remove(it)
@@ -24,7 +42,7 @@ class CustomerQueue(private val onPointsAwarded: (Int) -> Unit): ArrayList<Custo
     removeIf { !it.stillWaiting() }
   }
 
-  fun copy() = CustomerQueue(onPointsAwarded).also {
+  fun copy() = CustomerQueue().also {
     it.clear()
     forEach { customer -> it.add(customer.copy()) }
   }
@@ -70,11 +88,8 @@ data class Customer(val item: DeliverableItem, var award: Int) {
   }
 }
 
-/**
- * @param onDelivery: a callback to be called when a player makes a delivery. Typically
- * this will be a scorekeeper function of some sort.
- */
-class Window(private val dishReturn: DishReturn? = null, private val onDelivery: (Item) -> Unit = { }) : Equipment() {
+class Window(private val dishReturn: DishReturn? = null) : Equipment() {
+  var onDelivery: (Item) -> Unit = { }
 
   override fun basicNumber() = Constants.EQUIPMENT.WINDOW.ordinal
 

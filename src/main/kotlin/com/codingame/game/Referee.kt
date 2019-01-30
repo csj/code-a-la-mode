@@ -7,6 +7,8 @@ import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
 import java.util.*
 
+typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
+
 @Suppress("unused")  // injected by magic
 class Referee : AbstractReferee() {
   @Inject
@@ -20,23 +22,25 @@ class Referee : AbstractReferee() {
   private lateinit var view: BoardView
   private lateinit var matchPlayers: MutableList<Player>
 
+  class ScoreEntry(var roundScores: Array<Int?>) {
+    fun total() = roundScores.filterNotNull().sum()
+    override fun toString() = roundScores.let {
+      "${it[0]}, ${it[1]}, ${it[2]}"
+    }
+  }
+  private lateinit var scoreBoard: ScoreBoard
+
   override fun init() {
     matchPlayers = gameManager.players
+    scoreBoard = mapOf(
+        matchPlayers[0] to ScoreEntry(arrayOf(0, 0, null)),
+        matchPlayers[1] to ScoreEntry(arrayOf(0, null, 0)),
+        matchPlayers[2] to ScoreEntry(arrayOf(null, 0, 0))
+    )
     gameManager.maxTurns = 600
 
-    fun awardTeamPoints(points: Int) {
-//      println("$points points")
-//      teamMap()[teamIndex]!!
-//          .forEach {
-//            players[it].score += points
-//          }
-//
-//      view.scores[teamIndex]!!.text = players[teamMap()[teamIndex]!!.first()].score.toString()
-    }
-
-    val (b,q) = buildBoardAndQueue(::awardTeamPoints)
-    board = b
-    baseQueue = q
+    board = buildBoard()
+    baseQueue = CustomerQueue()
     view = BoardView(graphicEntityModule, board, matchPlayers)
 
     matchPlayers.forEach { player ->
@@ -54,8 +58,24 @@ class Referee : AbstractReferee() {
     }
   }
 
-  inner class RoundReferee(private val players: List<Player>) {
+  inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
+    var score = 0
+
+    private fun ScoreBoard.setScore(roundNumber: Int, score: Int) {
+      forEach { _, entry ->
+        if (entry.roundScores[roundNumber] != null) entry.roundScores[roundNumber] = score
+      }
+    }
+
     init {
+      System.err.println("Setting callback to queue $queue")
+      queue.onPointsAwarded = {
+        score += it
+        scoreBoard.setScore(roundNumber, score)
+        System.err.println("Score is now $scoreBoard")
+      }
+      board.window.onDelivery = queue::delivery
+
       players.forEach { player ->
         player.partner = players.find { it != player }!!
       }
@@ -162,7 +182,7 @@ class Referee : AbstractReferee() {
   }
 
   private lateinit var currentRound: RoundReferee
-
+  private var roundNumber: Int = 0
 
   private fun nextMatch() {
     val roundPlayers = matchPlayers.take(2)
@@ -177,17 +197,22 @@ class Referee : AbstractReferee() {
     view.queue = queue
     view.players = roundPlayers
 
-    currentRound = RoundReferee(roundPlayers)
+    currentRound = RoundReferee(roundPlayers, roundNumber++)
   }
 
   override fun gameTurn(turn: Int) {
-//    println("Turn $turn")
+    println("Turn $turn")
     if (turn % 200 == 0)
       nextMatch()
-          //.also { println("Starting new match!") }
+          .also { println("Starting new match!") }
     currentRound.gameTurn(turn)
   }
-}
 
+  override fun onEnd() {
+    scoreBoard.forEach { player, entry ->
+      player.score = entry.total()
+    }
+  }
+}
 
 

@@ -54,6 +54,8 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
 
 
 class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
+  lateinit var window: Window
+
   constructor(layout: List<String>): this(layout[0].length, layout.size, layout)
 
   fun reset() { allCells.forEach { c ->

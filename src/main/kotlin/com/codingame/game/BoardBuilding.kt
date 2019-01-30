@@ -56,14 +56,16 @@ val equipment2 = listOf(
 
 fun buildEmptyBoard(): Board = Board(boardLayout2)
 
-fun buildBoardAndQueue(scoreAwardCallback: (points: Int) -> Unit): Pair<Board, CustomerQueue> {
+fun buildBoard(): Board {
   val board = buildEmptyBoard()
-  val queue = CustomerQueue(scoreAwardCallback)
 
   val dishReturn1 = DishReturn().also { board["A3"].equipment = it }
+  val window = Window(dishReturn1)
+
 //  board["I6"]
   board["K3"]
-      .equipment = Window(dishReturn1, queue::delivery)
+      .equipment = window
+  board.window = window
 
   val equipmentLocs = equipment2.shuffled(rand).iterator()
 
@@ -80,7 +82,7 @@ fun buildBoardAndQueue(scoreAwardCallback: (points: Int) -> Unit): Pair<Board, C
   )
 
   equipments.forEach { eq -> board[equipmentLocs.next()].equipment = eq }
-  return Pair(board, queue)
+  return board
 }
 
 fun buildPlayers(): List<Player> {
