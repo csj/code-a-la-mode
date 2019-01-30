@@ -21,8 +21,6 @@ class Referee : AbstractReferee() {
   private lateinit var view: BoardView
   private lateinit var matchPlayers: MutableList<Player>
 
-  private val timedOutPlayers: MutableList<Player> = mutableListOf()
-
   override fun init() {
     matchPlayers = gameManager.players
     gameManager.maxTurns = 600
@@ -126,12 +124,11 @@ class Referee : AbstractReferee() {
       }
 
       fun processPlayerActions(player: Player) {
-        val line = if (player in timedOutPlayers) "WAIT" else
+        val line = if (!player.isActive) "WAIT" else
         try {
           player.outputs[0].trim()
         } catch (ex: AbstractPlayer.TimeoutException) {
-          System.err.println("Player $player timed out!")
-          timedOutPlayers += player
+          player.deactivate("Player $player timed out!")
           "WAIT"
         }
 
@@ -160,14 +157,16 @@ class Referee : AbstractReferee() {
 //      println("Current players: ${players.map { it.nicknameToken }}")
       val thePlayer = players[turn % 2]
 
-      if (thePlayer !in timedOutPlayers)
+      if (thePlayer.isActive) {
         sendGameState(thePlayer)
-      thePlayer.execute()  // is this necessary in the timeout case?
+        thePlayer.execute()
+      }
 
       try {
         processPlayerActions(thePlayer)
       } catch (ex: Exception) {
         System.err.println("${thePlayer.nicknameToken}: $ex")
+        thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
 
       view.updateCells(board.allCells)
