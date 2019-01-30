@@ -24,7 +24,7 @@ class NaiveAllItemsPlayer(
       turn++
       inputs = readInputs()
 
-//      if (turn > 20) throw Exception("ARRRGGG")
+      if (turn > 5) throw Exception("ARRRGGG")
 
       crates = mapOf(
           Constants.FOOD.BLUEBERRIES to Constants.EQUIPMENT.BLUEBERRY_CRATE,

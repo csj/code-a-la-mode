@@ -123,7 +123,6 @@ class Referee : AbstractReferee() {
               }
             }
 
-        player.execute()
       }
 
       fun processPlayerActions(player: Player) {
@@ -161,7 +160,10 @@ class Referee : AbstractReferee() {
 //      println("Current players: ${players.map { it.nicknameToken }}")
       val thePlayer = players[turn % 2]
 
-      sendGameState(thePlayer)
+      if (thePlayer !in timedOutPlayers)
+        sendGameState(thePlayer)
+      thePlayer.execute()  // is this necessary in the timeout case?
+
       try {
         processPlayerActions(thePlayer)
       } catch (ex: Exception) {
