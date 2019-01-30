@@ -1,6 +1,7 @@
 package com.codingame.game
 
 import com.codingame.game.model.*
+import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.*
@@ -19,6 +20,8 @@ class Referee : AbstractReferee() {
   private lateinit var baseQueue: CustomerQueue
   private lateinit var view: BoardView
   private lateinit var matchPlayers: MutableList<Player>
+
+  private val timedOutPlayers: MutableList<Player> = mutableListOf()
 
   override fun init() {
     matchPlayers = gameManager.players
@@ -124,7 +127,15 @@ class Referee : AbstractReferee() {
       }
 
       fun processPlayerActions(player: Player) {
-        val line = player.outputs[0].trim()
+        val line = if (player in timedOutPlayers) "WAIT" else
+        try {
+          player.outputs[0].trim()
+        } catch (ex: AbstractPlayer.TimeoutException) {
+          System.err.println("Player $player timed out!")
+          timedOutPlayers += player
+          "WAIT"
+        }
+
         val toks = line.split(" ").iterator()
         val command = toks.next()
         var useTarget: Cell? = null
