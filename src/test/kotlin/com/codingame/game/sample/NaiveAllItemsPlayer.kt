@@ -19,8 +19,12 @@ class NaiveAllItemsPlayer(
   }
 
   init {
+    var turn = 0
     while (true) {
+      turn++
       inputs = readInputs()
+
+      if (turn > 5) throw Exception("ARRRGGG")
 
       crates = mapOf(
           Constants.FOOD.BLUEBERRIES to Constants.EQUIPMENT.BLUEBERRY_CRATE,
