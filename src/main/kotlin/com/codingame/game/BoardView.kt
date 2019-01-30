@@ -220,7 +220,7 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule, width: Int = cel
         is RawPie -> image = "pie.png"  // TODO: Add flavour
         is Pie -> image = "pie.png"  // TODO: Add flavour and tint
         is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
-        is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
+        is IceCream -> image = "ice-cream.png"
         is Strawberries -> image = "strawberry.png"
         is Blueberries -> image = "blueberries.png"
         is Dish -> {
@@ -230,7 +230,7 @@ class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule, width: Int = cel
               isVisible = true
               when (edible) {
                 is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
-                is IceCreamBall -> image = "ice-cream.png"   // TODO: add flavour
+                is IceCream -> image = "ice-cream.png"
                 is Strawberries -> image = "strawberry.png"
                 is Blueberries -> image = "blueberries.png"
                 is Waffle -> image = "waffle.png"

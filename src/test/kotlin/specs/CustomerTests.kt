@@ -12,8 +12,8 @@ class CustomerTests: FreeSpec({
     val (alice, andrew) = buildPlayers()
     val board = buildEmptyBoard()
 
-    val aliceStuff = Dish(ChoppedBananas, IceCreamBall(IceCreamFlavour.VANILLA))
-    val andrewStuff = Dish(IceCreamBall(IceCreamFlavour.BUTTERSCOTCH), IceCreamBall(IceCreamFlavour.CHOCOLATE))
+    val aliceStuff = Dish(ChoppedBananas, IceCream)
+    val andrewStuff = Dish(Strawberries, Blueberries)
 
     var score = 0
     val queue = CustomerQueue { points -> score += points }

@@ -1,37 +1,16 @@
 package com.codingame.game.sample
 
 import com.codingame.game.model.Constants
-import com.codingame.game.model.IceCreamFlavour
 import sample.BaseCALMPlayer
 import java.io.InputStream
 import java.io.PrintStream
 
-//fun main(args: Array<String>) {
-//  VanillaIceCreamPlayer()
-//}
-
-class VanillaIceCreamPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream)
-  : IceCreamPlayer(stdin, stdout, stderr, IceCreamFlavour.VANILLA)
-
-class ChocolateIceCreamPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream)
-  : IceCreamPlayer(stdin, stdout, stderr, IceCreamFlavour.CHOCOLATE)
-
-open class IceCreamPlayer(
-    stdin: InputStream, stdout: PrintStream, stderr: PrintStream,
-    iceCreamFlavour: IceCreamFlavour)
+class IceCreamPlayer(
+    stdin: InputStream, stdout: PrintStream, stderr: PrintStream)
   : BaseCALMPlayer(stdin, stdout, stderr) {
 
-  private val crateVal = when (iceCreamFlavour) {
-    IceCreamFlavour.VANILLA -> Constants.EQUIPMENT.VANILLA_CRATE.ordinal
-    IceCreamFlavour.CHOCOLATE -> Constants.EQUIPMENT.CHOCOLATE_CRATE.ordinal
-    IceCreamFlavour.BUTTERSCOTCH -> Constants.EQUIPMENT.BUTTERSCOTCH_CRATE.ordinal
-  }
-
-  private val ballVal = when (iceCreamFlavour) {
-    IceCreamFlavour.VANILLA -> Constants.FOOD.VANILLA_BALL.value
-    IceCreamFlavour.CHOCOLATE -> Constants.FOOD.CHOCOLATE_BALL.value
-    IceCreamFlavour.BUTTERSCOTCH -> Constants.FOOD.BUTTERSCOTCH_BALL.value
-  }
+  private val crateVal = Constants.EQUIPMENT.ICE_CREAM_CRATE.ordinal
+  private val ballVal = Constants.FOOD.ICE_CREAM.value
 
   init {
     while (true) {

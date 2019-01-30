@@ -171,8 +171,8 @@ class Referee : AbstractReferee() {
     board.reset()
     queue = baseQueue.copy()
 
-    roundPlayers[0].apply { location = board["D6"]; heldItem = null }
-    roundPlayers[1].apply { location = board["F3"]; heldItem = null }
+    roundPlayers[0].apply { location = board["D3"]; heldItem = null }
+    roundPlayers[1].apply { location = board["H3"]; heldItem = null }
     view.board = board
     view.queue = queue
     view.players = roundPlayers

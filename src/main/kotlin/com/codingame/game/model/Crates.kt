@@ -2,13 +2,8 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-data class IceCreamCrate(val flavour: IceCreamFlavour): GeneralCrate({ IceCreamBall(flavour) }) {
-  override fun basicNumber(): Int =
-      when (flavour) {
-        IceCreamFlavour.VANILLA -> Constants.EQUIPMENT.VANILLA_CRATE.ordinal
-        IceCreamFlavour.CHOCOLATE -> Constants.EQUIPMENT.CHOCOLATE_CRATE.ordinal
-        IceCreamFlavour.BUTTERSCOTCH -> Constants.EQUIPMENT.BUTTERSCOTCH_CRATE.ordinal
-      }
+class IceCreamCrate: GeneralCrate({ IceCream }) {
+  override fun basicNumber(): Int = Constants.EQUIPMENT.ICE_CREAM_CRATE.ordinal
 }
 
 class StrawberryCrate: GeneralCrate({ Strawberries }) {

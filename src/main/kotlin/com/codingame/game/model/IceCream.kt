@@ -2,13 +2,7 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-enum class IceCreamFlavour {
-  VANILLA,
-  CHOCOLATE,
-  BUTTERSCOTCH
-}
-
-data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
+object IceCream : EdibleItem() {
   override fun take(player: Player, cell: Cell) {
     throw Exception("Cannot take $this directly!")
   }
@@ -23,7 +17,7 @@ data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
 //data class Scoop(val state: ScoopState = ScoopState.Clean) : Item() {
 //  override fun dropOntoDish(player: Player, dish: Dish) {
 //    if (state is ScoopState.IceCream) {
-//      IceCreamBall(state.flavour).dropOntoDish(player, dish)
+//      IceCream(state.flavour).dropOntoDish(player, dish)
 //      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
 //      return
 //    }
@@ -32,7 +26,7 @@ data class IceCreamBall(val flavour: IceCreamFlavour) : EdibleItem() {
 //
 //  override fun dropOntoEquipment(player: Player, equipment: Equipment) {
 //    if (state is ScoopState.IceCream) {
-//      IceCreamBall(state.flavour).dropOntoEquipment(player, equipment)
+//      IceCream(state.flavour).dropOntoEquipment(player, equipment)
 //      player.heldItem = Scoop(ScoopState.Dirty(state.flavour))
 //      return
 //    }

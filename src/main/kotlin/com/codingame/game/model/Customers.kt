@@ -43,9 +43,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
 
   companion object {
     private val possiblePlateContents = mapOf(
-        IceCreamBall(IceCreamFlavour.VANILLA) to 200,
-        IceCreamBall(IceCreamFlavour.CHOCOLATE) to 250,
-        IceCreamBall(IceCreamFlavour.BUTTERSCOTCH) to 300,
+        IceCream to 200,
         Strawberries to 300,
         Blueberries to 250,
         ChoppedBananas to 500,

@@ -25,9 +25,7 @@ class NaiveAllItemsPlayer(
       crates = mapOf(
           Constants.FOOD.BLUEBERRIES to Constants.EQUIPMENT.BLUEBERRY_CRATE,
           Constants.FOOD.STRAWBERRIES to Constants.EQUIPMENT.STRAWBERRY_CRATE,
-          Constants.FOOD.VANILLA_BALL to Constants.EQUIPMENT.VANILLA_CRATE,
-          Constants.FOOD.CHOCOLATE_BALL to Constants.EQUIPMENT.CHOCOLATE_CRATE,
-          Constants.FOOD.BUTTERSCOTCH_BALL to Constants.EQUIPMENT.BUTTERSCOTCH_CRATE
+          Constants.FOOD.ICE_CREAM to Constants.EQUIPMENT.ICE_CREAM_CRATE
       )
           .mapKeys { (key, _) -> key.value }
           .mapValues { (_, crateVal) -> inputs.tables.firstOrNull { it.equipment == crateVal.ordinal } ?:

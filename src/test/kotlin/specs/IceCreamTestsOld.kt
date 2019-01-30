@@ -45,13 +45,13 @@ package specs
 //      "can DROP ice cream onto a dish out of a scoop" {
 //        setup()
 //        player.drop(board["F2"])
-//        board["F2"].item shouldBe Dish(IceCreamBall(IceCreamFlavour.VANILLA))
+//        board["F2"].item shouldBe Dish(IceCream(IceCreamFlavour.VANILLA))
 //        player.heldItem shouldBe Scoop(ScoopState.Dirty(IceCreamFlavour.VANILLA))
 //      }
 //
 //      "cannot DROP ice cream onto a dish out of a scoop, if the dish already has ice cream" {
 //        setup()
-//        (board["F2"].item as Dish) += IceCreamBall(IceCreamFlavour.VANILLA)
+//        (board["F2"].item as Dish) += IceCream(IceCreamFlavour.VANILLA)
 //        shouldThrowAny {
 //          player.drop(board["F2"])
 //        }

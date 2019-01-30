@@ -15,7 +15,7 @@ class IceCreamTests: FreeSpec({
   val player = Player()
 
   fun setup() {
-    crateLoc.equipment = IceCreamCrate(IceCreamFlavour.VANILLA)
+    crateLoc.equipment = IceCreamCrate()
     player.location = board["H2"]
     tableLoc.item = null
     player.heldItem = null
@@ -24,14 +24,14 @@ class IceCreamTests: FreeSpec({
   "a player can take ice cream" {
     setup()
     player.use(crateLoc)
-    player.heldItem shouldBe IceCreamBall(IceCreamFlavour.VANILLA)
+    player.heldItem shouldBe IceCream
   }
 
   "a player can insta-plate ice cream" {
     setup()
     player.heldItem = Dish()
     player.use(crateLoc)
-    player.heldItem shouldBe Dish(IceCreamBall(IceCreamFlavour.VANILLA))
+    player.heldItem shouldBe Dish(IceCream)
   }
 
   "a player cannot put things onto a crate" {
@@ -42,10 +42,10 @@ class IceCreamTests: FreeSpec({
 
   "a player can add an ice cream ball to a plate on a table" {
     setup()
-    player.heldItem = IceCreamBall(IceCreamFlavour.VANILLA)
+    player.heldItem = IceCream
     tableLoc.item = Dish()
     player.use(tableLoc)
     player.heldItem shouldBe null
-    tableLoc.item shouldBe Dish(IceCreamBall(IceCreamFlavour.VANILLA))
+    tableLoc.item shouldBe Dish(IceCream)
   }
 })

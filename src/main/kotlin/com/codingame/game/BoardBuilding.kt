@@ -68,9 +68,7 @@ fun buildBoardAndQueue(scoreAwardCallback: (points: Int) -> Unit): Pair<Board, C
   val equipmentLocs = equipment2.shuffled(rand).iterator()
 
   val equipments = listOf(
-      IceCreamCrate(IceCreamFlavour.VANILLA),
-      IceCreamCrate(IceCreamFlavour.CHOCOLATE),
-      IceCreamCrate(IceCreamFlavour.BUTTERSCOTCH),
+      IceCreamCrate(),
       PieCrustCrate(),
       StrawberryCrate(),
       BlueberryCrate(),

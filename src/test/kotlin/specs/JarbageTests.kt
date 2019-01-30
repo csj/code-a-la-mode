@@ -21,7 +21,7 @@ class JarbageTests: FreeSpec({
   "a player can throw out most items" {
     setup()
     listOf(
-        IceCreamBall(IceCreamFlavour.VANILLA), Banana, ChoppedBananas, Blueberries,
+        IceCream, Banana, ChoppedBananas, Blueberries,
         Pie(PieFlavour.Strawberry), RawPie(PieFlavour.Strawberry, 1), Waffle, BurntPie, BurntWaffle
     ).forEach {
       player.heldItem = it
@@ -33,7 +33,7 @@ class JarbageTests: FreeSpec({
 
   "a player can jarbage a plate; this makes it clean" {
     setup()
-    player.heldItem = Dish(Strawberries, PieSlice(PieFlavour.Blueberry), IceCreamBall(IceCreamFlavour.BUTTERSCOTCH))
+    player.heldItem = Dish(Strawberries, PieSlice(PieFlavour.Blueberry), IceCream)
     player.use(jarbageLoc)
     player.heldItem shouldBe Dish()
     jarbageLoc.item shouldBe null
