@@ -1,6 +1,7 @@
 package com.codingame.game
 
 import com.codingame.game.model.*
+import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.*
@@ -140,11 +141,17 @@ class Referee : AbstractReferee() {
               }
             }
 
-        player.execute()
       }
 
       fun processPlayerActions(player: Player) {
-        val line = player.outputs[0].trim()
+        val line = if (!player.isActive) "WAIT" else
+        try {
+          player.outputs[0].trim()
+        } catch (ex: AbstractPlayer.TimeoutException) {
+          player.deactivate("Player $player timed out!")
+          "WAIT"
+        }
+
         val toks = line.split(" ").iterator()
         val command = toks.next()
         var useTarget: Cell? = null
@@ -170,11 +177,16 @@ class Referee : AbstractReferee() {
 //      println("Current players: ${players.map { it.nicknameToken }}")
       val thePlayer = players[turn % 2]
 
-      sendGameState(thePlayer)
+      if (thePlayer.isActive) {
+        sendGameState(thePlayer)
+        thePlayer.execute()
+      }
+
       try {
         processPlayerActions(thePlayer)
       } catch (ex: Exception) {
         System.err.println("${thePlayer.nicknameToken}: $ex")
+        thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
 
       view.updateCells(board.allCells)
