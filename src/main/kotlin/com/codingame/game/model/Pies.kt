@@ -67,15 +67,15 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
   private fun insertRawPie(flavour: PieFlavour) {
     if (state === OvenState.Empty)
       state = OvenState.Cooking(flavour, cookTime)
-    else throw Exception("Cannot insert pie: oven not empty!")
+    else throw LogicException("Cannot insert pie: oven not empty!")
   }
 
   override fun takeFrom(player: Player): Item {
     lateinit var retVal: Item
     val curState = state
     state = when (curState) {
-      OvenState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
-      is OvenState.Cooking -> throw Exception("Cannot take from $this: pie is cooking!")
+      OvenState.Empty -> throw LogicException("Cannot take from $this: nothing inside!")
+      is OvenState.Cooking -> throw LogicException("Cannot take from $this: pie is cooking!")
       is OvenState.Cooked -> OvenState.Empty.also { retVal = Pie(curState.flavour) }
       OvenState.Burnt -> OvenState.Empty.also { retVal = BurntPie }
     }
@@ -98,11 +98,11 @@ data class RawPie(var pieFlavour: PieFlavour? = null, var fruitsMissing: Int = 0
         fruitsMissing = Constants.PIE_FRUITS_NEEDED - 1
       }
       flavour -> {
-        if (fruitsMissing == 0) throw Exception("Cannot add more fruit: already full!")
+        if (fruitsMissing == 0) throw LogicException("Cannot add more fruit: already full!")
         fruitsMissing--
       }
       else -> {
-        throw Exception("Cannot add $item to $this: wrong flavour!")
+        throw LogicException("Cannot add $item to $this: wrong flavour!")
       }
     }
     player.heldItem = null

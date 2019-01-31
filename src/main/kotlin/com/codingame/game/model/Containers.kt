@@ -19,7 +19,7 @@ interface Container {
 }
 
 infix operator fun Container.plusAssign(item: EdibleItem) {
-  if (item in contents) throw Exception("Can't add: $this already contains $item")
+  if (item in contents) throw LogicException("Can't add: $this already contains $item")
   contents += item
 }
 

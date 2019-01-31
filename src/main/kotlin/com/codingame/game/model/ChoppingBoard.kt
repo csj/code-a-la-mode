@@ -16,11 +16,11 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
   }
 
   private fun checkVacant() {
-    if (pieOnBoard != null) throw Exception("Chopping board is not vacant")
+    if (pieOnBoard != null) throw LogicException("Chopping board is not vacant!")
   }
 
   private fun getSlice(): PieSlice {
-    val pie = pieOnBoard ?: throw Exception("No pie slices to get!")
+    val pie = pieOnBoard ?: throw LogicException("No pie slices to get!")
     pieOnBoard = when (pie.pieces) {
       1 -> null
       else -> pie.copy(pieces = pie.pieces - 1)

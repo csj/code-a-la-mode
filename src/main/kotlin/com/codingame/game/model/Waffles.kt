@@ -47,8 +47,8 @@ data class WaffleIron(private val cookTime: Int, private val burnTime: Int, priv
     lateinit var retVal: Item
     val curState = state
     state = when (curState) {
-      WaffleState.Empty -> throw Exception("Cannot take from $this: nothing inside!")
-      is WaffleState.Cooking -> throw Exception("Cannot take from $this: waffle is cooking!")
+      WaffleState.Empty -> throw LogicException("Cannot take from $this: nothing inside!")
+      is WaffleState.Cooking -> throw LogicException("Cannot take from $this: waffle is cooking!")
       is WaffleState.Cooked -> WaffleState.Empty.also { retVal = Waffle }
       WaffleState.Burnt -> WaffleState.Empty.also { retVal = BurntWaffle }
     }

@@ -38,11 +38,9 @@ class DishReturn : TimeSensitiveEquipment() {
   var dishes: Int = 4
 
   override fun takeFrom(player: Player): Item {
-    if (dishes > 0) {
-      dishes--
-      return Dish()
-    }
-    return super.takeFrom(player)
+    if (dishes <= 0) throw LogicException("Dishwasher is empty!")
+    dishes--
+    return Dish()
   }
 
   fun addDishToQueue() {

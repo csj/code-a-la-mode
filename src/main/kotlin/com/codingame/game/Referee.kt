@@ -26,7 +26,7 @@ class Referee : AbstractReferee() {
   class ScoreEntry(var roundScores: Array<Int?>) {
     fun total() = roundScores.filterNotNull().sum()
     override fun toString() = roundScores.let {
-      "${it[0]}, ${it[1]}, ${it[2]}"
+      "[${it[0]}, ${it[1]}, ${it[2]}]"
     }
   }
   private lateinit var scoreBoard: ScoreBoard
@@ -184,8 +184,10 @@ class Referee : AbstractReferee() {
 
       try {
         processPlayerActions(thePlayer)
-      } catch (ex: Exception) {
+      } catch (ex: LogicException) {
         System.err.println("${thePlayer.nicknameToken}: $ex")
+      } catch (ex: Exception) {
+        System.err.println("${thePlayer.nicknameToken}: $ex (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
 
