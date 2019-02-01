@@ -3,7 +3,7 @@ package com.codingame.game
 import com.codingame.game.model.*
 import java.util.*
 
-val rand = Random()
+lateinit var rand: Random
 fun <E> List<E>.random(): E {
   val index = rand.nextInt(size)
   return this[index]

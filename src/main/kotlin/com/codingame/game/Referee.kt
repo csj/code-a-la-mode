@@ -32,6 +32,8 @@ class Referee : AbstractReferee() {
   private lateinit var scoreBoard: ScoreBoard
 
   override fun init() {
+    rand = Random(gameManager.seed)
+
     matchPlayers = gameManager.players
     scoreBoard = mapOf(
         matchPlayers[0] to ScoreEntry(arrayOf(0, 0, null)),

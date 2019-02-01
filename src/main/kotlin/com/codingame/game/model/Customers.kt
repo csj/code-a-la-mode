@@ -34,12 +34,8 @@ class CustomerQueue(): ArrayList<Customer>() {
   }
 
   fun tick() {
-    repeat(3 - size) {
-      if (rand.nextDouble() < 0.2) {
-        this += Customer.randomCustomer()
-      }
-    }
     removeIf { !it.stillWaiting() }
+    while(size < 3) { this += Customer.randomCustomer() }
   }
 
   fun copy() = CustomerQueue().also {
