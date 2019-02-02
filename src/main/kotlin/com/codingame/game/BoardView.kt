@@ -6,48 +6,139 @@ import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.codingame.gameengine.module.entities.Sprite
 import com.codingame.gameengine.module.entities.Text
 
-var cellWidth: Int = 0
-val cellSpacing = 5
-val yOffset = 100
-val xOffset = 50
+lateinit var graphicEntityModule: GraphicEntityModule
 
-class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, matchPlayers: List<Player>) {
+class GameView {
+  lateinit var boardView: BoardView
+  lateinit var queueView: QueueView
+  lateinit var scoresView: ScoresView
+}
+
+class QueueView {
+  lateinit var queue: CustomerQueue
+
+  private var customerViews: List<CustomerView> = List(3) {
+    CustomerView()
+  }
+
+  val wholeGroup = graphicEntityModule.createGroup(*(customerViews.map { it.group }).toTypedArray()).apply {
+    x = 0
+    y = 800
+  }
+
+  fun updateQueue() {
+    customerViews.forEachIndexed { index, custView ->
+      custView.group.apply { x = 10 + index * 420; y = 10 }
+
+      if (index >= queue.size) {
+        custView.group.isVisible = false
+      } else {
+        queue[index].let {
+          custView.group.isVisible = it.award > 0
+          custView.update(it.dish.contents.toList(), it.award)
+        }
+      }
+    }
+  }
+
+  inner class CustomerView {
+    val viewWidth = 400
+    val viewHeight = 200
+
+    val customerSpritePadding = 5
+    val customerSpriteWidth = viewWidth / 4 - customerSpritePadding*2
+
+    private fun Sprite.center() {
+      anchorY = 0.5
+      anchorX = 0.5
+      x = customerSpriteWidth / 2
+      y = customerSpriteWidth / 2
+    }
+
+    val foodSprites = List(4) { i ->
+      graphicEntityModule.createSprite().apply {
+        center()
+        baseHeight = customerSpriteWidth
+        baseWidth = customerSpriteWidth
+        x = ((i + 0.5) * (customerSpriteWidth + customerSpritePadding*2)).toInt()
+        y = (0.5 * customerSpriteWidth + customerSpritePadding).toInt()
+        zIndex = 300
+        isVisible = false
+      }
+    }
+
+    val awardText = graphicEntityModule.createText("0").apply {
+      fillColor = 0xffffff
+      fontSize = 50
+      x = viewWidth / 2
+      y = viewHeight * 3 / 4
+      anchorX = 0.5
+      anchorY = 0.5
+      zIndex = 350
+    }
+
+    val backgroundBox = graphicEntityModule.createRectangle().apply {
+      fillColor = 0x4286f4
+      width = viewWidth
+      height = viewHeight
+      zIndex = 200
+    }
+
+    val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
+
+    fun update(edibles: List<EdibleItem>, award: Int) {
+      awardText.text = award.toString()
+
+      foodSprites.forEach { it.isVisible = false }
+      edibles.zip(foodSprites).forEach { (edible, foodSprite) ->
+        foodSprite.apply {
+          isVisible = true
+          when (edible) {
+            is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+            is IceCream -> image = "ice-cream.png"
+            is Strawberries -> image = "strawberry.png"
+            is Blueberries -> image = "blueberries.png"
+            is Waffle -> image = "waffle.png"
+            is ChoppedBananas -> image = "open-banana.png"
+          }
+        }
+      }
+    }
+  }
+
+}
+
+class ScoresView
+
+class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
+  var cellWidth: Int = 0
+  val cellSpacing = 5
+
+  val yRange = 0..800
+  val xRange = 0..1300
 
   lateinit var board: Board
   lateinit var players: List<Player>
-  lateinit var queue: CustomerQueue
 
   var scores = mutableMapOf<Int, Text>()
-  private var queueSprites: List<ItemSpriteGroup>
-  private var queueAwards: List<Text>
   private var cellViews: MutableList<CellView> = mutableListOf()
 
   init {
-    queueSprites = List(3) {
-      ItemSpriteGroup(graphicEntityModule, 50)
-    }
-
-    queueAwards = List(3) {
-      graphicEntityModule.createText("0").setFillColor(0xffffff)
-    }
-
     val floorColor = 0xe0e0eb
     val tableColor = 0x756b68
 //    val floorColor = 0xe0e0eb
 //    val tableColor = 0xb35900
 
-    val worldWidth = 1920
-    val worldHeight = 1080
 
-    val gridHeight = worldHeight - yOffset
-    val gridWidth = worldWidth - xOffset
+    val gridHeight = yRange.last - yRange.first
+    val gridWidth = xRange.last - xRange.first
     cellWidth = Math.min(gridHeight / baseBoard.height, gridWidth / baseBoard.width) - cellSpacing
 
     for (cellCol in baseBoard.cells) {
 
       for (cell in cellCol) {
-        val x = cell.x * (cellWidth + cellSpacing) + xOffset
-        val y = cell.y * (cellWidth + cellSpacing) + yOffset
+        val x = cell.x * (cellWidth + cellSpacing) + xRange.first
+        val y = cell.y * (cellWidth + cellSpacing) + yRange.first
 
         cellViews.add(CellView(cell).apply {
           background = graphicEntityModule
@@ -91,7 +182,7 @@ class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, 
             setY(cellWidth / 2)
           }
 
-          itemSpriteGroup = ItemSpriteGroup(graphicEntityModule)
+          itemSpriteGroup = ItemSpriteGroup()
 
           group = graphicEntityModule.createGroup(background, content, secondaryContent, itemSpriteGroup.group)
               .setX(x).setY(y)
@@ -109,7 +200,7 @@ class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, 
         tint = player.colorToken
       }
 
-      player.itemSprite = ItemSpriteGroup(graphicEntityModule)
+      player.itemSprite = ItemSpriteGroup()
 
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
 //          .setX(player.location.view.group.x + 5)
@@ -126,24 +217,6 @@ class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, 
 //    scores[1] = graphicEntityModule.createText("0").setX(420).setY(20).setFillColor(0xffffff)
   }
 
-  fun updateQueue() {
-    queueSprites.forEachIndexed { index, sprite ->
-      sprite.group.apply { x = 500 + (100 * index); y = 10 }
-
-      if(queue.size > index) {
-        queueAwards[index].text = queue[index].award.toString()
-        queueAwards[index].apply { x = 500 + (100 * index); y = 55 }
-        queueAwards[index].isVisible = true
-
-        sprite.update(queue[index].item)
-        sprite.group.isVisible = queue[index].award > 0
-      } else {
-        sprite.group.isVisible = false
-        queueAwards[index].isVisible = false
-      }
-    }
-  }
-
   fun updateCells(boardCells: List<Cell>) {
     boardCells.zip(cellViews).forEach { (cell, view) ->
       view.itemSpriteGroup.update(cell.item) }
@@ -151,8 +224,8 @@ class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, 
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell) {
     // TODO: PLEEEASE fix me. Such hacks :(
-    x = cell.x * (cellWidth + cellSpacing) + xOffset + 5
-    y = cell.y * (cellWidth + cellSpacing) + yOffset + 5
+    x = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
+    y = cell.y * (cellWidth + cellSpacing) + yRange.first + 5
   }
 
   fun updatePlayer(player: Player, useTarget: Cell?) {
@@ -178,76 +251,79 @@ class BoardView(val graphicEntityModule: GraphicEntityModule, baseBoard: Board, 
     player.characterSprite.isVisible = false
     player.itemSprite.isVisible = false
   }
-}
 
-class ItemSpriteGroup(graphicEntityModule: GraphicEntityModule, width: Int = cellWidth) {
-  val mainSprite = graphicEntityModule.createSprite().apply {
-    center()
-    baseHeight = width + 4
-    baseWidth = width + 4
-    zIndex = 50
-    isVisible = false
-  }
-
-  val subSprites = List(4) { i ->
-    graphicEntityModule.createSprite().apply {
+  inner class ItemSpriteGroup(width: Int = cellWidth) {
+    val mainSprite = graphicEntityModule.createSprite().apply {
       center()
-      baseHeight = width / 2
-      baseWidth = width / 2
-      zIndex = 50 + i
-      x = ((i - 1.5) * 8 + width / 2).toInt()
-      y = ((i - 1.5) * 8 + width / 2).toInt()
+      baseHeight = width + 4
+      baseWidth = width + 4
+      zIndex = 50
       isVisible = false
     }
-  }
 
-  val group = graphicEntityModule.createGroup(*(subSprites + mainSprite).toTypedArray())
-  var isVisible: Boolean = true
-  set(value) {
-    mainSprite.isVisible = value
-    subSprites.forEach { it.isVisible = value }
-  }
+    val subSprites = List(4) { i ->
+      graphicEntityModule.createSprite().apply {
+        center()
+        baseHeight = width / 2
+        baseWidth = width / 2
+        zIndex = 50 + i
+        x = ((i - 1.5) * 8 + width / 2).toInt()
+        y = ((i - 1.5) * 8 + width / 2).toInt()
+        isVisible = false
+      }
+    }
 
-  fun update(item: Item?) {
-    subSprites.forEach { it.isVisible = false }
-    mainSprite.apply {
-      isVisible = true
+    val group = graphicEntityModule.createGroup(*(subSprites + mainSprite).toTypedArray())
+    var isVisible: Boolean = true
+      set(value) {
+        mainSprite.isVisible = value
+        subSprites.forEach { it.isVisible = value }
+      }
 
-      when(item) {
-        is Banana -> image = "banana.png"
-        is ChoppedBananas -> image = "open-banana.png"
-        is Waffle -> image = "waffle.png"
-        is RawPie -> image = "pie.png"  // TODO: Add flavour
-        is Pie -> image = "pie.png"  // TODO: Add flavour and tint
-        is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
-        is IceCream -> image = "ice-cream.png"
-        is Strawberries -> image = "strawberry.png"
-        is Blueberries -> image = "blueberries.png"
-        is Dish -> {
-          image = "dish.png"
-          item.contents.zip(subSprites).forEach { (edible, subSprite) ->
-            subSprite.apply {
-              isVisible = true
-              when (edible) {
-                is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
-                is IceCream -> image = "ice-cream.png"
-                is Strawberries -> image = "strawberry.png"
-                is Blueberries -> image = "blueberries.png"
-                is Waffle -> image = "waffle.png"
-                is ChoppedBananas -> image = "open-banana.png"
+    fun update(item: Item?) {
+      subSprites.forEach { it.isVisible = false }
+      mainSprite.apply {
+        isVisible = true
+
+        when(item) {
+          is Banana -> image = "banana.png"
+          is ChoppedBananas -> image = "open-banana.png"
+          is Waffle -> image = "waffle.png"
+          is RawPie -> image = "pie.png"  // TODO: Add flavour
+          is Pie -> image = "pie.png"  // TODO: Add flavour and tint
+          is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+          is IceCream -> image = "ice-cream.png"
+          is Strawberries -> image = "strawberry.png"
+          is Blueberries -> image = "blueberries.png"
+          is Dish -> {
+            image = "dish.png"
+            item.contents.zip(subSprites).forEach { (edible, subSprite) ->
+              subSprite.apply {
+                isVisible = true
+                when (edible) {
+                  is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+                  is IceCream -> image = "ice-cream.png"
+                  is Strawberries -> image = "strawberry.png"
+                  is Blueberries -> image = "blueberries.png"
+                  is Waffle -> image = "waffle.png"
+                  is ChoppedBananas -> image = "open-banana.png"
+                }
               }
             }
           }
+          else -> mainSprite.isVisible = false
         }
-        else -> mainSprite.isVisible = false
       }
     }
   }
+
+  private fun Sprite.center() {
+    anchorY = 0.5
+    anchorX = 0.5
+    x = cellWidth / 2
+    y = cellWidth / 2
+  }
+
+
 }
 
-private fun Sprite.center() {
-  anchorY = 0.5
-  anchorX = 0.5
-  x = cellWidth / 2
-  y = cellWidth / 2
-}

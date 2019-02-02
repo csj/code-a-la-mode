@@ -17,7 +17,7 @@ class Player : AbstractMultiplayerPlayer() {
 
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
-  lateinit var itemSprite: ItemSpriteGroup
+  lateinit var itemSprite: BoardView.ItemSpriteGroup
   lateinit var characterSprite: Sprite
 
   fun sendInputLine(toks: List<Int>) = sendInputLine(toks.joinToString(" "))

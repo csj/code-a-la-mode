@@ -1,6 +1,6 @@
 package com.codingame.game.model
 
-import com.codingame.game.ItemSpriteGroup
+import com.codingame.game.BoardView
 import com.codingame.gameengine.module.entities.*
 import java.util.*
 
@@ -8,7 +8,7 @@ class CellView(val cell: Cell) {
   lateinit var background: Rectangle
   lateinit var content: Sprite
   lateinit var secondaryContent: Sprite
-  lateinit var itemSpriteGroup: ItemSpriteGroup
+  lateinit var itemSpriteGroup: BoardView.ItemSpriteGroup
   lateinit var group: Group
 }
 

@@ -13,7 +13,7 @@ val edibleEncoding: Map<EdibleItem, Int> = mapOf(
     Waffle to Constants.FOOD.WAFFLE.value
 )
 
-data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : DeliverableItem(), Container {
+data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : Item(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
 
   override fun receiveItem(player: Player, item: Item, cell: Cell?) {

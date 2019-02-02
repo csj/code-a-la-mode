@@ -4,8 +4,6 @@ import com.codingame.game.Player
 import com.codingame.game.rand
 import java.util.ArrayList
 
-abstract class DeliverableItem : Item()
-
 var nextQueueId: Int = 0
 
 class CustomerQueue(): ArrayList<Customer>() {
@@ -27,7 +25,7 @@ class CustomerQueue(): ArrayList<Customer>() {
 
   fun delivery(item: Item) {
     println("Delivery: $item; current queue: $this")
-    this.find { it.item == item }?.also {
+    this.find { it.dish == item }?.also {
       onPointsAwarded(it.award)
       remove(it)
     } ?: onPointsAwarded(0)
@@ -45,10 +43,10 @@ class CustomerQueue(): ArrayList<Customer>() {
 }
 
 
-data class Customer(val item: DeliverableItem, var award: Int) {
+data class Customer(val dish: Dish, var award: Int) {
   val originalAward = award
 
-  fun copy() = Customer(item, originalAward)
+  fun copy() = Customer(dish, originalAward)
 
   fun stillWaiting(): Boolean {
     award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
@@ -66,7 +64,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
         Waffle to 600
     )
 
-    private fun randomOrder(): DeliverableItem =
+    private fun randomOrder(): Dish =
         Dish(possiblePlateContents.keys.shuffled(rand)
             .take(
             when (rand.nextDouble()) {
@@ -78,7 +76,7 @@ data class Customer(val item: DeliverableItem, var award: Int) {
 
     fun randomCustomer(): Customer {
       val order = randomOrder()
-      val price = 300 + (order as Dish).contents.sumBy { possiblePlateContents[it]!! }
+      val price = 300 + order.contents.sumBy { possiblePlateContents[it]!! }
       return Customer(order, price)
     }
   }
@@ -89,13 +87,13 @@ class Window(private val dishReturn: DishReturn? = null) : Equipment() {
 
   override fun basicNumber() = Constants.EQUIPMENT.WINDOW.ordinal
 
-  private fun deliver(food: DeliverableItem) {
-    onDelivery(food)
+  private fun deliver(dish: Dish) {
+    onDelivery(dish)
     dishReturn?.addDishToQueue()
   }
 
   override fun receiveItem(player: Player, item: Item) {
-    if (item is DeliverableItem) {
+    if (item is Dish) {
       deliver(item)
       player.heldItem = null
       return

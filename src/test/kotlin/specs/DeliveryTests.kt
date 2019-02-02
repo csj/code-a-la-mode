@@ -34,7 +34,7 @@
 //        setup()
 //        player.heldItem = Dish(IceCream)
 //        player.use(window)
-//        window.item shouldBe null
+//        window.dish shouldBe null
 //        deliveredItem shouldBe Dish(IceCream)
 //      }
 //

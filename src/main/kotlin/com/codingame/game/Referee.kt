@@ -20,7 +20,7 @@ class Referee : AbstractReferee() {
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
   private lateinit var baseQueue: CustomerQueue
-  private lateinit var view: BoardView
+  val view = GameView()
   private lateinit var matchPlayers: MutableList<Player>
 
   class ScoreEntry(var roundScores: Array<Int?>) {
@@ -33,6 +33,7 @@ class Referee : AbstractReferee() {
 
   override fun init() {
     rand = Random(gameManager.seed)
+    com.codingame.game.graphicEntityModule = graphicEntityModule
 
     matchPlayers = gameManager.players
     scoreBoard = mapOf(
@@ -43,8 +44,10 @@ class Referee : AbstractReferee() {
     gameManager.maxTurns = 600
 
     board = buildBoard()
+    view.boardView = BoardView(board, matchPlayers)
+
     baseQueue = CustomerQueue()
-    view = BoardView(graphicEntityModule, board, matchPlayers)
+    view.queueView = QueueView()
 
     matchPlayers.forEach { player ->
       //      println("Sending board size to $player")
@@ -138,7 +141,7 @@ class Referee : AbstractReferee() {
             .also { player.sendInputLine(it.size) }
             .also {
               it.forEach {
-                val toks = listOf(it.award) + it.item.describe()[1]
+                val toks = listOf(it.award) + it.dish.describe()[1]
                 player.sendInputLine(toks)
               }
             }
@@ -172,8 +175,8 @@ class Referee : AbstractReferee() {
           }
         }
 
-        view.updateQueue()
-        view.updatePlayer(player, useTarget)
+        view.queueView.updateQueue()
+        view.boardView.updatePlayer(player, useTarget)
       }
 
 //      println("Current players: ${players.map { it.nicknameToken }}")
@@ -193,7 +196,7 @@ class Referee : AbstractReferee() {
         thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
 
-      view.updateCells(board.allCells)
+      view.boardView.updateCells(board.allCells)
     }
   }
 
@@ -202,16 +205,16 @@ class Referee : AbstractReferee() {
 
   private fun nextMatch() {
     val roundPlayers = matchPlayers.take(2)
-    view.removePlayer(matchPlayers[2])
+    view.boardView.removePlayer(matchPlayers[2])
     Collections.rotate(matchPlayers, 1)
     board.reset()
     queue = baseQueue.copy()
 
     roundPlayers[0].apply { location = board["D3"]; heldItem = null }
     roundPlayers[1].apply { location = board["H3"]; heldItem = null }
-    view.board = board
-    view.queue = queue
-    view.players = roundPlayers
+    view.boardView.board = board
+    view.boardView.players = roundPlayers
+    view.queueView.queue = queue
 
     currentRound = RoundReferee(roundPlayers, roundNumber++)
   }

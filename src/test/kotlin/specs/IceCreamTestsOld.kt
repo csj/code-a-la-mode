@@ -16,14 +16,14 @@ package specs
 //      fun setup() {
 //        player.location = board["H2"]
 //        player.heldItem = null
-//        board["I2"].item = Scoop()
+//        board["I2"].dish = Scoop()
 //      }
 //
 //      "can be picked up (without disturbing the crate)" {
 //        setup()
 //        player.take(board["I2"])
 //        board["I2"].equipment shouldBe IceCreamCrate(IceCreamFlavour.VANILLA)
-//        board["I2"].item shouldBe null
+//        board["I2"].dish shouldBe null
 //        player.heldItem shouldBe Scoop()
 //      }
 //
@@ -39,19 +39,19 @@ package specs
 //      fun setup() {
 //        player.location = board["E2"]
 //        player.heldItem = Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
-//        board["F2"].item = Dish()
+//        board["F2"].dish = Dish()
 //      }
 //
 //      "can DROP ice cream onto a dish out of a scoop" {
 //        setup()
 //        player.drop(board["F2"])
-//        board["F2"].item shouldBe Dish(IceCream(IceCreamFlavour.VANILLA))
+//        board["F2"].dish shouldBe Dish(IceCream(IceCreamFlavour.VANILLA))
 //        player.heldItem shouldBe Scoop(ScoopState.Dirty(IceCreamFlavour.VANILLA))
 //      }
 //
 //      "cannot DROP ice cream onto a dish out of a scoop, if the dish already has ice cream" {
 //        setup()
-//        (board["F2"].item as Dish) += IceCream(IceCreamFlavour.VANILLA)
+//        (board["F2"].dish as Dish) += IceCream(IceCreamFlavour.VANILLA)
 //        shouldThrowAny {
 //          player.drop(board["F2"])
 //        }
@@ -60,7 +60,7 @@ package specs
 //      "can DROP a full scoop onto a table (this drops the entire scoop)" {
 //        setup()
 //        player.drop(board["D2"])
-//        board["D2"].item shouldBe Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
+//        board["D2"].dish shouldBe Scoop(ScoopState.IceCream(IceCreamFlavour.VANILLA))
 //        player.heldItem shouldBe null
 //      }
 //

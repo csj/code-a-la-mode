@@ -74,10 +74,10 @@ class NaiveAllItemsPlayer(
       if (carryingState and goal != carryingState)
         return findEquipment(Constants.EQUIPMENT.JARBAGE).use()
 
-      // find next missing item from dish
+      // find next missing dish from dish
       val missingItem = items.firstOrNull { carryingState doesntHave it } ?:
         return findEquipment(Constants.EQUIPMENT.WINDOW).use()
-      stderr.println("missing item: $missingItem")
+      stderr.println("missing dish: $missingItem")
 
       return when (missingItem) {
         in crates.keys -> {
@@ -103,7 +103,7 @@ class NaiveAllItemsPlayer(
         Constants.FOOD.STRAWBERRY_PIE.value -> buildPie(true)
         Constants.FOOD.BLUEBERRY_PIE.value -> buildPie(false)
         Constants.FOOD.CHOPPED_BANANAS.value -> buildBananas()
-        else -> throw Exception("Unrecognized item: $item")
+        else -> throw Exception("Unrecognized dish: $item")
       }
     }
 
