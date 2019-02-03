@@ -8,8 +8,8 @@ val edibleEncoding: Map<EdibleItem, Int> = mapOf(
     Strawberries to Constants.FOOD.STRAWBERRIES.value,
     Blueberries to Constants.FOOD.BLUEBERRIES.value,
     ChoppedBananas to Constants.FOOD.CHOPPED_BANANAS.value,
-    PieSlice(PieFlavour.Strawberry) to Constants.FOOD.STRAWBERRY_PIE.value,
-    PieSlice(PieFlavour.Blueberry) to Constants.FOOD.BLUEBERRY_PIE.value,
+    StrawberrySlice to Constants.FOOD.STRAWBERRY_PIE.value,
+    BlueberrySlice to Constants.FOOD.BLUEBERRY_PIE.value,
     Waffle to Constants.FOOD.WAFFLE.value
 )
 

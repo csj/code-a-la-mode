@@ -33,7 +33,7 @@ class JarbageTests: FreeSpec({
 
   "a player can jarbage a plate; this makes it clean" {
     setup()
-    player.heldItem = Dish(Strawberries, PieSlice(PieFlavour.Blueberry), IceCream)
+    player.heldItem = Dish(Strawberries, BlueberrySlice, IceCream)
     player.use(jarbageLoc)
     player.heldItem shouldBe Dish()
     jarbageLoc.item shouldBe null

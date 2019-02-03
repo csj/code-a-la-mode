@@ -9,8 +9,9 @@ enum class PieFlavour {
 
 object Strawberries: EdibleItem()
 object Blueberries: EdibleItem()
+object BlueberrySlice: EdibleItem()
+object StrawberrySlice: EdibleItem()
 data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item()
-data class PieSlice(val pieFlavour: PieFlavour): EdibleItem()
 object BurntPie: Item()
 
 sealed class OvenState(val stateVal: Int) {

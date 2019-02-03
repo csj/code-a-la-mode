@@ -60,7 +60,7 @@ class ChoppingBoardTests: FreeSpec({
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Blueberry))
       player.use(choppingBoardLoc)
-      player.heldItem shouldBe PieSlice(PieFlavour.Blueberry)
+      player.heldItem shouldBe BlueberrySlice
       (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe Pie(PieFlavour.Blueberry, 3)
     }
   }
@@ -70,7 +70,7 @@ class ChoppingBoardTests: FreeSpec({
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
       player.use(choppingBoardLoc)
-      player.heldItem shouldBe PieSlice(PieFlavour.Strawberry)
+      player.heldItem shouldBe StrawberrySlice
       (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe Pie(PieFlavour.Strawberry, 1)
     }
 
@@ -79,7 +79,7 @@ class ChoppingBoardTests: FreeSpec({
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 2))
       player.heldItem = Dish()
       player.use(choppingBoardLoc)
-      player.heldItem shouldBe Dish(PieSlice(PieFlavour.Strawberry))
+      player.heldItem shouldBe Dish(StrawberrySlice)
     }
 
     "a player cannot use if his hands have something else" {
@@ -95,7 +95,7 @@ class ChoppingBoardTests: FreeSpec({
       setup()
       choppingBoardLoc.equipment = ChoppingBoard(Pie(PieFlavour.Strawberry, 1))
       player.use(choppingBoardLoc)
-      player.heldItem shouldBe PieSlice(PieFlavour.Strawberry)
+      player.heldItem shouldBe StrawberrySlice
       (choppingBoardLoc.equipment as ChoppingBoard).pieOnBoard shouldBe null
     }
   }

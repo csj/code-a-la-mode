@@ -11,7 +11,6 @@ abstract class EdibleItem: Item() {
     }
     return super.receiveItem(player, item, cell)
   }
-
 }
 
 interface Container {

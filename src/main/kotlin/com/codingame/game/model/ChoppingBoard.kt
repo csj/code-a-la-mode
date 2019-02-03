@@ -19,13 +19,16 @@ data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
     if (pieOnBoard != null) throw LogicException("Chopping board is not vacant!")
   }
 
-  private fun getSlice(): PieSlice {
+  private fun getSlice(): EdibleItem {
     val pie = pieOnBoard ?: throw LogicException("No pie slices to get!")
     pieOnBoard = when (pie.pieces) {
       1 -> null
       else -> pie.copy(pieces = pie.pieces - 1)
     }
-    return PieSlice(pie.pieFlavour)
+    return when (pie.pieFlavour) {
+      PieFlavour.Strawberry -> StrawberrySlice
+      PieFlavour.Blueberry -> BlueberrySlice
+    }
   }
 
   override fun takeFrom(player: Player) = getSlice()

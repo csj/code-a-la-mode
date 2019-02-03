@@ -59,8 +59,8 @@ data class Customer(val dish: Dish, var award: Int) {
         Strawberries to 300,
         Blueberries to 250,
         ChoppedBananas to 500,
-        PieSlice(PieFlavour.Strawberry) to 800,
-        PieSlice(PieFlavour.Blueberry) to 900,
+        StrawberrySlice to 800,
+        BlueberrySlice to 900,
         Waffle to 600
     )
 

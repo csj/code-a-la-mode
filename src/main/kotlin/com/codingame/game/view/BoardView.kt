@@ -190,7 +190,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is Waffle -> image = "waffle.png"
           is RawPie -> image = "pie.png"  // TODO: Add flavour
           is Pie -> image = "pie.png"  // TODO: Add flavour and tint
-          is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+          is StrawberrySlice -> image = "strawberry-pie-slice.png"
+          is BlueberrySlice -> image = "blueberry-pie-slice.png"
           is IceCream -> image = "ice-cream.png"
           is Strawberries -> image = "strawberry.png"
           is Blueberries -> image = "blueberries.png"
@@ -200,7 +201,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               subSprite.apply {
                 isVisible = true
                 when (edible) {
-                  is PieSlice -> image = "pie-slice.png"  // TODO: add flavour
+                  is StrawberrySlice -> image = "strawberry-pie-slice.png"
+                  is BlueberrySlice -> image = "blueberry-pie-slice.png"
                   is IceCream -> image = "ice-cream.png"
                   is Strawberries -> image = "strawberry.png"
                   is Blueberries -> image = "blueberries.png"
