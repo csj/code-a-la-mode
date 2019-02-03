@@ -2,6 +2,7 @@ package com.codingame.game
 
 import com.codingame.game.model.Cell
 import com.codingame.game.model.Item
+import com.codingame.game.view.BoardView
 import com.codingame.gameengine.core.AbstractMultiplayerPlayer
 import com.codingame.gameengine.module.entities.Group
 import com.codingame.gameengine.module.entities.Sprite

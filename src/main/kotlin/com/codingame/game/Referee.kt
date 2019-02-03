@@ -1,6 +1,10 @@
 package com.codingame.game
 
 import com.codingame.game.model.*
+import com.codingame.game.view.BoardView
+import com.codingame.game.view.GameView
+import com.codingame.game.view.QueueView
+import com.codingame.game.view.ScoresView
 import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
@@ -33,9 +37,9 @@ class Referee : AbstractReferee() {
 
   override fun init() {
     rand = Random(gameManager.seed)
-    com.codingame.game.graphicEntityModule = graphicEntityModule
+    com.codingame.game.view.graphicEntityModule = graphicEntityModule
 
-    matchPlayers = gameManager.players
+    matchPlayers = gameManager.players.toMutableList()
     scoreBoard = mapOf(
         matchPlayers[0] to ScoreEntry(arrayOf(0, 0, null)),
         matchPlayers[1] to ScoreEntry(arrayOf(0, null, 0)),
@@ -48,6 +52,8 @@ class Referee : AbstractReferee() {
 
     baseQueue = CustomerQueue()
     view.queueView = QueueView()
+
+    view.scoresView = ScoresView(matchPlayers)
 
     matchPlayers.forEach { player ->
       //      println("Sending board size to $player")
@@ -225,6 +231,7 @@ class Referee : AbstractReferee() {
       nextMatch()
           .also { println("Starting new match!") }
     currentRound.gameTurn(turn)
+    view.scoresView.update(scoreBoard)
   }
 
   override fun onEnd() {

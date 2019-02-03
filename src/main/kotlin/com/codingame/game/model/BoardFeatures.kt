@@ -1,6 +1,6 @@
 package com.codingame.game.model
 
-import com.codingame.game.BoardView
+import com.codingame.game.view.BoardView
 import com.codingame.gameengine.module.entities.*
 import java.util.*
 
