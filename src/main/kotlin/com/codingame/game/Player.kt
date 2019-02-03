@@ -21,7 +21,7 @@ class Player : AbstractMultiplayerPlayer() {
   lateinit var itemSprite: BoardView.ItemSpriteGroup
   lateinit var characterSprite: Sprite
 
-  fun sendInputLine(toks: List<Int>) = sendInputLine(toks.joinToString(" "))
+  fun sendInputLine(toks: List<Any>) = sendInputLine(toks.joinToString(" ", transform = { it.toString() }))
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
 
   // Returns true if the use was successful
@@ -59,7 +59,10 @@ class Player : AbstractMultiplayerPlayer() {
               .filter { it in fromSource.keys }
               .minBy { fromSource[it]!! } ?: return moveTo(partner.location)
 
-    if (target !in fromSource.keys) throw Exception("Cannot move: no path!")
+    if (target !in fromSource.keys) {
+      System.err.println("Warning: cannot move! Moving to partner location instead")
+      return moveTo(partner.location)
+    }
 
     if (location.distanceTo(target, partner.location) <= WALK_DISTANCE) {
       location = target

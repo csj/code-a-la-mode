@@ -2,6 +2,7 @@ package com.codingame.game.sample
 
 import com.codingame.game.model.Constants
 import sample.BaseCALMPlayer
+import sample.Item
 import java.io.InputStream
 import java.io.PrintStream
 
@@ -9,32 +10,32 @@ class IceCreamPlayer(
     stdin: InputStream, stdout: PrintStream, stderr: PrintStream)
   : BaseCALMPlayer(stdin, stdout, stderr) {
 
-  private val crateVal = Constants.EQUIPMENT.ICE_CREAM_CRATE.ordinal
-  private val ballVal = Constants.FOOD.ICE_CREAM.value
+  private val crateVal = Constants.EQUIPMENT.ICE_CREAM_CRATE.name
+  private val ballVal = Constants.FOOD.ICECREAM.name
 
   init {
     while (true) {
       val inputs = readInputs()
       val me = inputs.myPlayer
 
-      val iceCreamLoc = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == crateVal }
+      val iceCreamLoc = inputs.tables.firstOrNull { it.equipment?.equipmentType == crateVal }
         ?: throw Exception("Couldn't find ice cream crate")
-      val window = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == Constants.EQUIPMENT.WINDOW.ordinal }
+      val window = inputs.tables.firstOrNull { it.equipment?.equipmentType == Constants.EQUIPMENT.WINDOW.name }
         ?: throw Exception("Couldn't find window")
-      val dishReturn = inputs.tables.firstOrNull { it.x >= 0 && it.equipment == Constants.EQUIPMENT.DISH_RETURN.ordinal }
+      val dishReturn = inputs.tables.firstOrNull { it.equipment?.equipmentType == Constants.EQUIPMENT.DISH_RETURN.name }
         ?: throw Exception("Couldn't find dish return")
-      val emptyDishes = inputs.tables.filter { it.x >= 0 && it.item == Constants.ITEM.DISH.ordinal && it.itemState == 0 }
+      val emptyDishes = inputs.tables.filter { it.item?.itemType == Constants.ITEM.DISH.name && it.item.itemContents.isEmpty() }
       val emptyDish = emptyDishes.firstOrNull() ?: dishReturn
 
       when {
         // if holding a plate of ice cream, head for the window
-        me.carrying == Constants.ITEM.DISH.ordinal && me.carryingState == ballVal -> {
+        me.carrying?.itemType == Constants.ITEM.DISH.name && me.carrying.itemContents == listOf(ballVal) -> {
           stderr.println("I'm holding a plate of ice cream: going to window")
           stdout.println("USE ${window.x} ${window.y}")
         }
 
         // if holding an empty plate, go get some ice cream
-        me.carrying == Constants.ITEM.DISH.ordinal -> {
+        me.carrying?.itemType == Constants.ITEM.DISH.name -> {
           stderr.println("I'm holding an empty dish, going for ice cream")
           stdout.println("USE ${iceCreamLoc.x} ${iceCreamLoc.y}")
         }

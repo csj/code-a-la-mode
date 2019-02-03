@@ -7,13 +7,15 @@ object ChoppedBananas: EdibleItem()
 
 data class ChoppingBoard(var pieOnBoard: Pie? = null): Equipment() {
   override fun reset() { pieOnBoard = null }
-  override fun basicNumber() = Constants.EQUIPMENT.CHOPPINGBOARD.ordinal
-  override fun extras(): List<Int> {
-    return when(pieOnBoard) {
-      is Pie -> listOf(if (pieOnBoard!!.pieFlavour == PieFlavour.Strawberry) 0 else 1, pieOnBoard!!.pieces)
-      else -> listOf(-1, -1)
+
+  override fun describe() = (listOf("CHOPPINGBOARD") + (pieOnBoard?.let { pie ->
+    List(pie.pieces) {
+      when (pie.pieFlavour) {
+        PieFlavour.Strawberry -> "STRAWBERRYSLICE"
+        PieFlavour.Blueberry -> "BLUEBERRYSLICE"
+      }
     }
-  }
+  } ?: emptyList())).joinToString("-")
 
   private fun checkVacant() {
     if (pieOnBoard != null) throw LogicException("Chopping board is not vacant!")

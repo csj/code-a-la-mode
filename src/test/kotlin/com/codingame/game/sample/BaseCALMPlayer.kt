@@ -29,43 +29,28 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
     height = scanner.nextInt()
     numTables = scanner.nextInt()
     List(numTables) {
-      Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), -1, -1)
+      Table(scanner.nextInt(), scanner.nextInt(),
+          Equipment.parse(scanner.next()))
     }
 
   }
 
   protected fun readInputs(): GameState {
-    val myPlayer = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
-    val myFriend = Player(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt())
+    val myPlayer = Player(scanner.nextInt(), scanner.nextInt(), Item.parse(scanner.next()))
+    val myFriend = Player(scanner.nextInt(), scanner.nextInt(), Item.parse(scanner.next()))
 
-    val rendering = List(height) { List(width) { "." }.toMutableList() }
     val tables = List(numTables) {
-      Table(scanner.nextInt(), scanner.nextInt(), scanner.nextInt(),
-          scanner.nextInt(), scanner.nextInt(), scanner.nextInt(), scanner.nextInt()).also {
-//        System.err.println("Received table: $it")
-        val desc = when (it.equipment) {
-          0 -> "I"
-          else -> when (it.item) {
-            1024 -> "D"
-            else -> "X"
-          }
-        }
-        rendering[it.y][it.x] = desc
-      }
+      Table(scanner.nextInt(), scanner.nextInt(),
+          Equipment.parse(scanner.next()),
+          Item.parse(scanner.next()))
+//          .also { System.err.println("Received table: $it") }
     }
 
     val queue = List(scanner.nextInt()) {
-      Customer(scanner.nextInt(), scanner.nextInt())
+      Customer(Item.parse(scanner.next())!!, scanner.nextInt())
     }
 
-//    repeat(height) { i ->
-//      repeat(width) { j ->
-//        System.err.print(rendering[i][j])
-//      }
-//      System.err.println()
-//    }
-
-    return GameState(myPlayer!!, myFriend!!, tables, queue)
+    return GameState(myPlayer, myFriend, tables, queue)
   }
 }
 
@@ -77,7 +62,37 @@ data class GameState(
 
 data class Table(
     val x: Int, val y: Int,
-    val equipment: Int, val equipmentState: Int, val equipmentTimer: Int,
-    val item: Int = -1, val itemState: Int = -1)
-data class Player(val x: Int, val y: Int, val carrying: Int = -1, val carryingState: Int = -1)
-data class Customer(val award: Int, val itemDetail: Int)
+    val equipment: Equipment? = null,
+    val item: Item? = null)
+
+data class Equipment(val description: String) {
+  val toks = description.split("-")
+  val equipmentType = toks[0]
+
+  fun equipmentState() = toks[1]
+  fun equipmentTimer() = toks[2].toInt()
+  fun equipmentContents() = toks.drop(1)
+
+  companion object {
+    fun parse(description: String) =
+        if (description == "NONE") null
+        else Equipment(description)
+  }
+
+}
+
+data class Item(val description: String) {
+  val toks = description.split("-")
+  val itemType = toks[0]
+  val itemContents = toks.drop(1)
+
+  companion object {
+    fun parse(description: String) =
+        if (description == "NONE") null
+        else Item(description)
+
+  }
+}
+
+data class Player(val x: Int, val y: Int, val carrying: Item?)
+data class Customer(val dish: Item, val award: Int)

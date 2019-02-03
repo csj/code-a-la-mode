@@ -33,8 +33,7 @@ abstract class Equipment {
 
   open fun reset() { }
 
-  abstract fun basicNumber(): Int
-  open fun extras(): List<Int> = listOf(-1, -1)
+  abstract fun describe(): String
 }
 
 /**

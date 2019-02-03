@@ -14,43 +14,46 @@ object StrawberrySlice: EdibleItem()
 data class Pie(val pieFlavour: PieFlavour, val pieces: Int = 4): Item()
 object BurntPie: Item()
 
-sealed class OvenState(val stateVal: Int) {
-  object Empty: OvenState(0)
-  data class Cooking(val flavour: PieFlavour, val timeUntilCooked: Int): OvenState(
-      if (flavour == PieFlavour.Blueberry) 1 else 2
+sealed class OvenState(private val stateToks: List<Any>) {
+  override fun toString() = stateToks.joinToString("-")
+
+  object Empty: OvenState(listOf("EMPTY"))
+  class Cooking(val flavour: PieFlavour, val timeUntilCooked: Int): OvenState(
+      listOf(
+          "COOKING",
+          if (flavour == PieFlavour.Blueberry) "BLUEBERRY" else "STRAWBERRY",
+          timeUntilCooked
+      )
   )
-  data class Cooked(val flavour: PieFlavour, val timeUntilBurnt: Int): OvenState(
-      if (flavour == PieFlavour.Blueberry) 3 else 4
+  class Cooked(val flavour: PieFlavour, val timeUntilBurnt: Int): OvenState(
+      listOf(
+          "COOKED",
+          if (flavour == PieFlavour.Blueberry) "BLUEBERRY" else "STRAWBERRY",
+          timeUntilBurnt
+      )
   )
-  object Burnt: OvenState(5)
+  object Burnt: OvenState(listOf("BURNT"))
 }
 
 data class Oven(private val cookTime: Int, private val burnTime: Int, private var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
   override fun reset() { state = OvenState.Empty }
-  override fun basicNumber() = Constants.EQUIPMENT.OVEN.ordinal
-  override fun extras(): List<Int> {
-    val currentState = state
-    return listOf(
-        currentState.stateVal,
-        when(currentState) {
-          is OvenState.Empty -> -1
-          is OvenState.Cooking -> currentState.timeUntilCooked
-          is OvenState.Cooked -> currentState.timeUntilBurnt
-          is OvenState.Burnt -> -1
-        }
-    )
-  }
+  override fun describe() = "OVEN-$state"
+      .also { System.err.println("Describing oven: $it") }
+
   override fun tick() {
     val curState = state
     state = when (curState) {
       is OvenState.Empty -> return
       is OvenState.Cooking -> {
-        val (fl, time) = curState
-        if (time == 1) OvenState.Cooked(fl, burnTime) else curState.copy(timeUntilCooked = time-1)
+        if (curState.timeUntilCooked == 1)
+          OvenState.Cooked(curState.flavour, burnTime)
+        else
+          OvenState.Cooking(curState.flavour, curState.timeUntilCooked - 1)
       }
       is OvenState.Cooked -> {
         val time = curState.timeUntilBurnt
-        if (time == 1) OvenState.Burnt else curState.copy(timeUntilBurnt = time-1)
+        if (time == 1) OvenState.Burnt else
+          OvenState.Cooked(curState.flavour, curState.timeUntilBurnt - 1)
       }
       is OvenState.Burnt -> return
     }

@@ -5,39 +5,32 @@ import com.codingame.game.Player
 object Waffle: EdibleItem()
 object BurntWaffle: Item()
 
-sealed class WaffleState(val stateVal: Int) {
-  object Empty : WaffleState(0)
-  data class Cooking(val timeUntilCooked: Int): WaffleState(1)
-  data class Cooked(val timeUntilBurnt: Int): WaffleState(2)
-  object Burnt: WaffleState(3)
+sealed class WaffleState(private val stateString: String) {
+  override fun toString() = stateString
+
+  object Empty : WaffleState("EMPTY")
+  class Cooking(val timeUntilCooked: Int): WaffleState("COOKING-$timeUntilCooked")
+  class Cooked(val timeUntilBurnt: Int): WaffleState("COOKED-$timeUntilBurnt")
+  object Burnt: WaffleState("BURNT")
 }
 
 data class WaffleIron(private val cookTime: Int, private val burnTime: Int, private var state: WaffleState = WaffleState.Empty) : TimeSensitiveEquipment() {
   override fun reset() { state = WaffleState.Empty }
-  override fun basicNumber() = Constants.EQUIPMENT.WAFFLEIRON.ordinal
-  override fun extras(): List<Int> {
-    val currentState = state
-    return listOf(
-        currentState.stateVal,
-        when(currentState) {
-          is WaffleState.Empty -> -1
-          is WaffleState.Cooking -> currentState.timeUntilCooked
-          is WaffleState.Cooked -> currentState.timeUntilBurnt
-          is WaffleState.Burnt -> -1
-        }
-    )
-  }
+  override fun describe() = "WAFFLEIRON-$state"
+
   override fun tick() {
     val curState = state
     state = when (curState) {
       is WaffleState.Empty -> return
       is WaffleState.Cooking -> {
         val time = curState.timeUntilCooked
-        if (time == 1) WaffleState.Cooked(burnTime) else curState.copy(timeUntilCooked = time-1)
+        if (time == 1) WaffleState.Cooked(burnTime)
+          else WaffleState.Cooking(timeUntilCooked = time-1)
       }
       is WaffleState.Cooked -> {
         val time = curState.timeUntilBurnt
-        if (time == 1) WaffleState.Burnt else curState.copy(timeUntilBurnt = time-1)
+        if (time == 1) WaffleState.Burnt
+          else WaffleState.Cooked(timeUntilBurnt = time-1)
       }
       is WaffleState.Burnt -> return
     }

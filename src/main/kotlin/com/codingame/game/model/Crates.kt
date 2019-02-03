@@ -3,23 +3,23 @@ package com.codingame.game.model
 import com.codingame.game.Player
 
 class IceCreamCrate: GeneralCrate({ IceCream }) {
-  override fun basicNumber(): Int = Constants.EQUIPMENT.ICE_CREAM_CRATE.ordinal
+  override fun describe() = Constants.EQUIPMENT.ICE_CREAM_CRATE.name
 }
 
 class StrawberryCrate: GeneralCrate({ Strawberries }) {
-  override fun basicNumber() = Constants.EQUIPMENT.STRAWBERRY_CRATE.ordinal
+  override fun describe() = Constants.EQUIPMENT.STRAWBERRY_CRATE.name
 }
 
 class BlueberryCrate: GeneralCrate({ Blueberries }) {
-  override fun basicNumber() = Constants.EQUIPMENT.BLUEBERRY_CRATE.ordinal
+  override fun describe() = Constants.EQUIPMENT.BLUEBERRY_CRATE.name
 }
 
 class BananaCrate: GeneralCrate({ Banana }) {
-  override fun basicNumber() = Constants.EQUIPMENT.BANANA_CRATE.ordinal
+  override fun describe() = Constants.EQUIPMENT.BANANA_CRATE.name
 }
 
 class PieCrustCrate: GeneralCrate({ RawPie() }) {
-  override fun basicNumber() = Constants.EQUIPMENT.PIECRUST_CRATE.ordinal
+  override fun describe() = Constants.EQUIPMENT.PIECRUST_CRATE.name
 }
 
 abstract class AllInstancesAreConsideredEqual: Equipment() {

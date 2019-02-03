@@ -85,7 +85,7 @@ data class Customer(val dish: Dish, var award: Int) {
 class Window(private val dishReturn: DishReturn? = null) : Equipment() {
   var onDelivery: (Item) -> Unit = { }
 
-  override fun basicNumber() = Constants.EQUIPMENT.WINDOW.ordinal
+  override fun describe() = Constants.EQUIPMENT.WINDOW.name
 
   private fun deliver(dish: Dish) {
     onDelivery(dish)

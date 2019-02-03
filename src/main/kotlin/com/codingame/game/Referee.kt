@@ -63,7 +63,7 @@ class Referee : AbstractReferee() {
           .also { player.sendInputLine(it.size.toString()) }
           .also {
             it.forEach { cell ->
-              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.basicNumber() ?: -1}")
+              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.describe() ?: "NONE"}")
             }
           }
 
@@ -96,31 +96,34 @@ class Referee : AbstractReferee() {
     fun gameTurn(turn: Int) {
 
       board.tick()
-      queue.tick()
 
-      fun Item?.describe(): List<Int> = when (this) {
-        is Dish -> listOf(Constants.ITEM.DISH.ordinal, contents.map { edibleEncoding[it]!! }.sum())
-        is Banana -> listOf(Constants.ITEM.BANANA.ordinal, 0)
-        is RawPie -> listOf(Constants.ITEM.RAW_PIE.ordinal, when (this) {
-          RawPie(null) -> -1
-          else -> (if (pieFlavour == PieFlavour.Strawberry) 10 else 20) + this.fruitsMissing
-        })
-        is Pie -> listOf(Constants.ITEM.WHOLE_PIE.ordinal, if (this.pieFlavour == PieFlavour.Strawberry) 0 else 1)
-        is BurntPie -> listOf(Constants.ITEM.BURNT_PIE.ordinal, 0)
-        is BurntWaffle -> listOf(Constants.ITEM.BURNT_WAFFLE.ordinal, 0)
-        in edibleEncoding.keys -> listOf(Constants.ITEM.FOOD.ordinal, edibleEncoding[this]!!)
-        else -> listOf(-1,0)
+      fun Item?.describe(): String = when (this) {
+        is Dish -> (listOf(Constants.ITEM.DISH.name) + contents.map { edibleEncoding[it] }).joinToString("-")
+        is Banana -> Constants.ITEM.BANANA.name
+        is RawPie -> (listOf(Constants.ITEM.RAW_PIE) + when (this) {
+          RawPie(null) -> emptyList()
+          else -> List(3 - this.fruitsMissing) {
+            if (pieFlavour == PieFlavour.Strawberry) Constants.FOOD.STRAWBERRIES.name else Constants.FOOD.BLUEBERRIES.name
+          }
+        }).joinToString("-")
+        is Pie -> listOf(Constants.ITEM.WHOLE_PIE.name,
+            if (this.pieFlavour == PieFlavour.Strawberry) Constants.FOOD.STRAWBERRIES.name else Constants.FOOD.BLUEBERRIES.name
+        ).joinToString("-")
+        is BurntPie -> Constants.ITEM.BURNT_PIE.name
+        is BurntWaffle -> Constants.ITEM.BURNT_WAFFLE.name
+        in edibleEncoding.keys -> edibleEncoding[this]!!
+        else -> "NONE"
       }
 
       fun sendGameState(player: Player) {
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
-          val (item1, item2) = it.heldItem.describe()
+          val item = it.heldItem.describe()
 
           val toks = listOf(
               it.location.x,
               it.location.y,
-              item1, item2
+              item
           )
 //          println("Sending player toks $toks to $player")
 
@@ -133,11 +136,9 @@ class Referee : AbstractReferee() {
               val toks = listOf(
                   it.x,
                   it.y,
-                  it.equipment?.basicNumber() ?: -1
-              ) + (
-                  it.equipment?.extras() ?: listOf(-1,-1)
-                  ) +
+                  it.equipment?.describe() ?: "NONE",
                   it.item.describe()
+              )
               player.sendInputLine(toks)
 //              println("Sending table toks $toks to $player")
             }
@@ -147,7 +148,7 @@ class Referee : AbstractReferee() {
             .also { player.sendInputLine(it.size) }
             .also {
               it.forEach {
-                val toks = listOf(it.award) + it.dish.describe()[1]
+                val toks = listOf(it.dish.describe(), it.award.toString())
                 player.sendInputLine(toks)
               }
             }
@@ -180,8 +181,6 @@ class Referee : AbstractReferee() {
             }
           }
         }
-
-        view.queueView.updateQueue()
         view.boardView.updatePlayer(player, useTarget)
       }
 
@@ -201,6 +200,9 @@ class Referee : AbstractReferee() {
         System.err.println("${thePlayer.nicknameToken}: $ex (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
+
+      queue.tick()
+      view.queueView.updateQueue()
 
       view.boardView.updateCells(board.allCells)
     }

@@ -3,14 +3,14 @@ package com.codingame.game.model
 import com.codingame.game.Player
 import java.util.*
 
-val edibleEncoding: Map<EdibleItem, Int> = mapOf(
-    IceCream to Constants.FOOD.ICE_CREAM.value,
-    Strawberries to Constants.FOOD.STRAWBERRIES.value,
-    Blueberries to Constants.FOOD.BLUEBERRIES.value,
-    ChoppedBananas to Constants.FOOD.CHOPPED_BANANAS.value,
-    StrawberrySlice to Constants.FOOD.STRAWBERRY_PIE.value,
-    BlueberrySlice to Constants.FOOD.BLUEBERRY_PIE.value,
-    Waffle to Constants.FOOD.WAFFLE.value
+val edibleEncoding: Map<EdibleItem, String> = mapOf(
+    IceCream to Constants.FOOD.ICECREAM.name,
+    Strawberries to Constants.FOOD.STRAWBERRIES.name,
+    Blueberries to Constants.FOOD.BLUEBERRIES.name,
+    ChoppedBananas to Constants.FOOD.CHOPPEDBANANAS.name,
+    StrawberrySlice to Constants.FOOD.STRAWBERRYSLICE.name,
+    BlueberrySlice to Constants.FOOD.BLUEBERRYSLICE.name,
+    Waffle to Constants.FOOD.WAFFLE.name
 )
 
 data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : Item(), Container {
@@ -27,7 +27,7 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
 }
 
 class DishReturn : TimeSensitiveEquipment() {
-  override fun basicNumber() = Constants.EQUIPMENT.DISH_RETURN.ordinal
+  override fun describe() = (listOf(Constants.EQUIPMENT.DISH_RETURN.name) + List(dishes) { Constants.ITEM.DISH.name }).joinToString("-")
 
   override fun reset() {
     repeat(40) { tick() }
