@@ -7,7 +7,7 @@ public class Main {
 
 //        System.err.println("hallo");
         MultiplayerGameRunner gameRunner = new MultiplayerGameRunner();
-        gameRunner.setSeed(-2749567458568488030L);
+//        gameRunner.setSeed(-2749567458568488030L);
 //        System.err.println("mcfly?");
 
         // Adds as many player as you need to test your game

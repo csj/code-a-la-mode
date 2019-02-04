@@ -10,9 +10,10 @@ class CellView(val cell: Cell) {
   lateinit var secondaryContent: Sprite
   lateinit var itemSpriteGroup: BoardView.ItemSpriteGroup
   lateinit var group: Group
+  lateinit var text: Text
 }
 
-class Cell(val x: Int, val y: Int, val isTable: Boolean = true) {
+class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null) {
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
@@ -65,7 +66,8 @@ class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
 
   val cells = Array(width) { x ->
     Array(height) { y ->
-      Cell(x, y, layout != null && layout[y][x] != '.')
+      Cell(x, y, layout != null && layout[y][x] != '.',
+          layout?.get(y)?.get(x)?.let { if (it !in listOf('*', '.')) it else null })
     }
   }
 

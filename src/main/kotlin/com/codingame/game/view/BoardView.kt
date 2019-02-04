@@ -81,9 +81,18 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
             setY(cellWidth / 2)
           }
 
+          text = graphicEntityModule.createText(cell.character?.toString() ?: "").apply {
+            setX(cellWidth / 2)
+            setY(cellWidth / 2)
+            anchorX = 0.5
+            anchorY = 0.5
+            fontSize = 60
+            fillColor = 0
+          }
+
           itemSpriteGroup = ItemSpriteGroup()
 
-          group = graphicEntityModule.createGroup(background, content, secondaryContent, itemSpriteGroup.group)
+          group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
 
         })
@@ -122,7 +131,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell) {
-    // TODO: PLEEEASE fix me. Such hacks :(
     x = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
     y = cell.y * (cellWidth + cellSpacing) + yRange.first + 5
   }
