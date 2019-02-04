@@ -1,12 +1,12 @@
 read width:int height:int
 read numTables:int
-loop numTables read x:int y:int equipmentType:int
+loop numTables read x:int y:int equipment:string
 gameloop
-read playerX:int playerY:int playerItemType:int playerItemDetail:int
-read partnerX:int partnerY:int partnerItemType:int partnerItemDetail:int
-loop numTables read tableX:int tableY:int equipmentType:int equipmentState:int equipmentTimer:int itemType:int itemDetail:int
+read playerX:int playerY:int playerItem:string
+read partnerX:int partnerY:int partnerItem:string
+loop numTables read tableX:int tableY:int equipment:string item:string
 read numCustomers:int
-loop numCustomers read customerAward:int customerItem:int
+loop numCustomers read customerAward:int customerItem:string
 write WAIT
 
 INPUT
