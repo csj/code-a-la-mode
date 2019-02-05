@@ -39,7 +39,7 @@ class ScoresView(matchPlayers: List<Player>) {
       y = viewHeight * 3 / 4
       anchorX = 0.5
       anchorY = 0.5
-      fontSize = 35
+      fontSize = 50
       fillColor = 0
       zIndex = 350
 
@@ -48,7 +48,7 @@ class ScoresView(matchPlayers: List<Player>) {
     private val scoreTexts = List(3) { i ->
       graphicEntityModule.createText("--").apply {
         fillColor = 0xffffff
-        fontSize = 60
+        fontSize = 45
         x = ((i + 1.5) * viewWidth / 4).toInt()
         y = viewHeight * 1 / 4
         anchorX = 0.5

@@ -13,44 +13,30 @@ class Player {
         int width = in.nextInt(); // the width of the kitchen
         int height = in.nextInt(); // the height of the kitchen
         int numTables = in.nextInt(); // the number of tables in the kitchen
-        System.err.println("There are " + numTables + " tables");
         for (int i = 0; i < numTables; i++) {
             int x = in.nextInt();
             int y = in.nextInt();
-            int equipmentType = in.nextInt();
+            String equipment = in.next();
         }
 
         // game loop
         while (true) {
             int playerX = in.nextInt();
             int playerY = in.nextInt();
-            int playerItemType = in.nextInt();
-            int playerItemDetail = in.nextInt();
-            System.err.println("I am at " + playerX + ", " + playerY);
+            String playerItem = in.next();
             int partnerX = in.nextInt();
             int partnerY = in.nextInt();
-            int partnerItemType = in.nextInt();
-            int partnerItemDetail = in.nextInt();
-            System.err.println("Partner is at " + partnerX + ", " + partnerY);
-
+            String partnerItem = in.next();
             for (int i = 0; i < numTables; i++) {
                 int tableX = in.nextInt();
                 int tableY = in.nextInt();
-//                System.err.println("Table is at " + tableX + ", " + tableY);
-                int equipmentType = in.nextInt();
-                int equipmentState = in.nextInt();
-                int equipmentTimer = in.nextInt();
-                int itemType = in.nextInt();
-                int itemDetail = in.nextInt();
+                String equipment = in.next();
+                String item = in.next();
             }
             int numCustomers = in.nextInt(); // the number of customers currently waiting for food
-//            System.err.println("There are " + numCustomers + " customers");
-
             for (int i = 0; i < numCustomers; i++) {
+                String customerItem = in.next(); // the food the customer is waiting for
                 int customerAward = in.nextInt(); // the number of points awarded for delivering the food
-                int customerItem = in.nextInt(); // the food the customer is waiting for
-//                System.err.println("Customer: " + customerAward + ", " + customerItem);
-
             }
 
             // Write an action using System.out.println()

@@ -2,10 +2,7 @@ package com.codingame.game.view
 
 import com.codingame.game.Player
 import com.codingame.game.model.*
-import com.codingame.gameengine.module.entities.Entity
-import com.codingame.gameengine.module.entities.GraphicEntityModule
-import com.codingame.gameengine.module.entities.Sprite
-import com.codingame.gameengine.module.entities.Text
+import com.codingame.gameengine.module.entities.*
 
 
 class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
@@ -130,19 +127,31 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       view.itemSpriteGroup.update(cell.item) }
   }
 
-  fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell) {
-    x = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
-    y = cell.y * (cellWidth + cellSpacing) + yRange.first + 5
+  fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
+    val newX = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
+    val newY = cell.y * (cellWidth + cellSpacing) + yRange.first + 5
+
+    if (hardTransition) {
+      setX(newX, Curve.NONE)
+      setY(newY, Curve.NONE)
+    } else {
+      x = newX
+      y = newY
+    }
   }
 
-  fun updatePlayer(player: Player, useTarget: Cell?) {
+  fun resetPlayers() {
+    players.forEach { updatePlayer(it, null, true) }
+  }
+
+  fun updatePlayer(player: Player, useTarget: Cell?, hardTransition: Boolean = false) {
     player.characterSprite.isVisible = true
     player.itemSprite.isVisible = true
 
     player.itemSprite.update(player.heldItem)
 
     if (useTarget == null) {
-      player.sprite.setLocation(board[player.location.x, player.location.y])
+      player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
     } else {
       player.sprite.setLocation(useTarget)
       graphicEntityModule.commitEntityState(0.3, player.sprite)
@@ -232,6 +241,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     x = cellWidth / 2
     y = cellWidth / 2
   }
+
+
 
 
 }

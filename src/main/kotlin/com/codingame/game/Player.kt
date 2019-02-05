@@ -53,7 +53,7 @@ class Player : AbstractMultiplayerPlayer() {
 
     val fromSource = location.buildDistanceMap(blockedCell)
     val target =
-        if (!cell.isTable)
+        if (!cell.isTable && cell != blockedCell)
           cell
         else
           cell.neighbours.map { it.first }

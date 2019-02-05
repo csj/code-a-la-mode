@@ -91,11 +91,19 @@ class Referee : AbstractReferee() {
   }
 
   override fun gameTurn(turn: Int) {
-    if (!currentRound.gameTurn(turn)
-            .also { view.scoresView.update(scoreBoard) }) {
+    if (currentRound.isOver()) {
       if (roundNumber >= 3) gameManager.endGame()
-      else nextRound()
+      else {
+        nextRound()
+        view.boardView.resetPlayers()
+      }
+    } else {
+      currentRound.gameTurn(turn)
     }
+
+    view.scoresView.update(scoreBoard)
+    view.queueView.updateQueue()
+    view.boardView.updateCells(board.allCells)
   }
 
   override fun onEnd() {
@@ -128,8 +136,11 @@ class Referee : AbstractReferee() {
     var turn = 0
     var nextPlayerId = 0
 
-    fun gameTurn(matchTurn: Int): Boolean {
-      if (turn++ >= 200) return false
+    fun isOver(): Boolean = turn >= 200
+
+    fun gameTurn(matchTurn: Int) {
+      turn++
+      if (isOver()) return
 
       board.tick()
       val thePlayer = players[nextPlayerId]
@@ -171,7 +182,6 @@ class Referee : AbstractReferee() {
           ) else listOf(-1, -1, "NONE")
 
 //          println("Sending player toks $toks to $player")
-
           player.sendInputLine(toks)
         }
 
@@ -245,11 +255,6 @@ class Referee : AbstractReferee() {
       }
 
       queue.tick()
-      view.queueView.updateQueue()
-
-      view.boardView.updateCells(board.allCells)
-
-      return true
     }
   }
 
