@@ -4,27 +4,15 @@ import com.codingame.game.Player
 import com.codingame.game.rand
 import java.util.ArrayList
 
-var nextQueueId: Int = 0
-
 class CustomerQueue(): ArrayList<Customer>() {
-  val queueId: Int = nextQueueId++
 
   constructor(eagerPointsAwarded: (Int) -> Unit): this() {
     onPointsAwarded = eagerPointsAwarded
   }
 
-  override fun toString(): String {
-    return "CustomerQueue@$queueId"
-  }
-
   lateinit var onPointsAwarded: (Int) -> Unit
 
-  init {
-    System.err.println("It's a new queue: $this")
-  }
-
   fun delivery(item: Item) {
-    println("Delivery: $item; current queue: $this")
     this.find { it.dish == item }?.also {
       onPointsAwarded(it.award)
       remove(it)

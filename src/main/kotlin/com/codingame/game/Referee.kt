@@ -66,7 +66,41 @@ class Referee : AbstractReferee() {
               player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.describe() ?: "NONE"}")
             }
           }
+    }
 
+    nextRound()
+  }
+
+  private lateinit var currentRound: RoundReferee
+  private var roundNumber: Int = 0
+
+  private fun nextRound() {
+    val roundPlayers = matchPlayers.take(2)
+    view.boardView.removePlayer(matchPlayers[2])
+    Collections.rotate(matchPlayers, 1)
+    board.reset()
+    queue = baseQueue.copy()
+
+    roundPlayers[0].apply { location = board["D3"]; heldItem = null }
+    roundPlayers[1].apply { location = board["H3"]; heldItem = null }
+    view.boardView.board = board
+    view.boardView.players = roundPlayers
+    view.queueView.queue = queue
+
+    currentRound = RoundReferee(roundPlayers, roundNumber++)
+  }
+
+  override fun gameTurn(turn: Int) {
+    if (!currentRound.gameTurn(turn)
+            .also { view.scoresView.update(scoreBoard) }) {
+      if (roundNumber >= 3) gameManager.endGame()
+      else nextRound()
+    }
+  }
+
+  override fun onEnd() {
+    scoreBoard.forEach { player, entry ->
+      player.score = entry.total()
     }
   }
 
@@ -80,11 +114,9 @@ class Referee : AbstractReferee() {
     }
 
     init {
-      System.err.println("Setting callback to queue $queue")
       queue.onPointsAwarded = {
         score += it
         scoreBoard.setScore(roundNumber, score)
-        System.err.println("Score is now $scoreBoard")
       }
       board.window.onDelivery = queue::delivery
 
@@ -93,9 +125,21 @@ class Referee : AbstractReferee() {
       }
     }
 
-    fun gameTurn(turn: Int) {
+    var turn = 0
+    var nextPlayerId = 0
+
+    fun gameTurn(matchTurn: Int): Boolean {
+      if (turn++ >= 200) return false
 
       board.tick()
+      val thePlayer = players[nextPlayerId]
+      nextPlayerId = 1-nextPlayerId
+      if (!thePlayer.isActive) {
+        System.err.println("(Turn $turn) WARNING: ${thePlayer.nicknameToken} is dead; skipping")
+        if (thePlayer.score == 0) thePlayer.score = -1000 + matchTurn
+        view.boardView.removePlayer(thePlayer)
+        return gameTurn(matchTurn)
+      }
 
       fun Item?.describe(): String = when (this) {
         is Dish -> (listOf(Constants.ITEM.DISH.name) + contents.map { edibleEncoding[it] }).joinToString("-")
@@ -120,11 +164,12 @@ class Referee : AbstractReferee() {
         players.sortedByDescending { it == player }.forEach {
           val item = it.heldItem.describe()
 
-          val toks = listOf(
+          val toks = if (it.isActive) listOf(
               it.location.x,
               it.location.y,
               item
-          )
+          ) else listOf(-1, -1, "NONE")
+
 //          println("Sending player toks $toks to $player")
 
           player.sendInputLine(toks)
@@ -157,12 +202,12 @@ class Referee : AbstractReferee() {
 
       fun processPlayerActions(player: Player) {
         val line = if (!player.isActive) "WAIT" else
-        try {
-          player.outputs[0].trim()
-        } catch (ex: AbstractPlayer.TimeoutException) {
-          player.deactivate("Player $player timed out!")
-          "WAIT"
-        }
+          try {
+            player.outputs[0].trim()
+          } catch (ex: AbstractPlayer.TimeoutException) {
+            player.deactivate("Player $player timed out!")
+            "WAIT"
+          }
 
         val toks = line.split(" ").iterator()
         val command = toks.next()
@@ -185,12 +230,9 @@ class Referee : AbstractReferee() {
       }
 
 //      println("Current players: ${players.map { it.nicknameToken }}")
-      val thePlayer = players[turn % 2]
 
-      if (thePlayer.isActive) {
-        sendGameState(thePlayer)
-        thePlayer.execute()
-      }
+      sendGameState(thePlayer)
+      thePlayer.execute()
 
       try {
         processPlayerActions(thePlayer)
@@ -198,6 +240,7 @@ class Referee : AbstractReferee() {
         System.err.println("${thePlayer.nicknameToken}: $ex")
       } catch (ex: Exception) {
         System.err.println("${thePlayer.nicknameToken}: $ex (deactivating!)")
+        ex.printStackTrace()
         thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
 
@@ -205,42 +248,12 @@ class Referee : AbstractReferee() {
       view.queueView.updateQueue()
 
       view.boardView.updateCells(board.allCells)
+
+      return true
     }
   }
 
-  private lateinit var currentRound: RoundReferee
-  private var roundNumber: Int = 0
 
-  private fun nextMatch() {
-    val roundPlayers = matchPlayers.take(2)
-    view.boardView.removePlayer(matchPlayers[2])
-    Collections.rotate(matchPlayers, 1)
-    board.reset()
-    queue = baseQueue.copy()
-
-    roundPlayers[0].apply { location = board["D3"]; heldItem = null }
-    roundPlayers[1].apply { location = board["H3"]; heldItem = null }
-    view.boardView.board = board
-    view.boardView.players = roundPlayers
-    view.queueView.queue = queue
-
-    currentRound = RoundReferee(roundPlayers, roundNumber++)
-  }
-
-  override fun gameTurn(turn: Int) {
-    println("Turn $turn")
-    if (turn % 200 == 0)
-      nextMatch()
-          .also { println("Starting new match!") }
-    currentRound.gameTurn(turn)
-    view.scoresView.update(scoreBoard)
-  }
-
-  override fun onEnd() {
-    scoreBoard.forEach { player, entry ->
-      player.score = entry.total()
-    }
-  }
 }
 
 

@@ -49,7 +49,9 @@ class Player : AbstractMultiplayerPlayer() {
   }
 
   fun moveTo(cell: Cell) {
-    val fromSource = location.buildDistanceMap(partner.location)
+    val blockedCell = if (partner.isActive) partner.location else null
+
+    val fromSource = location.buildDistanceMap(blockedCell)
     val target =
         if (!cell.isTable)
           cell
@@ -57,19 +59,19 @@ class Player : AbstractMultiplayerPlayer() {
           cell.neighbours.map { it.first }
               .filter { !it.isTable }
               .filter { it in fromSource.keys }
-              .minBy { fromSource[it]!! } ?: return moveTo(partner.location)
+              .minBy { fromSource[it]!! } ?: return moveTo(blockedCell!!)
 
     if (target !in fromSource.keys) {
       System.err.println("Warning: cannot move! Moving to partner location instead")
-      return moveTo(partner.location)
+      return moveTo(blockedCell!!)
     }
 
-    if (location.distanceTo(target, partner.location) <= WALK_DISTANCE) {
+    if (location.distanceTo(target, blockedCell) <= WALK_DISTANCE) {
       location = target
       return
     }
 
-    val fromTarget = target.buildDistanceMap(partner.location)
+    val fromTarget = target.buildDistanceMap(blockedCell)
 
     location = fromSource
         .filter { (cell, dist) -> dist <= WALK_DISTANCE && !cell.isTable }

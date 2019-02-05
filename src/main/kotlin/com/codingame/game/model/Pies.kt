@@ -38,7 +38,6 @@ sealed class OvenState(private val stateToks: List<Any>) {
 data class Oven(private val cookTime: Int, private val burnTime: Int, private var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
   override fun reset() { state = OvenState.Empty }
   override fun describe() = "OVEN-$state"
-      .also { System.err.println("Describing oven: $it") }
 
   override fun tick() {
     val curState = state

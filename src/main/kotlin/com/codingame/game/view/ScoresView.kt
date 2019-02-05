@@ -39,7 +39,7 @@ class ScoresView(matchPlayers: List<Player>) {
       y = viewHeight * 3 / 4
       anchorX = 0.5
       anchorY = 0.5
-      fontSize = 50
+      fontSize = 35
       fillColor = 0
       zIndex = 350
 
