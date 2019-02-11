@@ -2,43 +2,63 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 import com.codingame.game.rand
-import java.util.ArrayList
 
-class CustomerQueue(): ArrayList<Customer>() {
+val originalQueue = List(50) { Customer.randomCustomer() }
 
+class CustomerQueue() {
   constructor(eagerPointsAwarded: (Int) -> Unit): this() {
     onPointsAwarded = eagerPointsAwarded
   }
 
+  val queueIterator = originalQueue.iterator()
+
+  val activeCustomers: MutableList<Customer> = mutableListOf()
+
   lateinit var onPointsAwarded: (Int) -> Unit
 
   fun delivery(item: Item) {
-    this.find { it.dish == item }?.also {
+    activeCustomers.filter { it.dish == item }.maxBy { it.award }?.also {
       onPointsAwarded(it.award)
-      remove(it)
+      it.satisfaction = Satisfaction.Satisfied
     } ?: onPointsAwarded(0)
   }
 
-  fun tick() {
-    removeIf { !it.stillWaiting() }
-    while(size < 3) { this += Customer.randomCustomer() }
+  fun getNewCustomers() {
+    activeCustomers.removeIf {
+      it.satisfaction in listOf(Satisfaction.Satisfied, Satisfaction.Leaving)
+    }
+    while(activeCustomers.size < 3) {
+      activeCustomers += queueIterator.next().also {
+        it.award = it.originalAward
+        it.satisfaction = Satisfaction.Waiting
+      }}
   }
 
-  fun copy() = CustomerQueue().also {
-    it.clear()
-    forEach { customer -> it.add(customer.copy()) }
+  fun updateRemainingCustomers() {
+    activeCustomers
+        .filter { it.satisfaction != Satisfaction.Satisfied }
+        .forEach { it.updateSatisfaction() }
   }
 }
 
+enum class Satisfaction {
+  Waiting,
+  Satisfied,
+  Danger,
+  Leaving
+}
 
 data class Customer(val dish: Dish, var award: Int) {
   val originalAward = award
+  var satisfaction: Satisfaction = Satisfaction.Waiting
 
-  fun copy() = Customer(dish, originalAward)
-
-  fun stillWaiting(): Boolean {
+  fun updateSatisfaction() {
     award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
-    return award > 10
+    satisfaction = when {
+      award > 25 -> Satisfaction.Waiting
+      award > 10 -> Satisfaction.Danger
+      else -> Satisfaction.Leaving
+    }
   }
 
   companion object {

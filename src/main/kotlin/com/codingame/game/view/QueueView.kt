@@ -1,6 +1,7 @@
 package com.codingame.game.view
 
 import com.codingame.game.model.*
+import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Sprite
 
 class QueueView {
@@ -24,12 +25,12 @@ class QueueView {
     customerViews.forEachIndexed { index, custView ->
       custView.group.apply { x = 10 + index * 440; y = 10 }
 
-      if (index >= queue.size) {
+      if (index >= queue.activeCustomers.size) {
         custView.group.isVisible = false
       } else {
-        queue[index].let {
+        queue.activeCustomers[index].let {
           custView.group.isVisible = it.award > 0
-          custView.update(it.dish.contents.toList(), it.award)
+          custView.update(it)
         }
       }
     }
@@ -71,8 +72,14 @@ class QueueView {
       zIndex = 350
     }
 
+    val waitingColour = 0x4286f4
+    val dangerColour = 0xf4d507
+    val angryColour = 0xc13d2c
+    val happyColour = 0x37c648
+
+
     val backgroundBox = graphicEntityModule.createRectangle().apply {
-      fillColor = 0x4286f4
+      fillColor = waitingColour
       width = viewWidth
       height = viewHeight
       zIndex = 200
@@ -80,8 +87,18 @@ class QueueView {
 
     val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
 
-    fun update(edibles: List<EdibleItem>, award: Int) {
+    fun update(customer: Customer) {
+      val award = customer.award
+      val edibles = customer.dish.contents
+
       awardText.text = award.toString()
+
+      backgroundBox.setFillColor(when(customer.satisfaction) {
+        Satisfaction.Waiting -> waitingColour
+        Satisfaction.Satisfied -> happyColour
+        Satisfaction.Danger -> dangerColour
+        Satisfaction.Leaving -> angryColour
+      }, Curve.NONE)
 
       foodSprites.forEach { it.isVisible = false }
       edibles.zip(foodSprites).forEach { (edible, foodSprite) ->

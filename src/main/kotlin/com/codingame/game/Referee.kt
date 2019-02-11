@@ -23,7 +23,6 @@ class Referee : AbstractReferee() {
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
-  private lateinit var baseQueue: CustomerQueue
   val view = GameView()
   private lateinit var matchPlayers: MutableList<Player>
 
@@ -50,7 +49,6 @@ class Referee : AbstractReferee() {
     board = buildBoard()
     view.boardView = BoardView(board, matchPlayers)
 
-    baseQueue = CustomerQueue()
     view.queueView = QueueView()
 
     view.scoresView = ScoresView(matchPlayers)
@@ -79,7 +77,7 @@ class Referee : AbstractReferee() {
     view.boardView.removePlayer(matchPlayers[2])
     Collections.rotate(matchPlayers, 1)
     board.reset()
-    queue = baseQueue.copy()
+    queue = CustomerQueue()
 
     roundPlayers[0].apply { location = board["D3"]; heldItem = null }
     roundPlayers[1].apply { location = board["H3"]; heldItem = null }
@@ -199,7 +197,7 @@ class Referee : AbstractReferee() {
             }
 
         // 3. Describe customer queue
-        queue
+        queue.activeCustomers
             .also { player.sendInputLine(it.size) }
             .also {
               it.forEach {
@@ -241,6 +239,7 @@ class Referee : AbstractReferee() {
 
 //      println("Current players: ${players.map { it.nicknameToken }}")
 
+      queue.getNewCustomers()
       sendGameState(thePlayer)
       thePlayer.execute()
 
@@ -254,7 +253,8 @@ class Referee : AbstractReferee() {
         thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
       }
 
-      queue.tick()
+      queue.updateRemainingCustomers()
+
     }
   }
 
