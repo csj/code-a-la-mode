@@ -14,6 +14,15 @@ import java.util.*
 
 typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
 
+enum class League {
+  IceCreamBerries,
+  BananasChoppingBoard,
+  Waffles,
+  All
+}
+
+lateinit var league: League
+
 @Suppress("unused")  // injected by magic
 class Referee : AbstractReferee() {
   @Inject
@@ -45,6 +54,13 @@ class Referee : AbstractReferee() {
         matchPlayers[2] to ScoreEntry(arrayOf(null, 0, 0))
     )
     gameManager.maxTurns = 600
+
+    league = when (gameManager.leagueLevel + 1) {
+      1 -> League.IceCreamBerries
+      2 -> League.BananasChoppingBoard
+      3 -> League.Waffles
+      else -> League.All
+    }
 
     board = buildBoard()
     view.boardView = BoardView(board, matchPlayers)
@@ -106,7 +122,7 @@ class Referee : AbstractReferee() {
 
   override fun onEnd() {
     scoreBoard.forEach { player, entry ->
-      player.score = entry.total()
+      player.score = entry.total()  // TODO not if they're dead ..
     }
   }
 
@@ -127,6 +143,7 @@ class Referee : AbstractReferee() {
       board.window.onDelivery = queue::delivery
 
       players.forEach { player ->
+
         player.partner = players.find { it != player }!!
       }
     }

@@ -69,25 +69,18 @@ fun buildBoard(): Board {
 
   val equipmentLocs = equipment2.shuffled(rand).iterator()
 
-  val equipments = listOf(
-      IceCreamCrate(),
-      PieCrustCrate(),
-      StrawberryCrate(),
-      BlueberryCrate(),
-      BananaCrate(),
-      Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME),
-      ChoppingBoard(),
-      WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME),
-      Jarbage()
+  val equipments = listOfNotNull(
+      Jarbage(),
+      (league >= League.IceCreamBerries).then(IceCreamCrate()),
+      (league >= League.IceCreamBerries).then(StrawberryCrate()),
+      (league >= League.IceCreamBerries).then(BlueberryCrate()),
+      (league >= League.BananasChoppingBoard).then(BananaCrate()),
+      (league >= League.BananasChoppingBoard).then(ChoppingBoard()),
+      (league >= League.Waffles).then(WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME)),
+      (league >= League.All).then(PieCrustCrate()),
+      (league >= League.All).then(Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME))
   )
 
   equipments.forEach { eq -> board[equipmentLocs.next()].equipment = eq }
   return board
-}
-
-fun buildPlayers(): List<Player> {
-  return listOf(
-      Player(),
-      Player()
-  )
 }

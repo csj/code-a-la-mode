@@ -1,6 +1,8 @@
 package com.codingame.game.model
 
+import com.codingame.game.League
 import com.codingame.game.Player
+import com.codingame.game.league
 import com.codingame.game.rand
 
 val originalQueue = List(50) { Customer.randomCustomer() }
@@ -62,15 +64,11 @@ data class Customer(val dish: Dish, var award: Int) {
   }
 
   companion object {
-    private val possiblePlateContents = mapOf(
-        IceCream to 200,
-        Strawberries to 300,
-        Blueberries to 250,
-        ChoppedBananas to 500,
-        StrawberrySlice to 800,
-        BlueberrySlice to 900,
-        Waffle to 600
-    )
+    private val possiblePlateContents =
+        mapOf(IceCream to 200, Strawberries to 300, Blueberries to 250) +
+        (if (league >= League.BananasChoppingBoard) mapOf(ChoppedBananas to 500) else mapOf()) +
+        (if (league >= League.Waffles) mapOf(Waffle to 600) else mapOf()) +
+        (if (league >= League.All) mapOf(StrawberrySlice to 800, BlueberrySlice to 900) else mapOf())
 
     private fun randomOrder(): Dish =
         Dish(possiblePlateContents.keys.shuffled(rand)

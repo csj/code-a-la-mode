@@ -14,10 +14,8 @@ class NaiveAllItemsPlayer(
   lateinit var inputs: GameState
   lateinit var crates: Map<String, Table>
 
-  private fun findEquipment(equipment: Constants.EQUIPMENT): Table {
-    return inputs.tables.firstOrNull { it.equipment?.equipmentType == equipment.name }
-      ?: throw Exception("Couldn't find equipment: $equipment")
-  }
+  private fun findEquipment(equipment: Constants.EQUIPMENT) =
+      inputs.tables.firstOrNull { it.equipment?.equipmentType == equipment.name }
 
   init {
     var turn = 0
@@ -44,7 +42,7 @@ class NaiveAllItemsPlayer(
 
   private fun chaseGoal(): String? {
     // be responsible with the cutting board
-    findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD).let {
+    findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD)?.let {
       if (it.equipment?.equipmentContents()?.isNotEmpty() == true) {
         stderr.println("clearing cutting board")
         return if (inputs.myPlayer.carrying == null)
@@ -74,12 +72,12 @@ class NaiveAllItemsPlayer(
 
       // if it has anything we don't need, jarbage it
       if ((dishContents - goalItems).isNotEmpty())
-        return findEquipment(Constants.EQUIPMENT.GARBAGE).use()
+        return findEquipment(Constants.EQUIPMENT.GARBAGE)!!.use()
 
       // find next missing item from dish
       val missingItems = goalItems - dishContents
       val missingItem = missingItems.firstOrNull() ?:
-        return findEquipment(Constants.EQUIPMENT.WINDOW).use()
+        return findEquipment(Constants.EQUIPMENT.WINDOW)!!.use()
 
       stderr.println("missing item: $missingItem")
 
@@ -120,8 +118,8 @@ class NaiveAllItemsPlayer(
   private fun buildBananas(): String? {
     val carrying = inputs.myPlayer.carrying
     return when {
-      carrying == null -> findEquipment(Constants.EQUIPMENT.BANANA_CRATE).use()
-      carrying.itemType == Constants.ITEM.BANANA.name -> findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD).use()
+      carrying == null -> findEquipment(Constants.EQUIPMENT.BANANA_CRATE)?.use()
+      carrying.itemType == Constants.ITEM.BANANA.name -> findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD)?.use()
       carrying.itemType == Constants.FOOD.CHOPPEDBANANAS.name -> useEmptyTable()
       else -> { stderr.println("uhhh, holding: $carrying"); return useEmptyTable() }
     }
@@ -132,7 +130,7 @@ class NaiveAllItemsPlayer(
 
   private fun getEmptyPlate(): String = (
       inputs.tables.find { it.item?.itemType == Constants.ITEM.DISH.name }
-          ?: findEquipment(Constants.EQUIPMENT.DISH_RETURN)).use()
+          ?: findEquipment(Constants.EQUIPMENT.DISH_RETURN)!!).use()
 
   private fun useEmptyTable(): String {
     return inputs.myPlayer.run {
@@ -143,7 +141,7 @@ class NaiveAllItemsPlayer(
 
   private fun buildWaffle(): String? {
     return if (inputs.myPlayer.carrying == null)
-      findEquipment(Constants.EQUIPMENT.WAFFLEIRON).use()
+      findEquipment(Constants.EQUIPMENT.WAFFLEIRON)!!.use()
     else useEmptyTable()
   }
 
@@ -152,7 +150,7 @@ class NaiveAllItemsPlayer(
     val x = inputs.myPlayer.x
     val y = inputs.myPlayer.y
 
-    findEquipment(Constants.EQUIPMENT.OVEN).let {
+    findEquipment(Constants.EQUIPMENT.OVEN)!!.let {
       if (it.equipment!!.equipmentState() != "EMPTY") {
         stderr.println("waiting for pie in oven")
         return it.use()
@@ -172,7 +170,7 @@ class NaiveAllItemsPlayer(
               )
         }.minBy { abs(it.x - x) + abs(it.y - y) } ?:
           findEquipment(Constants.EQUIPMENT.PIECRUST_CRATE)
-        return pie.use()
+        return pie!!.use()
       }
 
       carrying.itemType == Constants.ITEM.RAW_PIE.name -> {
@@ -180,18 +178,18 @@ class NaiveAllItemsPlayer(
         return when {
           carrying.itemContents.isEmpty() ->
             findEquipment(if (isStrawberry) Constants.EQUIPMENT.STRAWBERRY_CRATE else
-              Constants.EQUIPMENT.BLUEBERRY_CRATE).use()
+              Constants.EQUIPMENT.BLUEBERRY_CRATE)!!.use()
 
           carrying.itemContents.size == 3 -> {
             stderr.println("pie is complete; heading for oven")
-            findEquipment(Constants.EQUIPMENT.OVEN).use()
+            findEquipment(Constants.EQUIPMENT.OVEN)!!.use()
           }
 
           carrying.itemContents[0] == Constants.FOOD.STRAWBERRIES.name ->
-            findEquipment(Constants.EQUIPMENT.STRAWBERRY_CRATE).use()
+            findEquipment(Constants.EQUIPMENT.STRAWBERRY_CRATE)!!.use()
 
           carrying.itemContents[0] == Constants.FOOD.BLUEBERRIES.name ->
-            findEquipment(Constants.EQUIPMENT.BLUEBERRY_CRATE).use()
+            findEquipment(Constants.EQUIPMENT.BLUEBERRY_CRATE)!!.use()
 
           else -> useEmptyTable()
         }
@@ -199,7 +197,7 @@ class NaiveAllItemsPlayer(
 
       carrying.itemType == Constants.ITEM.WHOLE_PIE.name -> {
         stderr.println("holding whole pie; heading for chopping board")
-        return findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD).use()
+        return findEquipment(Constants.EQUIPMENT.CHOPPINGBOARD)!!.use()
       }
 
       else -> return useEmptyTable()
