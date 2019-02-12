@@ -17,12 +17,13 @@ class CustomerQueue() {
   val activeCustomers: MutableList<Customer> = mutableListOf()
 
   lateinit var onPointsAwarded: (Int) -> Unit
+  lateinit var onFailure: () -> Unit
 
   fun delivery(item: Item) {
     activeCustomers.filter { it.dish == item }.maxBy { it.award }?.also {
       onPointsAwarded(it.award)
       it.satisfaction = Satisfaction.Satisfied
-    } ?: onPointsAwarded(0)
+    } ?: onFailure()
   }
 
   fun getNewCustomers() {

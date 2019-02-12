@@ -55,7 +55,7 @@ class Referee : AbstractReferee() {
     )
     gameManager.maxTurns = 600
 
-    league = when (gameManager.leagueLevel + 1) {
+    league = when (4) {  // when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.BananasChoppingBoard
       3 -> League.Waffles
@@ -83,6 +83,7 @@ class Referee : AbstractReferee() {
     }
 
     nextRound()
+
   }
 
   private lateinit var currentRound: RoundReferee
@@ -94,6 +95,7 @@ class Referee : AbstractReferee() {
     Collections.rotate(matchPlayers, 1)
     board.reset()
     queue = CustomerQueue()
+    queue.onFailure = { view.queueView.failed = true }
 
     roundPlayers[0].apply { location = board["D3"]; heldItem = null }
     roundPlayers[1].apply { location = board["H3"]; heldItem = null }
@@ -114,6 +116,7 @@ class Referee : AbstractReferee() {
     } else {
       currentRound.gameTurn(turn)
     }
+    System.err.println("Turn $turn: failed = ${view.queueView.failed}")
 
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()
@@ -271,7 +274,6 @@ class Referee : AbstractReferee() {
       }
 
       queue.updateRemainingCustomers()
-
     }
   }
 

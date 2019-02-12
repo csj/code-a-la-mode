@@ -7,18 +7,28 @@ import com.codingame.gameengine.module.entities.Sprite
 class QueueView {
   lateinit var queue: CustomerQueue
 
+  var failed = false
+
   companion object {
-    var x = 0
-    var y = 0
+    lateinit var xRange: IntRange
+    lateinit var yRange: IntRange
   }
 
   private var customerViews: List<CustomerView> = List(3) {
     CustomerView()
   }
 
-  val wholeGroup = graphicEntityModule.createGroup(*(customerViews.map { it.group }).toTypedArray()).apply {
-    x = QueueView.x
-    y = QueueView.y
+  val failureBox = graphicEntityModule.createRectangle().apply {
+    width = QueueView.xRange.last - QueueView.xRange.first
+    height = QueueView.yRange.last - QueueView.yRange.first
+    fillColor = 0xff0000
+    isVisible = false
+    zIndex = -1000
+  }
+
+  val wholeGroup = graphicEntityModule.createGroup(*(customerViews.map { it.group } + failureBox).toTypedArray()).apply {
+    x = QueueView.xRange.first
+    y = QueueView.yRange.first
   }
 
   fun updateQueue() {
@@ -34,6 +44,9 @@ class QueueView {
         }
       }
     }
+    failureBox.isVisible = failed
+    graphicEntityModule.commitEntityState(0.0, failureBox)
+    failed = false
   }
 
   inner class CustomerView {
@@ -77,7 +90,6 @@ class QueueView {
     val angryColour = 0xc13d2c
     val happyColour = 0x37c648
 
-
     val backgroundBox = graphicEntityModule.createRectangle().apply {
       fillColor = waitingColour
       width = viewWidth
@@ -93,12 +105,13 @@ class QueueView {
 
       awardText.text = award.toString()
 
-      backgroundBox.setFillColor(when(customer.satisfaction) {
-        Satisfaction.Waiting -> waitingColour
-        Satisfaction.Satisfied -> happyColour
-        Satisfaction.Danger -> dangerColour
-        Satisfaction.Leaving -> angryColour
-      }, Curve.NONE)
+      backgroundBox.setFillColor(
+          when(customer.satisfaction) {
+            Satisfaction.Waiting -> waitingColour
+            Satisfaction.Satisfied -> happyColour
+            Satisfaction.Danger -> dangerColour
+            Satisfaction.Leaving -> angryColour
+          }, Curve.IMMEDIATE)
 
       foodSprites.forEach { it.isVisible = false }
       edibles.zip(foodSprites).forEach { (edible, foodSprite) ->
