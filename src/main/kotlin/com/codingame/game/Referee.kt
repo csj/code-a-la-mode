@@ -116,7 +116,6 @@ class Referee : AbstractReferee() {
     } else {
       currentRound.gameTurn(turn)
     }
-    System.err.println("Turn $turn: failed = ${view.queueView.failed}")
 
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()

@@ -26,15 +26,13 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
   }
 }
 
-class DishReturn : TimeSensitiveEquipment() {
+class DishReturn: Equipment() {
   override fun describe() = (listOf(Constants.EQUIPMENT.DISH_RETURN.name) + List(dishes) { Constants.ITEM.DISH.name }).joinToString("-")
 
   override fun reset() {
-    repeat(40) { tick() }
     dishes = 4
   }
 
-  private val dishQueue = LinkedList<Boolean>(List(40) { false })
   var dishes: Int = 4
 
   override fun takeFrom(player: Player): Item {
@@ -44,14 +42,7 @@ class DishReturn : TimeSensitiveEquipment() {
   }
 
   fun addDishToQueue() {
-    dishQueue.add(true)
-  }
-
-  override fun tick() {
-    while (dishQueue.pop()!!) {
-      dishes++
-    }
-    dishQueue.add(false)
+    dishes++
   }
 
 }
