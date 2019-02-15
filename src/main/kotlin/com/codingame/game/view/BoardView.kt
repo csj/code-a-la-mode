@@ -56,7 +56,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is GeneralCrate -> image = "crate.png"
               is Oven -> image = "oven.png"
               is Window -> image = "window.png"
-              is WaffleIron -> image = "waffle-iron.png"
               is DishReturn -> image = "dishwasher.png"
               is Jarbage -> image = "trash.png"
             }
@@ -67,7 +66,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is BlueberryCrate -> image = "blueberries.png"
               is StrawberryCrate -> image = "strawberry.png"
               is IceCreamCrate -> image = "ice-cream.png"
-              is PieCrustCrate -> image = "pie.png"
+              is DoughCrate -> image = "dough.png"
               else -> isVisible = false
             }
             baseHeight = cellWidth / 2
@@ -202,33 +201,43 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         isVisible = true
 
         when(item) {
-          is Banana -> image = "banana.png"
-          is ChoppedBananas -> image = "open-banana.png"
-          is Waffle -> image = "waffle.png"
-          is RawPie -> image = "pie.png"  // TODO: Add flavour
-          is Pie -> image = "pie.png"  // TODO: Add flavour and tint
-          is StrawberrySlice -> image = "strawberry-pie-slice.png"
-          is BlueberrySlice -> image = "blueberry-pie-slice.png"
           is IceCream -> image = "ice-cream.png"
           is Strawberries -> image = "strawberry.png"
           is Blueberries -> image = "blueberries.png"
+          is Dough -> image = "dough.png"
+          is Banana -> image = "banana.png"
+          is ChoppedBananas -> image = "open-banana.png"
+          is Croissant -> image = "croissant.png"
+          is Tart -> image = "tart.png"
+          is BurntFood -> image = "coal.png"
           is Dish -> {
             image = "dish.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->
               subSprite.apply {
                 isVisible = true
                 when (edible) {
-                  is StrawberrySlice -> image = "strawberry-pie-slice.png"
-                  is BlueberrySlice -> image = "blueberry-pie-slice.png"
                   is IceCream -> image = "ice-cream.png"
                   is Strawberries -> image = "strawberry.png"
                   is Blueberries -> image = "blueberries.png"
-                  is Waffle -> image = "waffle.png"
                   is ChoppedBananas -> image = "open-banana.png"
+                  is Croissant -> image = "croissant.png"
+                  is Tart -> image = "tart.png"
                 }
               }
             }
           }
+          is Shell -> {
+            image = "empty-tart.png"
+            if (item.hasStrawberry) subSprites[0].apply {
+              isVisible = true
+              image = "strawberry.png"
+            }
+            if (item.hasBlueberry) subSprites[1].apply {
+              isVisible = true
+              image = "blueberries.png"
+            }
+          }
+
           else -> mainSprite.isVisible = false
         }
       }

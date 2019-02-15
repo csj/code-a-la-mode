@@ -11,8 +11,14 @@ abstract class Item {
     cell.item = null
     player.heldItem = this
   }
+
+  abstract fun describeTokens(): List<String>
+  fun describe() = describeTokens().joinToString("-")
 }
 
+abstract class EasilyDescribedItem(private val singleItemToken: String): Item() {
+  override fun describeTokens() = listOf(singleItemToken)
+}
 
 /**
  * Represents a feature of the board. Cannot be moved or picked up, but can be USEd.

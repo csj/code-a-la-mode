@@ -1,17 +1,6 @@
 package com.codingame.game.model
 
 import com.codingame.game.Player
-import java.util.*
-
-val edibleEncoding: Map<EdibleItem, String> = mapOf(
-    IceCream to Constants.FOOD.ICECREAM.name,
-    Strawberries to Constants.FOOD.STRAWBERRIES.name,
-    Blueberries to Constants.FOOD.BLUEBERRIES.name,
-    ChoppedBananas to Constants.FOOD.CHOPPEDBANANAS.name,
-    StrawberrySlice to Constants.FOOD.STRAWBERRYSLICE.name,
-    BlueberrySlice to Constants.FOOD.BLUEBERRYSLICE.name,
-    Waffle to Constants.FOOD.WAFFLE.name
-)
 
 data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) : Item(), Container {
   constructor(vararg initialContents: EdibleItem): this(mutableSetOf(*initialContents))
@@ -24,14 +13,16 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
     }
     super.receiveItem(player, item, cell)
   }
+
+  override fun describeTokens(): List<String> {
+    return listOf(Constants.ITEM.DISH.name) + contents.map { it.describe() }
+  }
 }
 
 class DishReturn: Equipment() {
   override fun describe() = (listOf(Constants.EQUIPMENT.DISH_RETURN.name) + List(dishes) { Constants.ITEM.DISH.name }).joinToString("-")
 
-  override fun reset() {
-    dishes = 4
-  }
+  override fun reset() { dishes = 4 }
 
   var dishes: Int = 4
 

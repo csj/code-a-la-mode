@@ -47,11 +47,11 @@ val boardLayout2 = listOf(
 )
 
 val equipment2 = listOf(
-    "A0", "B0", "C0", "D0", "E0", "F0", "G0", "H0", "I0", "J0", "K0",
-    "A1", "A2",       "A4", "A5",
-    "K1", "K2",       "K4", "K5",
+    "A0", "B0", "C0", "D0", "E0"       ,"G0", "H0", "I0", "J0", "K0",
+    "A1", "A2", "A3", "A4", "A5",
+    "K1", "K2", "K3", "K4", "K5",
     "H2", "C3", "F3", "I3",
-    "A6", "B6", "C6", "D6", "E6", "F6", "G6", "H6", "I6", "J6", "K6"
+    "A6", "B6", "C6", "D6", "E6"       ,"G6", "H6", "I6", "J6", "K6"
     )
 
 fun buildEmptyBoard(): Board = Board(boardLayout2)
@@ -59,12 +59,10 @@ fun buildEmptyBoard(): Board = Board(boardLayout2)
 fun buildBoard(): Board {
   val board = buildEmptyBoard()
 
-  val dishReturn1 = DishReturn().also { board["A3"].equipment = it }
+  val dishReturn1 = DishReturn().also { board["F0"].equipment = it }
   val window = Window(dishReturn1)
 
-//  board["I6"]
-  board["K3"]
-      .equipment = window
+  board["F6"].equipment = window
   board.window = window
 
   val equipmentLocs = equipment2.shuffled(rand).iterator()
@@ -76,9 +74,8 @@ fun buildBoard(): Board {
       (league >= League.IceCreamBerries).then(BlueberryCrate()),
       (league >= League.BananasChoppingBoard).then(BananaCrate()),
       (league >= League.BananasChoppingBoard).then(ChoppingBoard()),
-      (league >= League.Waffles).then(WaffleIron(Constants.WAFFLE_COOKTIME, Constants.WAFFLE_BURNTIME)),
-      (league >= League.All).then(PieCrustCrate()),
-      (league >= League.All).then(Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME))
+      (league >= League.Croissants).then(DoughCrate()),
+      (league >= League.Croissants).then(Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME))
   )
 
   equipments.forEach { eq -> board[equipmentLocs.next()].equipment = eq }

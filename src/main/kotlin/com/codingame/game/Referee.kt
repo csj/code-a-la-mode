@@ -17,7 +17,7 @@ typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
 enum class League {
   IceCreamBerries,
   BananasChoppingBoard,
-  Waffles,
+  Croissants,
   All
 }
 
@@ -58,7 +58,7 @@ class Referee : AbstractReferee() {
     league = when (4) {  // when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.BananasChoppingBoard
-      3 -> League.Waffles
+      3 -> League.Croissants
       else -> League.All
     }
 
@@ -169,28 +169,10 @@ class Referee : AbstractReferee() {
         return gameTurn(matchTurn)
       }
 
-      fun Item?.describe(): String = when (this) {
-        is Dish -> (listOf(Constants.ITEM.DISH.name) + contents.map { edibleEncoding[it] }).joinToString("-")
-        is Banana -> Constants.ITEM.BANANA.name
-        is RawPie -> (listOf(Constants.ITEM.RAW_PIE) + when (this) {
-          RawPie(null) -> emptyList()
-          else -> List(3 - this.fruitsMissing) {
-            if (pieFlavour == PieFlavour.Strawberry) Constants.FOOD.STRAWBERRIES.name else Constants.FOOD.BLUEBERRIES.name
-          }
-        }).joinToString("-")
-        is Pie -> listOf(Constants.ITEM.WHOLE_PIE.name,
-            if (this.pieFlavour == PieFlavour.Strawberry) Constants.FOOD.STRAWBERRIES.name else Constants.FOOD.BLUEBERRIES.name
-        ).joinToString("-")
-        is BurntPie -> Constants.ITEM.BURNT_PIE.name
-        is BurntWaffle -> Constants.ITEM.BURNT_WAFFLE.name
-        in edibleEncoding.keys -> edibleEncoding[this]!!
-        else -> "NONE"
-      }
-
       fun sendGameState(player: Player) {
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
-          val item = it.heldItem.describe()
+          val item = it.heldItem?.describe() ?: "NONE"
 
           val toks = if (it.isActive) listOf(
               it.location.x,
@@ -209,7 +191,7 @@ class Referee : AbstractReferee() {
                   it.x,
                   it.y,
                   it.equipment?.describe() ?: "NONE",
-                  it.item.describe()
+                  it.item?.describe() ?: "NONE"
               )
               player.sendInputLine(toks)
 //              println("Sending table toks $toks to $player")

@@ -70,8 +70,8 @@ data class Equipment(val description: String) {
   val equipmentType = toks[0]
 
   fun equipmentState() = toks[1]
-  fun equipmentTimer() = toks[2].toInt()
-  fun equipmentContents() = toks.drop(1)
+  fun equipmentContents() = toks[2]
+  fun equipmentTimer() = toks[3].toInt()
 
   companion object {
     fun parse(description: String) =

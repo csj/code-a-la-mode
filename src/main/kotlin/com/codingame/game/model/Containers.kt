@@ -2,7 +2,7 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-abstract class EdibleItem: Item() {
+abstract class EdibleItem(private val singleToken: String): Item() {
   override fun receiveItem(player: Player, item: Item, cell: Cell?) {
     if (item is Dish) {
       item += this
@@ -11,6 +11,8 @@ abstract class EdibleItem: Item() {
     }
     return super.receiveItem(player, item, cell)
   }
+
+  override fun describeTokens() = listOf(singleToken)
 }
 
 interface Container {

@@ -10,7 +10,6 @@ class IceCreamPlayer(
     stdin: InputStream, stdout: PrintStream, stderr: PrintStream)
   : BaseCALMPlayer(stdin, stdout, stderr) {
 
-  private val crateVal = Constants.EQUIPMENT.ICE_CREAM_CRATE.name
   private val ballVal = Constants.FOOD.ICECREAM.name
 
   init {
@@ -18,7 +17,8 @@ class IceCreamPlayer(
       val inputs = readInputs()
       val me = inputs.myPlayer
 
-      val iceCreamLoc = inputs.tables.firstOrNull { it.equipment?.equipmentType == crateVal }
+      val iceCreamLoc = inputs.tables.firstOrNull { it.equipment?.equipmentType == "CRATE" &&
+      it.equipment.equipmentState() == "ICECREAM" }
         ?: throw Exception("Couldn't find ice cream crate")
       val window = inputs.tables.firstOrNull { it.equipment?.equipmentType == Constants.EQUIPMENT.WINDOW.name }
         ?: throw Exception("Couldn't find window")
