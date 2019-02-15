@@ -71,7 +71,10 @@ class Referee : AbstractReferee() {
 
     matchPlayers.forEach { player ->
       //      println("Sending board size to $player")
-      player.sendInputLine("${board.width} ${board.height}")
+      //      player.sendInputLine("${board.width} ${board.height}")
+
+      player.describeCustomers(originalQueue)
+
       board.allCells
           .filter { it.isTable }
           .also { player.sendInputLine(it.size.toString()) }
@@ -198,15 +201,7 @@ class Referee : AbstractReferee() {
             }
 
         // 3. Describe customer queue
-        queue.activeCustomers
-            .also { player.sendInputLine(it.size) }
-            .also {
-              it.forEach {
-                val toks = listOf(it.dish.describe(), it.award.toString())
-                player.sendInputLine(toks)
-              }
-            }
-
+        player.describeCustomers(queue.activeCustomers)
       }
 
       fun processPlayerActions(player: Player) {
@@ -259,6 +254,17 @@ class Referee : AbstractReferee() {
   }
 
 
+}
+
+private fun Player.describeCustomers(customers: List<Customer>) {
+  customers
+      .also { sendInputLine(it.size) }
+      .also {
+        it.forEach {
+          val toks = listOf(it.dish.describe(), it.award.toString())
+          sendInputLine(toks)
+        }
+      }
 }
 
 

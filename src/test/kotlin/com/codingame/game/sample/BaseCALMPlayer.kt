@@ -25,8 +25,13 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
   var numTables: Int
 
   init {
-    width = scanner.nextInt()
-    height = scanner.nextInt()
+    width = 11 //scanner.nextInt()
+    height = 7 //scanner.nextInt()
+
+    val longQueue = List(scanner.nextInt()) {
+      Customer(Item.parse(scanner.next())!!, scanner.nextInt())
+    }
+
     numTables = scanner.nextInt()
     List(numTables) {
       Table(scanner.nextInt(), scanner.nextInt(),

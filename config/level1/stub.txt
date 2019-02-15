@@ -1,4 +1,5 @@
-read width:int height:int
+read numAllCustomers:int
+loop numAllCustomers read customerItem:word(100) customerAward:int
 read numTables:int
 loop numTables read x:int y:int equipment:word(100)
 gameloop
@@ -10,8 +11,6 @@ loop numCustomers read customerItem:word(100) customerAward:int
 write WAIT
 
 INPUT
-width: the width of the kitchen
-height: the height of the kitchen
 numTables: the number of tables in the kitchen
 numCustomers: the number of customers currently waiting for food
 customerAward: the number of points awarded for delivering the food

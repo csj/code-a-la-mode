@@ -10,8 +10,15 @@ class Player {
 
     public static void main(String args[]) {
         Scanner in = new Scanner(System.in);
-        int width = in.nextInt(); // the width of the kitchen
-        int height = in.nextInt(); // the height of the kitchen
+
+        int numAllCustomers = in.nextInt();
+        for (int i=0; i<numAllCustomers; i++) {
+            String customerItem = in.next(); // the food the customer is waiting for
+            int customerAward = in.nextInt(); // the number of points awarded for delivering the food
+        }
+
+        int width = 11; //in.nextInt(); // the width of the kitchen
+        int height = 7; //in.nextInt(); // the height of the kitchen
         int numTables = in.nextInt(); // the number of tables in the kitchen
         for (int i = 0; i < numTables; i++) {
             int x = in.nextInt();

@@ -41,7 +41,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/kotlin" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" type="java-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin/specs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/kotlin" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
@@ -75,33 +74,7 @@
     <orderEntry type="library" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" name="Maven: org.javassist:javassist:3.22.0-GA" level="project" />
     <orderEntry type="library" name="Maven: org.apache.commons:commons-lang3:3.5" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-test:1.3.11" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.jetbrains.kotlin:kotlin-test-common:1.3.11" level="project" />
-    <orderEntry type="library" name="Maven: run.smt.ktest:ktest-runner-junit4:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: run.smt.ktest:ktest-util:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: run.smt.ktest:ktest-api:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: run.smt.ktest:ktest-config:1.0.0" level="project" />
-    <orderEntry type="library" name="Maven: com.typesafe:config:1.3.1" level="project" />
-    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jre8:1.2.10" level="project" />
-    <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jre7:1.2.10" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.3.11" level="project" />
     <orderEntry type="library" name="Maven: org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.3.11" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.kotlintest:kotlintest-runner-junit5:3.1.9" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.kotlintest:kotlintest-core:3.1.9" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.kotlintest:kotlintest-assertions:3.1.9" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: com.univocity:univocity-parsers:2.6.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.kotlintest:kotlintest-runner-jvm:3.1.9" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.reflections:reflections:0.9.11" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.arrow-kt:arrow-core:0.7.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.arrow-kt:arrow-annotations:0.7.1" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: io.kindedj:kindedj:1.1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-engine:1.2.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.apiguardian:apiguardian-api:1.0.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-commons:1.2.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.opentest4j:opentest4j:1.1.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-suite-api:1.2.0" level="project" />
-    <orderEntry type="library" scope="TEST" name="Maven: org.junit.platform:junit-platform-launcher:1.2.0" level="project" />
-    <orderEntry type="library" name="Maven: junit:junit:4.0" level="project" />
   </component>
 </module>
