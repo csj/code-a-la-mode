@@ -9,7 +9,6 @@ object Constants {
   
   enum class FOOD {
     ICECREAM,
-    STRAWBERRIES,
     BLUEBERRIES,
     CHOPPEDBANANAS,
     CROISSANT,

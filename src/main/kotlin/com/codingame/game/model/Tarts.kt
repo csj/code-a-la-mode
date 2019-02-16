@@ -3,7 +3,6 @@ package com.codingame.game.model
 import com.codingame.game.Player
 import com.codingame.game.then
 
-object Strawberries: EdibleItem(Constants.FOOD.STRAWBERRIES.name)
 object Blueberries: EdibleItem(Constants.FOOD.BLUEBERRIES.name)
 object Tart: EdibleItem(Constants.FOOD.TART.name)
 object BurntFood: EasilyDescribedItem(Constants.ITEM.BURNT_FOOD.name)
@@ -65,7 +64,7 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
     if (state !== OvenState.Empty)
       throw LogicException("Cannot insert: oven not empty!")
 
-    if (item is Shell && item.hasBlueberry && item.hasStrawberry) {
+    if (item is Shell && item.hasBlueberry) {
       state = OvenState.Baking(Tart, cookTime)
       player.heldItem = null
       return
@@ -93,13 +92,9 @@ data class Oven(private val cookTime: Int, private val burnTime: Int, private va
   }
 }
 
-data class Shell(var hasBlueberry: Boolean = false, var hasStrawberry: Boolean = false): Item() {
+data class Shell(var hasBlueberry: Boolean = false): Item() {
   override fun receiveItem(player: Player, item: Item, cell: Cell?) {
     when (item) {
-      is Strawberries -> {
-        if (hasStrawberry) throw LogicException("This already has strawberries!")
-        hasStrawberry = true
-      }
       is Blueberries -> {
         if (hasBlueberry) throw LogicException("This already has blueberries!")
         hasBlueberry = true
@@ -114,8 +109,7 @@ data class Shell(var hasBlueberry: Boolean = false, var hasStrawberry: Boolean =
   override fun describeTokens(): List<String> {
     return listOfNotNull(
         Constants.ITEM.SHELL.name,
-        hasBlueberry.then(Constants.FOOD.BLUEBERRIES.name),
-        hasStrawberry.then(Constants.FOOD.STRAWBERRIES.name)
+        hasBlueberry.then(Constants.FOOD.BLUEBERRIES.name)
     )
   }
 }

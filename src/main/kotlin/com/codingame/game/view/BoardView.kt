@@ -62,9 +62,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           }
           secondaryContent = graphicEntityModule.createSprite().apply {
             when (equipment) {
-              is BananaCrate -> image = "banana.png"
+              is BananaCrate -> image = "strawberry.png"
               is BlueberryCrate -> image = "blueberries.png"
-              is StrawberryCrate -> image = "strawberry.png"
               is IceCreamCrate -> image = "ice-cream.png"
               is DoughCrate -> image = "dough.png"
               else -> isVisible = false
@@ -202,11 +201,10 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
         when(item) {
           is IceCream -> image = "ice-cream.png"
-          is Strawberries -> image = "strawberry.png"
           is Blueberries -> image = "blueberries.png"
           is Dough -> image = "dough.png"
-          is Banana -> image = "banana.png"
-          is ChoppedBananas -> image = "open-banana.png"
+          is Banana -> image = "strawberry.png"
+          is ChoppedBananas -> image = "strawberries-cut.png"
           is Croissant -> image = "croissant.png"
           is Tart -> image = "tart.png"
           is BurntFood -> image = "coal.png"
@@ -217,9 +215,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 isVisible = true
                 when (edible) {
                   is IceCream -> image = "ice-cream.png"
-                  is Strawberries -> image = "strawberry.png"
                   is Blueberries -> image = "blueberries.png"
-                  is ChoppedBananas -> image = "open-banana.png"
+                  is ChoppedBananas -> image = "strawberries-cut.png"
                   is Croissant -> image = "croissant.png"
                   is Tart -> image = "tart.png"
                 }
@@ -228,10 +225,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           }
           is Shell -> {
             image = "empty-tart.png"
-            if (item.hasStrawberry) subSprites[0].apply {
-              isVisible = true
-              image = "strawberry.png"
-            }
             if (item.hasBlueberry) subSprites[1].apply {
               isVisible = true
               image = "blueberries.png"

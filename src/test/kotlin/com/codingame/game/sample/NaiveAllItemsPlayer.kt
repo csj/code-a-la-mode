@@ -29,7 +29,6 @@ class NaiveAllItemsPlayer(
 
       crates = listOf(
           Constants.FOOD.BLUEBERRIES,
-          Constants.FOOD.STRAWBERRIES,
           Constants.FOOD.ICECREAM,
           Constants.ITEM.DOUGH,
           Constants.ITEM.BANANA
@@ -179,18 +178,10 @@ class NaiveAllItemsPlayer(
 
       carrying.itemType == Constants.ITEM.SHELL.name -> {
         stderr.println("doing stuff: carrying = $carrying, contents = ${carrying.itemContents}")
-        when {
-          Constants.FOOD.BLUEBERRIES.name !in carrying.itemContents ->
-            return findCrate(Constants.FOOD.BLUEBERRIES.name).use()
-
-          Constants.FOOD.STRAWBERRIES.name !in carrying.itemContents ->
-            return findCrate(Constants.FOOD.STRAWBERRIES.name).use()
-
-          carrying.itemContents.size == 2 -> {
-            stderr.println("shell is complete; heading for oven")
-            return findEquipment(Constants.EQUIPMENT.OVEN)!!.use()
-          }
-        }
+        return if (Constants.FOOD.BLUEBERRIES.name in carrying.itemContents) {
+          stderr.println("shell is complete; heading for oven")
+          findEquipment(Constants.EQUIPMENT.OVEN)!!.use()
+        } else findCrate(Constants.FOOD.BLUEBERRIES.name).use()
       }
     }
 

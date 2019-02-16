@@ -120,10 +120,9 @@ class QueueView {
           when (edible) {
             is Tart -> image = "tart.png"
             is IceCream -> image = "ice-cream.png"
-            is Strawberries -> image = "strawberry.png"
             is Blueberries -> image = "blueberries.png"
             is Croissant -> image = "croissant.png"
-            is ChoppedBananas -> image = "open-banana.png"
+            is ChoppedBananas -> image = "strawberries-cut.png"
           }
         }
       }

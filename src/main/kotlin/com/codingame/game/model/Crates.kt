@@ -3,7 +3,6 @@ package com.codingame.game.model
 import com.codingame.game.Player
 
 class IceCreamCrate: GeneralCrate(IceCream)
-class StrawberryCrate: GeneralCrate(Strawberries)
 class BlueberryCrate: GeneralCrate(Blueberries)
 class BananaCrate: GeneralCrate(Banana)
 class DoughCrate: GeneralCrate(Dough)

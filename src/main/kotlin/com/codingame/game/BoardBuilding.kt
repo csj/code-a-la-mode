@@ -70,7 +70,6 @@ fun buildBoard(): Board {
   val equipments = listOfNotNull(
       Jarbage(),
       (league >= League.IceCreamBerries).then(IceCreamCrate()),
-      (league >= League.IceCreamBerries).then(StrawberryCrate()),
       (league >= League.IceCreamBerries).then(BlueberryCrate()),
       (league >= League.BananasChoppingBoard).then(BananaCrate()),
       (league >= League.BananasChoppingBoard).then(ChoppingBoard()),
