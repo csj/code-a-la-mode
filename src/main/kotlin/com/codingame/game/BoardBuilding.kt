@@ -71,8 +71,8 @@ fun buildBoard(): Board {
       Jarbage(),
       (league >= League.IceCreamBerries).then(IceCreamCrate()),
       (league >= League.IceCreamBerries).then(BlueberryCrate()),
-      (league >= League.BananasChoppingBoard).then(BananaCrate()),
-      (league >= League.BananasChoppingBoard).then(ChoppingBoard()),
+      (league >= League.StrawberriesChoppingBoard).then(StrawberryCrate()),
+      (league >= League.StrawberriesChoppingBoard).then(ChoppingBoard()),
       (league >= League.Croissants).then(DoughCrate()),
       (league >= League.Croissants).then(Oven(Constants.OVEN_COOKTIME, Constants.OVEN_BURNTIME))
   )

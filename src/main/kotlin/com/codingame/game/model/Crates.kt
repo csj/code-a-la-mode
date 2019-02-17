@@ -4,7 +4,7 @@ import com.codingame.game.Player
 
 class IceCreamCrate: GeneralCrate(IceCream)
 class BlueberryCrate: GeneralCrate(Blueberries)
-class BananaCrate: GeneralCrate(Banana)
+class StrawberryCrate: GeneralCrate(Strawberries)
 class DoughCrate: GeneralCrate(Dough)
 
 abstract class AllInstancesAreConsideredEqual: Equipment() {

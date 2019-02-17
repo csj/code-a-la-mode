@@ -16,7 +16,7 @@ typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
 
 enum class League {
   IceCreamBerries,
-  BananasChoppingBoard,
+  StrawberriesChoppingBoard,
   Croissants,
   All
 }
@@ -57,7 +57,7 @@ class Referee : AbstractReferee() {
 
     league = when (4) {  // when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
-      2 -> League.BananasChoppingBoard
+      2 -> League.StrawberriesChoppingBoard
       3 -> League.Croissants
       else -> League.All
     }

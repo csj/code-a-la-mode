@@ -62,7 +62,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           }
           secondaryContent = graphicEntityModule.createSprite().apply {
             when (equipment) {
-              is BananaCrate -> image = "strawberry.png"
+              is StrawberryCrate -> image = "strawberry.png"
               is BlueberryCrate -> image = "blueberries.png"
               is IceCreamCrate -> image = "ice-cream.png"
               is DoughCrate -> image = "dough.png"
@@ -203,8 +203,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is IceCream -> image = "ice-cream.png"
           is Blueberries -> image = "blueberries.png"
           is Dough -> image = "dough.png"
-          is Banana -> image = "strawberry.png"
-          is ChoppedBananas -> image = "strawberries-cut.png"
+          is Strawberries -> image = "strawberry.png"
+          is ChoppedStrawberries -> image = "strawberries-cut.png"
           is Croissant -> image = "croissant.png"
           is Tart -> image = "tart.png"
           is BurntFood -> image = "coal.png"
@@ -216,7 +216,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 when (edible) {
                   is IceCream -> image = "ice-cream.png"
                   is Blueberries -> image = "blueberries.png"
-                  is ChoppedBananas -> image = "strawberries-cut.png"
+                  is ChoppedStrawberries -> image = "strawberries-cut.png"
                   is Croissant -> image = "croissant.png"
                   is Tart -> image = "tart.png"
                 }

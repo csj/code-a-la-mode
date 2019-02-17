@@ -31,7 +31,7 @@ class NaiveAllItemsPlayer(
           Constants.FOOD.BLUEBERRIES,
           Constants.FOOD.ICECREAM,
           Constants.ITEM.DOUGH,
-          Constants.ITEM.BANANA
+          Constants.ITEM.STRAWBERRIES
       ).map { item ->
         item.name to (inputs.tables.firstOrNull {
           it.equipment?.equipmentType == "CRATE" &&
@@ -99,7 +99,7 @@ class NaiveAllItemsPlayer(
       return when(item) {
         Constants.FOOD.CROISSANT.name -> buildCroissant()
         Constants.FOOD.TART.name -> buildTart()
-        Constants.FOOD.CHOPPEDBANANAS.name -> buildBananas()
+        Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> buildStrawberries()
         else -> throw Exception("Unrecognized dish: $item")
       }
     }
@@ -110,12 +110,12 @@ class NaiveAllItemsPlayer(
     return getEmptyPlate()
   }
 
-  private fun buildBananas(): String? {
+  private fun buildStrawberries(): String? {
     val carrying = inputs.myPlayer.carrying
     return when {
-      carrying == null -> findCrate(Constants.ITEM.BANANA.name).use()
-      carrying.itemType == Constants.ITEM.BANANA.name -> findEquipment(Constants.EQUIPMENT.CHOPPING_BOARD)?.use()
-      carrying.itemType == Constants.FOOD.CHOPPEDBANANAS.name -> useEmptyTable()
+      carrying == null -> findCrate(Constants.ITEM.STRAWBERRIES.name).use()
+      carrying.itemType == Constants.ITEM.STRAWBERRIES.name -> findEquipment(Constants.EQUIPMENT.CHOPPING_BOARD)?.use()
+      carrying.itemType == Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> useEmptyTable()
       else -> { stderr.println("uhhh, holding: $carrying"); return useEmptyTable() }
     }
   }

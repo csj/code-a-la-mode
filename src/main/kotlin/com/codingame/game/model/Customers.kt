@@ -67,7 +67,7 @@ data class Customer(val dish: Dish, var award: Int) {
   companion object {
     private val possiblePlateContents =
         mapOf(IceCream to 200, Blueberries to 250) +
-        (if (league >= League.BananasChoppingBoard) mapOf(ChoppedBananas to 400) else mapOf()) +
+        (if (league >= League.StrawberriesChoppingBoard) mapOf(ChoppedStrawberries to 400) else mapOf()) +
         (if (league >= League.Croissants) mapOf(Croissant to 600) else mapOf()) +
         (if (league >= League.All) mapOf(Tart to 800) else mapOf())
 

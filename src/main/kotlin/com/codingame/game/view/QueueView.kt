@@ -122,7 +122,7 @@ class QueueView {
             is IceCream -> image = "ice-cream.png"
             is Blueberries -> image = "blueberries.png"
             is Croissant -> image = "croissant.png"
-            is ChoppedBananas -> image = "strawberries-cut.png"
+            is ChoppedStrawberries -> image = "strawberries-cut.png"
           }
         }
       }
