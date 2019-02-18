@@ -8,7 +8,7 @@ import com.codingame.gameengine.module.entities.Group
 import com.codingame.gameengine.module.entities.Sprite
 
 const val REACH_DISTANCE = 3
-const val WALK_DISTANCE = 7
+const val WALK_DISTANCE = 9
 operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo(other)
 
 class Player : AbstractMultiplayerPlayer() {
