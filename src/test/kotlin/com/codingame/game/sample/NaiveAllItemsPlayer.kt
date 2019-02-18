@@ -35,9 +35,8 @@ class NaiveAllItemsPlayer(
       ).map { item ->
         item.name to (inputs.tables.firstOrNull {
           it.equipment?.equipmentType == "CRATE" &&
-          it.equipment.equipmentState() == item.name } ?:
-            throw Exception("Couldn't find crate: $item"))
-      }.toMap()
+          it.equipment.equipmentState() == item.name })
+      }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
       stdout.println(act() ?: "WAIT")
     }
@@ -47,7 +46,7 @@ class NaiveAllItemsPlayer(
     val carrying = inputs.myPlayer.carrying
 
     // 0. If the oven has something ready, go get it!
-    findEquipment(Constants.EQUIPMENT.OVEN)!!.let {
+    findEquipment(Constants.EQUIPMENT.OVEN)?.let {
       if (it.equipment!!.equipmentState() in listOf("READY", "BURNT"))
         return if (carrying == null) it.use() else useEmptyTable()
     }
