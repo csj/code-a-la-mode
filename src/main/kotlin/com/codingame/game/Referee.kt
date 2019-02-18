@@ -242,11 +242,11 @@ class Referee : AbstractReferee() {
       try {
         processPlayerActions(thePlayer)
       } catch (ex: LogicException) {
-        System.err.println("${thePlayer.nicknameToken}: $ex")
+        System.err.println("${thePlayer.nicknameToken}: ${ex.message}")
       } catch (ex: Exception) {
-        System.err.println("${thePlayer.nicknameToken}: $ex (deactivating!)")
+        System.err.println("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         ex.printStackTrace()
-        thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
+        thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
       }
 
       queue.updateRemainingCustomers()
