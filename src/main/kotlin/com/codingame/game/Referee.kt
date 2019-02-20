@@ -11,6 +11,7 @@ import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
 import java.util.*
+import tooltipModule.TooltipModule
 
 typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
 
@@ -29,6 +30,7 @@ class Referee : AbstractReferee() {
   private lateinit var gameManager: MultiplayerGameManager<Player>
   @Inject
   private lateinit var graphicEntityModule: GraphicEntityModule
+  @Inject private lateinit var tooltipModule: TooltipModule
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -63,7 +65,7 @@ class Referee : AbstractReferee() {
     }
 
     board = buildBoard()
-    view.boardView = BoardView(board, matchPlayers)
+    view.boardView = BoardView(board, matchPlayers, tooltipModule)
 
     view.queueView = QueueView()
 

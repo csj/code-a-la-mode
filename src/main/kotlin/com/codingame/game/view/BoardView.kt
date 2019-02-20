@@ -3,9 +3,10 @@ package com.codingame.game.view
 import com.codingame.game.Player
 import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.*
+import tooltipModule.TooltipModule
 
 
-class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
+class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: TooltipModule) {
   companion object {
     lateinit var yRange: IntRange
     lateinit var xRange: IntRange
@@ -90,6 +91,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
 
+          tooltipModule.registerEntity(group)
         })
       }
     }
