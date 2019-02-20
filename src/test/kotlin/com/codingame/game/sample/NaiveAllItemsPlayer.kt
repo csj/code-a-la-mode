@@ -14,10 +14,8 @@ class NaiveAllItemsPlayer(
   lateinit var inputs: GameState
   lateinit var crates: Map<String, Table>
 
-  private fun findEquipment(equipment: Constants.EQUIPMENT) =
-      inputs.tables.firstOrNull { it.equipment?.equipmentType == equipment.name }
-
-  private fun findCrate(item: String) = crates[item]!!
+  private fun findEquipment(equipmentChar: Char) =
+      inputs.tables.firstOrNull { it.equipment == equipmentChar }
 
   init {
     var turn = 0
@@ -28,14 +26,12 @@ class NaiveAllItemsPlayer(
 //      if (turn > 5) throw Exception("ARRRGGG")
 
       crates = listOf(
-          Constants.FOOD.BLUEBERRIES,
-          Constants.FOOD.ICECREAM,
-          Constants.ITEM.DOUGH,
-          Constants.ITEM.STRAWBERRIES
-      ).map { item ->
-        item.name to (inputs.tables.firstOrNull {
-          it.equipment?.equipmentType == "CRATE" &&
-          it.equipment.equipmentState() == item.name })
+          Constants.FOOD.BLUEBERRIES to 'B',
+          Constants.FOOD.ICECREAM to 'I',
+          Constants.ITEM.DOUGH to 'H',
+          Constants.ITEM.STRAWBERRIES to 'S'
+      ).map { (item, char) ->
+        item.name to (inputs.tables.firstOrNull { it.equipment == char } )
       }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
       stdout.println(act() ?: "WAIT")
@@ -46,14 +42,15 @@ class NaiveAllItemsPlayer(
     val carrying = inputs.myPlayer.carrying
 
     // 0. If the oven has something ready, go get it!
-    findEquipment(Constants.EQUIPMENT.OVEN)?.let {
-      if (it.equipment!!.equipmentState() in listOf("READY", "BURNT"))
-        return if (carrying == null) it.use() else useEmptyTable()
-    }
+    if (inputs.ovenContents in listOf(
+        Constants.FOOD.CROISSANT.name,
+        Constants.FOOD.TART.name,
+        Constants.ITEM.BURNT_FOOD.name
+    ))
+      return if (carrying == null) findEquipment('O')!!.use() else useEmptyTable()
 
     goal = inputs.queue.firstOrNull()?.dish ?: return null
     stderr.println("Current goal is: $goal")
-
 
     // make all the items and leave them on tables. then grab a plate and collect them all.
     val goalItems = goal.itemContents.toSet()
@@ -67,12 +64,12 @@ class NaiveAllItemsPlayer(
 
       // if it has anything we don't need, jarbage it
       if ((dishContents - goalItems).isNotEmpty())
-        return findEquipment(Constants.EQUIPMENT.GARBAGE)!!.use()
+        return findEquipment('G')!!.use()
 
       // find next missing item from dish
       val missingItems = goalItems - dishContents
       val missingItem = missingItems.firstOrNull() ?:
-      return findEquipment(Constants.EQUIPMENT.WINDOW)!!.use()
+        return findEquipment('W')!!.use()
 
       stderr.println("missing item: $missingItem")
 
@@ -112,8 +109,8 @@ class NaiveAllItemsPlayer(
   private fun buildStrawberries(): String? {
     val carrying = inputs.myPlayer.carrying
     return when {
-      carrying == null -> findCrate(Constants.ITEM.STRAWBERRIES.name).use()
-      carrying.itemType == Constants.ITEM.STRAWBERRIES.name -> findEquipment(Constants.EQUIPMENT.CHOPPING_BOARD)?.use()
+      carrying == null -> crates[Constants.ITEM.STRAWBERRIES.name]!!.use()
+      carrying.itemType == Constants.ITEM.STRAWBERRIES.name -> findEquipment('C')?.use()
       carrying.itemType == Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> useEmptyTable()
       else -> { stderr.println("uhhh, holding: $carrying"); return useEmptyTable() }
     }
@@ -122,15 +119,14 @@ class NaiveAllItemsPlayer(
   private fun isReady(item: String): Boolean =
       item in crates.keys ||
           inputs.tables.any { it.item?.itemType == item } ||
-          (item == "CROISSANT" &&
-              findEquipment(Constants.EQUIPMENT.OVEN)!!.equipment!!.let {
-                it.equipmentState() in listOf("BAKING", "READY") &&
-                    it.equipmentContents() == "CROISSANT"
-              })
+          (item == "CROISSANT" && inputs.ovenContents in listOf(
+              Constants.ITEM.DOUGH.name,
+              Constants.FOOD.CROISSANT.name
+          ))
 
   private fun getEmptyPlate(): String = (
       inputs.tables.find { it.item?.itemType == Constants.ITEM.DISH.name }
-          ?: findEquipment(Constants.EQUIPMENT.DISH_RETURN)!!).use()
+          ?: findEquipment('D')!!).use()
 
   private fun useEmptyTable(): String {
     return inputs.myPlayer.run {
@@ -141,8 +137,8 @@ class NaiveAllItemsPlayer(
 
   private fun buildCroissant(): String? {
     return when(inputs.myPlayer.carrying?.itemType) {
-      null -> findCrate(Constants.ITEM.DOUGH.name).use()
-      Constants.ITEM.DOUGH.name -> findEquipment(Constants.EQUIPMENT.OVEN)!!.use()
+      null -> crates[Constants.ITEM.DOUGH.name]!!.use()
+      Constants.ITEM.DOUGH.name -> findEquipment('O')!!.use()
       else -> useEmptyTable()
     }
   }
@@ -152,11 +148,9 @@ class NaiveAllItemsPlayer(
     val x = inputs.myPlayer.x
     val y = inputs.myPlayer.y
 
-    findEquipment(Constants.EQUIPMENT.OVEN)!!.let {
-      if (it.equipment!!.equipmentState() != "EMPTY") {
-        stderr.println("waiting for tart in oven")
-        return it.use()
-      }
+    if (inputs.ovenContents != "NONE") {
+      stderr.println("waiting for tart in oven")
+      return findEquipment('O')!!.use()
     }
 
     val carrying = inputs.myPlayer.carrying
@@ -166,21 +160,21 @@ class NaiveAllItemsPlayer(
         stderr.println("looking for shell")
         val tart = (inputs.tables.filter {
           it.item?.itemType == Constants.ITEM.SHELL.name
-        } + findCrate(Constants.ITEM.DOUGH.name))
+        } + crates[Constants.ITEM.DOUGH.name]!!)
             .minBy { abs(it.x - x) + abs(it.y - y) }
 
         return tart!!.use()
       }
 
       carrying.itemType == Constants.ITEM.DOUGH.name ->
-        return findEquipment(Constants.EQUIPMENT.CHOPPING_BOARD)!!.use()
+        return findEquipment('C')!!.use()
 
       carrying.itemType == Constants.ITEM.SHELL.name -> {
         stderr.println("doing stuff: carrying = $carrying, contents = ${carrying.itemContents}")
         return if (Constants.FOOD.BLUEBERRIES.name in carrying.itemContents) {
           stderr.println("shell is complete; heading for oven")
-          findEquipment(Constants.EQUIPMENT.OVEN)!!.use()
-        } else findCrate(Constants.FOOD.BLUEBERRIES.name).use()
+          findEquipment('O')!!.use()
+        } else crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
       }
     }
 

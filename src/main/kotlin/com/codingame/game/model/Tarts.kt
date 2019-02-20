@@ -9,30 +9,22 @@ object BurntFood: EasilyDescribedItem(Constants.ITEM.BURNT_FOOD.name)
 object Dough: EasilyDescribedItem(Constants.ITEM.DOUGH.name)
 object Croissant: EdibleItem(Constants.FOOD.CROISSANT.name)
 
-sealed class OvenState(private val stateToks: List<Any>) {
-  override fun toString() = stateToks.joinToString("-")
+sealed class OvenState(private val contentsStr: String, private val timer: Int) {
+  override fun toString() = "$contentsStr $timer"
 
-  object Empty: OvenState(listOf("EMPTY"))
+  object Empty: OvenState("NONE", 0)
   class Baking(val contents: EdibleItem, val timeUntilCooked: Int): OvenState(
-      listOf(
-          "BAKING",
-          contents.describe(),
-          timeUntilCooked
-      )
+      contents.describe(), timeUntilCooked
   )
   class Ready(val contents: EdibleItem, val timeUntilBurnt: Int): OvenState(
-      listOf(
-          "READY",
-          contents.describe(),
-          timeUntilBurnt
-      )
+      contents.describe(), timeUntilBurnt
   )
-  object Burnt: OvenState(listOf("BURNT"))
+  object Burnt: OvenState(BurntFood.describe(), 0)
 }
 
-data class Oven(private val cookTime: Int, private val burnTime: Int, private var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
+data class Oven(private val cookTime: Int, private val burnTime: Int, var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
   override fun reset() { state = OvenState.Empty }
-  override fun describe() = "OVEN-$state"
+  override val describeChar = 'O'
 
   override fun tick() {
     val curState = state

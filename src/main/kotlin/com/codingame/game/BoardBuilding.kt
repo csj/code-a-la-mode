@@ -59,7 +59,7 @@ fun buildEmptyBoard(): Board = Board(boardLayout2)
 fun buildBoard(): Board {
   val board = buildEmptyBoard()
 
-  val dishReturn1 = DishReturn().also { board["F0"].equipment = it }
+  val dishReturn1 = DishWasher().also { board["F0"].equipment = it }
   val window = Window(dishReturn1)
 
   board["F6"].equipment = window

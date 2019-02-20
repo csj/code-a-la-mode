@@ -6,7 +6,7 @@ object Strawberries: EasilyDescribedItem(Constants.ITEM.STRAWBERRIES.name)
 object ChoppedStrawberries: EdibleItem(Constants.FOOD.CHOPPEDSTRAWBERRIES.name)
 
 class ChoppingBoard: Equipment() {
-  override fun describe() = Constants.EQUIPMENT.CHOPPING_BOARD.name
+  override val describeChar = 'C'
 
   override fun receiveItem(player: Player, item: Item) {
     if (item === Strawberries) {

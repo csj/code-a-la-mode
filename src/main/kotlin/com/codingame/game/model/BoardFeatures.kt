@@ -51,6 +51,8 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
   fun distanceTo(target: Cell, partnerCell: Cell? = null): Int? {
     return buildDistanceMap(partnerCell)[target]
   }
+
+  fun describeChar() = if (!isTable) '.' else equipment?.describeChar ?: '#'
 }
 
 

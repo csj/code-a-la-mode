@@ -39,7 +39,7 @@ abstract class Equipment {
 
   open fun reset() { }
 
-  abstract fun describe(): String
+  abstract val describeChar: Char?
 }
 
 /**

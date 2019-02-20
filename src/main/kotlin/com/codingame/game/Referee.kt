@@ -75,14 +75,9 @@ class Referee : AbstractReferee() {
 
       player.describeCustomers(originalQueue)
 
-      board.allCells
-          .filter { it.isTable }
-          .also { player.sendInputLine(it.size.toString()) }
-          .also {
-            it.forEach { cell ->
-              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.describe() ?: "NONE"}")
-            }
-          }
+      board.cells.transpose().forEach { cellRow ->
+        player.sendInputLine(cellRow.map { it.describeChar() }.joinToString(""))
+      }
     }
 
     nextRound()
@@ -173,34 +168,41 @@ class Referee : AbstractReferee() {
       }
 
       fun sendGameState(player: Player) {
+
+        // 0. Describe turns remaining
+        player.sendInputLine(200 - turn)
+
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
-          val item = it.heldItem?.describe() ?: "NONE"
 
           val toks = if (it.isActive) listOf(
               it.location.x,
               it.location.y,
-              item
+              it.heldItem?.describe() ?: "NONE"
           ) else listOf(-1, -1, "NONE")
 
 //          println("Sending player toks $toks to $player")
           player.sendInputLine(toks)
         }
 
-        // 2. Describe all table cells
-        board.allCells.filter { it.isTable }
+        // 2. Describe all table cells with items
+        board.allCells.filter { it.isTable && it.item != null }
+            .also { player.sendInputLine(it.size) }
             .forEach {
               val toks = listOf(
                   it.x,
                   it.y,
-                  it.equipment?.describe() ?: "NONE",
-                  it.item?.describe() ?: "NONE"
+                  it.item!!.describe()
               )
               player.sendInputLine(toks)
-//              println("Sending table toks $toks to $player")
             }
 
-        // 3. Describe customer queue
+        // 3. Describe oven
+        board.allCells.map { it.equipment as? Oven }.find { it != null }.let {
+          player.sendInputLine(it?.state?.toString() ?: "NONE 0")
+        }
+
+        // 4. Describe customer queue
         player.describeCustomers(queue.activeCustomers)
       }
 
@@ -254,6 +256,16 @@ class Referee : AbstractReferee() {
   }
 
 
+}
+
+private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {
+  val rows = this.size
+  val cols = this[0].size
+  val trans = Array(cols) { Array(rows) { Cell(-1, -1) } }
+  for (i in 0 until cols) {
+    for (j in 0 until rows) trans[i][j] = this[j][i]
+  }
+  return trans
 }
 
 private fun Player.describeCustomers(customers: List<Customer>) {

@@ -19,8 +19,8 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
   }
 }
 
-class DishReturn: Equipment() {
-  override fun describe() = (listOf(Constants.EQUIPMENT.DISH_RETURN.name) + List(dishes) { Constants.ITEM.DISH.name }).joinToString("-")
+class DishWasher: Equipment() {
+  override val describeChar = 'D'
 
   override fun reset() { dishes = 4 }
 

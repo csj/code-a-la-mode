@@ -89,14 +89,14 @@ data class Customer(val dish: Dish, var award: Int) {
   }
 }
 
-class Window(private val dishReturn: DishReturn? = null) : Equipment() {
+class Window(private val dishWasher: DishWasher? = null) : Equipment() {
   var onDelivery: (Item) -> Unit = { }
 
-  override fun describe() = Constants.EQUIPMENT.WINDOW.name
+  override val describeChar = 'W'
 
   private fun deliver(dish: Dish) {
     onDelivery(dish)
-    dishReturn?.addDishToQueue()
+    dishWasher?.addDishToQueue()
   }
 
   override fun receiveItem(player: Player, item: Item) {
