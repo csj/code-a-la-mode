@@ -34,7 +34,7 @@ class Player {
             int partnerY = in.nextInt();
             String partnerItem = in.next();
 
-            int numTablesWithItems
+            int numTablesWithItems = in.nextInt();
             for (int i = 0; i < numTablesWithItems; i++) {
                 int tableX = in.nextInt();
                 int tableY = in.nextInt();
