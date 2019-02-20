@@ -19,27 +19,31 @@ class Player {
 
         int width = 11; //in.nextInt(); // the width of the kitchen
         int height = 7; //in.nextInt(); // the height of the kitchen
-        int numTables = in.nextInt(); // the number of tables in the kitchen
-        for (int i = 0; i < numTables; i++) {
-            int x = in.nextInt();
-            int y = in.nextInt();
-            String equipment = in.next();
+        for (int i = 0; i < height; i++) {
+            String kitchenLine = in.next();
         }
 
         // game loop
         while (true) {
+            int turnsRemaining = in.nextInt();
+
             int playerX = in.nextInt();
             int playerY = in.nextInt();
             String playerItem = in.next();
             int partnerX = in.nextInt();
             int partnerY = in.nextInt();
             String partnerItem = in.next();
-            for (int i = 0; i < numTables; i++) {
+
+            int numTablesWithItems
+            for (int i = 0; i < numTablesWithItems; i++) {
                 int tableX = in.nextInt();
                 int tableY = in.nextInt();
-                String equipment = in.next();
                 String item = in.next();
             }
+
+            String ovenContents = in.next();
+            int ovenTimer = in.nextInt();
+
             int numCustomers = in.nextInt(); // the number of customers currently waiting for food
             for (int i = 0; i < numCustomers; i++) {
                 String customerItem = in.next(); // the food the customer is waiting for

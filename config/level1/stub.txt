@@ -1,17 +1,18 @@
 read numAllCustomers:int
 loop numAllCustomers read customerItem:word(100) customerAward:int
-read numTables:int
-loop numTables read x:int y:int equipment:word(100)
+loop 7 read kitchenLine:word(100)
 gameloop
+read turnsRemaining:int
 read playerX:int playerY:int playerItem:word(100)
 read partnerX:int partnerY:int partnerItem:word(100)
-loop numTables read tableX:int tableY:int equipment:word(100) item:word(100)
+read numTablesWithItems
+loop numTablesWithItems read tableX:int tableY:int item:word(100)
 read numCustomers:int
 loop numCustomers read customerItem:word(100) customerAward:int
 write WAIT
 
 INPUT
-numTables: the number of tables in the kitchen
+numTablesWithItems: the number of tables in the kitchen that currently hold an item
 numCustomers: the number of customers currently waiting for food
 customerAward: the number of points awarded for delivering the food
 customerItem: the food the customer is waiting for
