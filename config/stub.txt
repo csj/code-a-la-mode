@@ -7,6 +7,7 @@ read playerX:int playerY:int playerItem:word(100)
 read partnerX:int partnerY:int partnerItem:word(100)
 read numTablesWithItems:int
 loop numTablesWithItems read tableX:int tableY:int item:word(100)
+read ovenContents:word(100) ovenTimer:int
 read numCustomers:int
 loop numCustomers read customerItem:word(100) customerAward:int
 write WAIT
