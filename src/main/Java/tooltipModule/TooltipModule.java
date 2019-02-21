@@ -53,11 +53,7 @@ public class TooltipModule implements Module {
     private void sendFrameData() {
         Object[] data = new Object[]{
                 newRegistrations,
-                newExtra,
-                BoardView.xRange.getEndInclusive() - BoardView.xRange.getStart(),
-                BoardView.yRange.getEndInclusive() - BoardView.yRange.getStart(),
-                BoardView.xRange.getStart(),
-                BoardView.yRange.getStart()};
+                newExtra};
 
         gameManager.setViewData("tooltips", data);
         previousRegistrations.clear();
@@ -72,6 +68,19 @@ public class TooltipModule implements Module {
     public void registerEntity(Entity<?> entity) {
         registerEntity(entity, new HashMap<>());
     }
+
+    public void registerEntity(Entity<?> entity, String tooltip) {
+        Map<String, Object> params = new HashMap<>();
+        String[] tt = tooltip.split("\n");
+        for(String s : tt){
+            String[] splitted = s.split(":");
+            if(splitted.length < 2) continue;
+            params.put(splitted[0], splitted[1]);
+        }
+
+        registerEntity(entity.getId(), params);
+    }
+
 
     public void registerEntity(Entity<?> entity, Map<String, Object> params) {
         registerEntity(entity.getId(), params);
@@ -101,7 +110,6 @@ public class TooltipModule implements Module {
         int id = entity.getId();
         if (!deepEquals(lines, extra.get(id)))
         {
-
             newExtra.put(id, lines);
             extra.put(id, lines);
         }

@@ -6,7 +6,7 @@ import com.codingame.gameengine.module.entities.*
 import tooltipModule.TooltipModule
 
 
-class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: TooltipModule) {
+class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule: TooltipModule) {
   companion object {
     lateinit var yRange: IntRange
     lateinit var xRange: IntRange
@@ -17,10 +17,21 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
 
   lateinit var board: Board
   lateinit var players: List<Player>
+  lateinit var ovenSprite: Sprite
+
 
   private var cellViews: MutableList<CellView> = mutableListOf()
 
   init {
+    fun setTooltip(tooltipModule: TooltipModule, cell: Cell, group: Group){
+      var toolTip = ""
+      if(cell.equipment != null){
+        toolTip += "Equipment:" + (cell.equipment?.toString);
+      }
+
+      tooltipModule.registerEntity(group, toolTip);
+    }
+
     val floorColor = 0xe0e0eb
     val tableColor = 0x756b68
 //    val floorColor = 0xe0e0eb
@@ -61,6 +72,12 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
               is Jarbage -> image = "trash.png"
             }
           }
+
+          if(equipment is Oven) {
+            ovenSprite = content
+            tooltipModule.registerEntity(ovenSprite)
+          }
+
           secondaryContent = graphicEntityModule.createSprite().apply {
             when (equipment) {
               is StrawberryCrate -> image = "strawberry.png"
@@ -86,12 +103,12 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
             fillColor = 0
           }
 
-          itemSpriteGroup = ItemSpriteGroup()
+          itemSpriteGroup = ItemSpriteGroup(cellWidth, tooltipModule)
 
           group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
 
-          tooltipModule.registerEntity(group)
+          setTooltip(tooltipModule, cell, group)
         })
       }
     }
@@ -104,10 +121,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
         center()
         tint = player.colorToken
       }
-
-      player.itemSprite = ItemSpriteGroup()
+      player.itemSprite = ItemSpriteGroup(cellWidth, tooltipModule)
 
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
+      tooltipModule.registerEntity(player.sprite, "Chef:" +player.nicknameToken)
+
 //          .setX(player.location.view.group.x + 5)
 //          .setY(player.location.view.group.y + 5)
     }
@@ -124,8 +142,12 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
 
   fun updateCells(boardCells: List<Cell>) {
     boardCells.zip(cellViews).forEach { (cell, view) ->
-      view.itemSpriteGroup.update(cell.item) }
+      view.itemSpriteGroup.update(cell.item, tooltipModule) }
+
+    tooltipModule.updateExtraTooltipText(ovenSprite, boardCells.first{ it -> it.equipment is Oven}.equipment.toString())
   }
+
+
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
     val newX = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
@@ -148,7 +170,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
     player.characterSprite.isVisible = true
     player.itemSprite.isVisible = true
 
-    player.itemSprite.update(player.heldItem)
+    player.itemSprite.update(player.heldItem, tooltipModule)
 
     if (useTarget == null) {
       player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
@@ -168,7 +190,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
     player.itemSprite.isVisible = false
   }
 
-  inner class ItemSpriteGroup(width: Int = cellWidth) {
+  inner class ItemSpriteGroup(width: Int = cellWidth, val tooltipModule: TooltipModule) {
+
     val mainSprite = graphicEntityModule.createSprite().apply {
       center()
       baseHeight = width + 4
@@ -190,13 +213,20 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
     }
 
     val group = graphicEntityModule.createGroup(*(subSprites + mainSprite).toTypedArray())
+
+
+    init {
+        tooltipModule.registerEntity(group)
+
+    }
+
     var isVisible: Boolean = true
       set(value) {
         mainSprite.isVisible = value
         subSprites.forEach { it.isVisible = value }
       }
 
-    fun update(item: Item?) {
+    fun update(item: Item?, tooltipModule: TooltipModule) {
       subSprites.forEach { it.isVisible = false }
       mainSprite.apply {
         isVisible = true
@@ -235,6 +265,10 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, tooltipModule: Too
 
           else -> mainSprite.isVisible = false
         }
+      }
+
+      if(mainSprite.isVisible ){
+        tooltipModule.updateExtraTooltipText(group, "Item: " + item?.describe())
       }
     }
   }

@@ -10,8 +10,8 @@ import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
-import java.util.*
 import tooltipModule.TooltipModule
+import java.util.*
 
 typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
 
@@ -67,7 +67,7 @@ class Referee : AbstractReferee() {
     board = buildBoard()
     view.boardView = BoardView(board, matchPlayers, tooltipModule)
 
-    view.queueView = QueueView()
+    view.queueView = QueueView(tooltipModule)
 
     view.scoresView = ScoresView(matchPlayers)
 

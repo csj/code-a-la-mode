@@ -23,6 +23,9 @@ sealed class OvenState(private val contentsStr: String, private val timer: Int) 
 }
 
 data class Oven(private val cookTime: Int, private val burnTime: Int, var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
+  override val toString: String
+    get() = "Oven"
+
   override fun reset() { state = OvenState.Empty }
   override val describeChar = 'O'
 

@@ -2,10 +2,23 @@ package com.codingame.game.model
 
 import com.codingame.game.Player
 
-class IceCreamCrate: GeneralCrate(IceCream, 'I')
-class BlueberryCrate: GeneralCrate(Blueberries, 'B')
-class StrawberryCrate: GeneralCrate(Strawberries, 'S')
-class DoughCrate: GeneralCrate(Dough, 'H')
+class IceCreamCrate: GeneralCrate(IceCream, 'I') {
+  override val toString: String
+    get() = "Ice cream crate"
+}
+
+class BlueberryCrate: GeneralCrate(Blueberries, 'B'){
+  override val toString: String
+    get() = "Blueberry crate"
+}
+class StrawberryCrate: GeneralCrate(Strawberries, 'S'){
+  override val toString: String
+    get() = "Strawberry crate"
+}
+class DoughCrate: GeneralCrate(Dough, 'H'){
+  override val toString: String
+    get() = "Dough crate"
+}
 
 abstract class AllInstancesAreConsideredEqual: Equipment() {
   override fun equals(other: Any?): Boolean = other!!.javaClass == this.javaClass

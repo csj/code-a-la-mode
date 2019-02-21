@@ -20,6 +20,9 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
 }
 
 class DishWasher: Equipment() {
+  override val toString: String
+    get() = "Dish washer"
+
   override val describeChar = 'D'
 
   override fun reset() { dishes = 4 }

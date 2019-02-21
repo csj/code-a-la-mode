@@ -47,6 +47,7 @@ function getMouseMoveFunc(tooltip, container, module) {
             const ids = Object.keys(tooltip.inside).map(n => +n);
 
             for (let id of ids) {
+
                 if (tooltip.inside[id]) {
                     const entity = entityModule.entities.get(id);
                     const state = entity && getEntityState(entity, module.currentFrame.number);
@@ -59,21 +60,19 @@ function getMouseMoveFunc(tooltip, container, module) {
             }
 
             if (showing.length) {
-//Use module.property to get properties
-                var width = 1320;
+
+                var width = 1910-590;
                 var height = 840;
-                var x0 = 570;
+                var x0 = 590;
                 var y0 = 10;
+
                 var columns = 11;
                 var rows = 7;
                 var cellsize = width / columns;
                 var scale = height / (cellsize * (rows ))
                 var cellX = (Math.floor((point.x - x0) / cellsize / scale));
                 var cellY = (Math.floor((point.y - y0) / cellsize / scale) );
-                if (cellX < 0 || cellX >= columns || cellY < 0 || cellY >= rows) {
-                    tooltip.visible = false;
-                    return;
-                }
+
                 const tooltipBlocks = [];
                 var found = false;
 
@@ -89,6 +88,7 @@ function getMouseMoveFunc(tooltip, container, module) {
                                 // check if the property/key is defined in the object itself, not in parent
                                 if (params.hasOwnProperty(key)) {
                                     var txt = key + ": " + params[key];
+                                    if((tooltipBlocks.indexOf(txt) > -1)) continue;
                                     found = true;
                                     tooltipBlocks.push(txt);
                                 }
@@ -105,12 +105,18 @@ function getMouseMoveFunc(tooltip, container, module) {
                                 tooltipBlock = extra;
                             }
                         }
+
+                        if((tooltipBlocks.indexOf(tooltipBlock) > -1)) continue;
                         tooltipBlocks.push(tooltipBlock);
                     }
                 }
-                if (!found) {
-                    tooltipBlocks.push("x: " + cellX);
-                    tooltipBlocks.push("y: " + cellY);
+                if (cellX >= 0 && cellX < columns && cellY >= 0 && cellY < rows) {
+                    tooltipBlocks.splice(0, 0, "y: " + cellY);
+                    tooltipBlocks.splice(0, 0, "x: " + cellX);
+                }
+                else if(!found){
+                    tooltip.visible = false;
+                    return;
                 }
 
                 for (var i = 0; i < tooltipBlocks.length; i++) {
@@ -165,18 +171,13 @@ export class TooltipModule {
         this.currentProgress = progress;
     }
 
-    handleFrameData(frameInfo, [registrations, extra, width, height, x0, y0]) {
+    handleFrameData(frameInfo, [registrations, extra]) {
         const registered = { ...this.previousFrame.registered,
             ...registrations
         };
         const extraText = { ...this.previousFrame.extraText,
             ...extra
         };
-
-       // this.width = width;
-       // this.height = height;
-      //  this.x0 = x0;
-      //  this.y0 = y0;
 
         Object.keys(registrations).forEach(
             k => {

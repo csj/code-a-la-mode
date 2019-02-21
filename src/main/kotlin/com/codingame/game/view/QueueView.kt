@@ -3,8 +3,9 @@ package com.codingame.game.view
 import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Sprite
+import tooltipModule.TooltipModule
 
-class QueueView {
+class QueueView (val tooltipModule: TooltipModule){
   lateinit var queue: CustomerQueue
 
   var failed = false
@@ -15,7 +16,7 @@ class QueueView {
   }
 
   private var customerViews: List<CustomerView> = List(3) {
-    CustomerView()
+    CustomerView(tooltipModule)
   }
 
   val failureBox = graphicEntityModule.createRectangle().apply {
@@ -49,7 +50,7 @@ class QueueView {
     failed = false
   }
 
-  inner class CustomerView {
+  inner class CustomerView (val tooltipModule: TooltipModule){
     val viewWidth = 420
     val viewHeight = 210
 
@@ -100,6 +101,8 @@ class QueueView {
     val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
 
     fun update(customer: Customer) {
+      var desc =customer.dish.describe()
+      tooltipModule.updateExtraTooltipText(backgroundBox, customer.dish.describe())
       val award = customer.award
       val edibles = customer.dish.contents
 
