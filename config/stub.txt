@@ -5,7 +5,7 @@ gameloop
 read turnsRemaining:int
 read playerX:int playerY:int playerItem:word(100)
 read partnerX:int partnerY:int partnerItem:word(100)
-read numTablesWithItems
+read numTablesWithItems:int
 loop numTablesWithItems read tableX:int tableY:int item:word(100)
 read numCustomers:int
 loop numCustomers read customerItem:word(100) customerAward:int
