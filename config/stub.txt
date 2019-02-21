@@ -1,6 +1,6 @@
 read numAllCustomers:int
 loop numAllCustomers read customerItem:word(100) customerAward:int
-loop 7 read kitchenLine:word(100)
+loop 7 read kitchenLine:string(16)
 gameloop
 read turnsRemaining:int
 read playerX:int playerY:int playerItem:word(100)
