@@ -17,6 +17,7 @@ numTablesWithItems: the number of tables in the kitchen that currently hold an i
 numCustomers: the number of customers currently waiting for food
 customerAward: the number of points awarded for delivering the food
 customerItem: the food the customer is waiting for
+ovenContents: ignore until bronze league
 
 OUTPUT
 MOVE x y
