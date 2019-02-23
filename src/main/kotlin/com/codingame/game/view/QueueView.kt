@@ -5,7 +5,7 @@ import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Sprite
 import tooltipModule.TooltipModule
 
-class QueueView (val tooltipModule: TooltipModule){
+class QueueView (private val tooltipModule: TooltipModule){
   lateinit var queue: CustomerQueue
 
   var failed = false
@@ -97,12 +97,15 @@ class QueueView (val tooltipModule: TooltipModule){
       height = viewHeight
       zIndex = 200
     }
-
     val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
 
+    init {
+      tooltipModule.registerEntity(group)
+    }
+
     fun update(customer: Customer) {
-      var desc =customer.dish.describe()
-      tooltipModule.updateExtraTooltipText(backgroundBox, customer.dish.describe())
+      tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
+
       val award = customer.award
       val edibles = customer.dish.contents
 

@@ -98,6 +98,7 @@ function getMouseMoveFunc(tooltip, container, module) {
                         var extra = module.currentFrame.extraText[show];
                         if (extra && extra.length) {
                             tooltipBlock = extra;
+                            found = true;
                         } else {
                             extra = module.currentFrame.extraText[show - 1];
                             if (extra && extra.length) {

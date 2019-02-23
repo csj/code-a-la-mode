@@ -144,10 +144,9 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
     boardCells.zip(cellViews).forEach { (cell, view) ->
       view.itemSpriteGroup.update(cell.item, tooltipModule) }
 
-    tooltipModule.updateExtraTooltipText(ovenSprite, boardCells.first{ it -> it.equipment is Oven}.equipment.toString())
+    var oven = boardCells.first{ it -> it.equipment is Oven}.equipment as Oven
+    tooltipModule.updateExtraTooltipText(ovenSprite, oven.toViewString())
   }
-
-
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
     val newX = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
@@ -269,6 +268,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
 
       if(mainSprite.isVisible ){
         tooltipModule.updateExtraTooltipText(group, "Item: " + item?.describe())
+      }else{
+        tooltipModule.updateExtraTooltipText(group, "")
       }
     }
   }
