@@ -12,10 +12,11 @@ const val WALK_DISTANCE = 7
 operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo(other)
 
 class Player : AbstractMultiplayerPlayer() {
+  public var message : String = "";
+
   override fun toString(): String {
     return this.nicknameToken
   }
-
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
   lateinit var itemSprite: BoardView.ItemSpriteGroup
