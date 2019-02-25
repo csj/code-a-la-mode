@@ -32,7 +32,7 @@ class Referee : AbstractReferee() {
   @Inject
   private lateinit var graphicEntityModule: GraphicEntityModule
   @Inject private lateinit var tooltipModule: TooltipModule
- // @Inject private lateinit var endScreenModule :EndScreenModule
+  @Inject private lateinit var endScreenModule :EndScreenModule
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -128,8 +128,8 @@ class Referee : AbstractReferee() {
     scoreBoard.forEach { player, entry ->
       player.score = entry.total()  // TODO not if they're dead ..
     }
-  //  endScreenModule.titleRankingsSprite = "logo.png"
-  //  endScreenModule.setScores(gameManager.players.stream().mapToInt { p -> p.score }.toArray())
+    endScreenModule.titleRankingsSprite = "logo.png"
+    endScreenModule.setScores(gameManager.players.stream().mapToInt { p -> p.score }.toArray())
   }
 
   inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
