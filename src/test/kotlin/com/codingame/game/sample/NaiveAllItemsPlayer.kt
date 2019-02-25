@@ -41,8 +41,6 @@ class NaiveAllItemsPlayer(
   private fun act(): String? {
     val carrying = inputs.myPlayer.carrying
 
-    if (carrying?.itemType == "DISH") return findEquipment('O')!!.use()
-
     // 0. If the oven has something ready, go get it!
     if (inputs.ovenContents in listOf(
         Constants.FOOD.CROISSANT.name,
