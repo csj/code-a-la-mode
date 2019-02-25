@@ -7,6 +7,7 @@ object ChoppedStrawberries: EdibleItem(Constants.FOOD.CHOPPEDSTRAWBERRIES.name)
 
 class ChoppingBoard: Equipment() {
   override val describeChar = 'C'
+  override val tooltipString = "Chopping board"
 
   override fun receiveItem(player: Player, item: Item) {
     if (item === Strawberries) {

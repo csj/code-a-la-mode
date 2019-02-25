@@ -23,6 +23,18 @@ sealed class OvenState(private val contentsStr: String, private val timer: Int) 
 }
 
 class Oven(private val cookTime: Int, private val burnTime: Int, var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
+  override val tooltipString = "Oven"
+
+  fun toViewString() : String {
+    val curState = state
+    return when (curState) {
+      is OvenState.Empty -> ""
+      is OvenState.Baking -> "Item:${curState.contents.describe()}\nTimer:${curState.timeUntilCooked}"
+      is OvenState.Ready -> "Item:${curState.contents.describe()}\nBurn timer:${curState.timeUntilBurnt}"
+      is OvenState.Burnt -> "Item burnt to a crisp"
+    }
+  }
+
   override fun reset() { state = OvenState.Empty }
   override val describeChar = 'O'
 

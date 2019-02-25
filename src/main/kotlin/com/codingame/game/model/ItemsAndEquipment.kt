@@ -42,6 +42,7 @@ abstract class Equipment {
 
   abstract val describeChar: Char?
   override fun toString() = "EQUIPMENT [$describeChar]"
+  abstract val tooltipString: String
 }
 
 /**
