@@ -4,7 +4,7 @@ import com.codingame.game.Player
 
 abstract class Item {
   open fun receiveItem(player: Player, item: Item, cell: Cell?) {
-    throw Exception("Cannot drop $item onto $this!")
+    throw LogicException("Cannot take $item while holding $this!")
   }
 
   open fun take(player: Player, cell: Cell) {
@@ -14,6 +14,7 @@ abstract class Item {
 
   abstract fun describeTokens(): List<String>
   fun describe() = describeTokens().joinToString("-")
+  override fun toString() = describe()
 }
 
 abstract class EasilyDescribedItem(private val singleItemToken: String): Item() {
@@ -30,16 +31,17 @@ abstract class Equipment {
   }
 
   open fun takeFrom(player: Player): Item {
-    throw Exception("$this cannot be taken directly!")
+    throw LogicException("Cannot USE $this now, not holding anything!")
   }
 
   open fun receiveItem(player: Player, item: Item) {
-    throw Exception("Cannot drop $item onto $this!")
+    throw LogicException("Cannot drop $item onto $this!")
   }
 
   open fun reset() { }
 
   abstract val describeChar: Char?
+  override fun toString() = "EQUIPMENT [$describeChar]"
 }
 
 /**

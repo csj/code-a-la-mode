@@ -248,14 +248,16 @@ class Referee : AbstractReferee() {
       } catch (ex: Exception) {
         System.err.println("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         ex.printStackTrace()
+        if (thePlayer.heldItem is Dish) {
+          board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+              .first().let { it.dishes++ }
+        }
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
       }
 
       queue.updateRemainingCustomers()
     }
   }
-
-
 }
 
 private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {
