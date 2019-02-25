@@ -41,8 +41,8 @@ abstract class Equipment {
   open fun reset() { }
 
   abstract val describeChar: Char?
-  override fun toString() = "EQUIPMENT [$describeChar]"
   abstract val tooltipString: String
+  override fun toString() = tooltipString
 }
 
 /**
