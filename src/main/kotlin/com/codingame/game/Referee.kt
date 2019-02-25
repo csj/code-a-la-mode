@@ -8,6 +8,7 @@ import com.codingame.game.view.ScoresView
 import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
+import com.codingame.gameengine.module.endscreen.EndScreenModule
 import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
 import tooltipModule.TooltipModule
@@ -31,6 +32,7 @@ class Referee : AbstractReferee() {
   @Inject
   private lateinit var graphicEntityModule: GraphicEntityModule
   @Inject private lateinit var tooltipModule: TooltipModule
+  @Inject private lateinit var endScreenModule :EndScreenModule
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -127,6 +129,8 @@ class Referee : AbstractReferee() {
     scoreBoard.forEach { player, entry ->
       player.score = entry.total()  // TODO not if they're dead ..
     }
+    endScreenModule.titleRankingsSprite = "logo.png"
+    endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
 
   inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
@@ -218,13 +222,20 @@ class Referee : AbstractReferee() {
             "WAIT"
           }
 
-        val toks = line.split(" ").iterator()
+        val splittedOutput = line.split(";")
+        val fullCommand = splittedOutput[0]
+        val toks = fullCommand.split(" ").iterator()
+
         val command = toks.next()
         var useTarget: Cell? = null
 
         if (command != "WAIT") {
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val cellx = toks.next().toInt()
+
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val celly = toks.next().toInt()
+
           val target = board[cellx, celly]
 
           when (command) {
@@ -233,8 +244,12 @@ class Referee : AbstractReferee() {
               if (player.use(target))
                 useTarget = target
             }
+            else -> throw Exception("Invalid command: $fullCommand")
           }
         }
+
+        if(splittedOutput.size > 1) player.message = splittedOutput[1].take(20)
+
         view.boardView.updatePlayer(player, useTarget)
       }
 
@@ -247,10 +262,9 @@ class Referee : AbstractReferee() {
       try {
         processPlayerActions(thePlayer)
       } catch (ex: LogicException) {
-        System.err.println("${thePlayer.nicknameToken}: ${ex.message}")
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message}")
       } catch (ex: Exception) {
-        System.err.println("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
-        ex.printStackTrace()
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
       }
 

@@ -16,6 +16,7 @@ class ScoresView(matchPlayers: List<Player>) {
   fun update(scores: ScoreBoard) {
     scores.forEach { player, entry ->
       playerScoreViews[player]!!.update(entry)
+      playerScoreViews[player]!!.messageText.text = (player.message)
     }
   }
 
@@ -56,6 +57,18 @@ class ScoresView(matchPlayers: List<Player>) {
         zIndex = 350
       }
     }
+
+    val messageText =
+      graphicEntityModule.createText("").apply {
+        fillColor = 0xffffff
+        fontSize = 35
+        x = ((1 + 1.5) * viewWidth / 4).toInt()
+        y = viewHeight * 2 / 4
+        anchorX = 0.5
+        anchorY = 0.5
+        zIndex = 350
+      }
+
 
     val backgroundBox = graphicEntityModule.createRectangle().apply {
       fillColor = player.colorToken

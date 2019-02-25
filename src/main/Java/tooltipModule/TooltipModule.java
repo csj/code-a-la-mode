@@ -74,8 +74,8 @@ public class TooltipModule implements Module {
         String[] tt = tooltip.split("\n");
         for(String s : tt){
             String[] splitted = s.split(":");
-            if(splitted.length < 2) continue;
-            params.put(splitted[0], splitted[1]);
+            if(splitted.length < 2) params.put(s, "");
+            else params.put(splitted[0], splitted[1]);
         }
 
         registerEntity(entity.getId(), params);
