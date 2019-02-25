@@ -104,5 +104,7 @@ class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
       }
     }
   }
+
+  fun oven() = allCells.mapNotNull { it.equipment as? Oven }.firstOrNull()
 }
 

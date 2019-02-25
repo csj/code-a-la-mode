@@ -10,6 +10,7 @@ import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
+import tooltipModule.TooltipModule
 import java.util.*
 
 typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
@@ -29,6 +30,7 @@ class Referee : AbstractReferee() {
   private lateinit var gameManager: MultiplayerGameManager<Player>
   @Inject
   private lateinit var graphicEntityModule: GraphicEntityModule
+  @Inject private lateinit var tooltipModule: TooltipModule
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -46,6 +48,7 @@ class Referee : AbstractReferee() {
   override fun init() {
     rand = Random(gameManager.seed)
     com.codingame.game.view.graphicEntityModule = graphicEntityModule
+    com.codingame.game.view.tooltipModule = tooltipModule
 
     matchPlayers = gameManager.players.toMutableList()
     scoreBoard = mapOf(
@@ -117,7 +120,7 @@ class Referee : AbstractReferee() {
 
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()
-    view.boardView.updateCells(board.allCells)
+    view.boardView.updateCells(board)
   }
 
   override fun onEnd() {
@@ -198,7 +201,7 @@ class Referee : AbstractReferee() {
             }
 
         // 3. Describe oven
-        board.allCells.map { it.equipment as? Oven }.find { it != null }.let {
+        board.oven().let {
           player.sendInputLine(it?.state?.toString() ?: "NONE 0")
         }
 
