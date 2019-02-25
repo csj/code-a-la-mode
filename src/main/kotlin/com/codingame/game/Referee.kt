@@ -222,16 +222,16 @@ class Referee : AbstractReferee() {
             "WAIT"
           }
 
-        var splittedOutput = line.split(";")
-        val toks = splittedOutput[0].split(" ").iterator()
+        val toks = line.split(" ").iterator()
         val command = toks.next()
         var useTarget: Cell? = null
 
+        var commandLength = 4
         if (command != "WAIT") {
-          if(!toks.hasNext()) throw LogicException("Invalid command: ${splittedOutput[0]}")
+          if(!toks.hasNext()) throw Exception("Invalid command: ${line}")
           val cellx = toks.next().toInt()
 
-          if(!toks.hasNext()) throw LogicException("Invalid command: ${splittedOutput[0]}")
+          if(!toks.hasNext()) throw Exception("Invalid command: ${line}")
           val celly = toks.next().toInt()
 
           val target = board[cellx, celly]
@@ -242,11 +242,14 @@ class Referee : AbstractReferee() {
               if (player.use(target))
                 useTarget = target
             }
-            else -> throw LogicException("Invalid command: ${splittedOutput[0]}")
+            else -> throw Exception("Invalid command: ${line}")
           }
+
+          commandLength = command.length + (cellx.toString()).length+(celly.toString()).length+3
         }
 
-        if(splittedOutput.size > 1) player.message = splittedOutput[1].take(20)
+        if(line.length > commandLength) player.message = line.substring(commandLength)
+        else player.message = ""
 
         view.boardView.updatePlayer(player, useTarget)
       }

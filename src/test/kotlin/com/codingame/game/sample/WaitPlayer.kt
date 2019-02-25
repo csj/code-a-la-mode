@@ -8,7 +8,7 @@ class WaitPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream): 
   init {
     while (true) {
       val inputs = readInputs()
-      stdout.println("TEST 5 6")
+      stdout.println("WAIT 1")
     }
   }
 }

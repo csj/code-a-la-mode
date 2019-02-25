@@ -181,6 +181,6 @@ class NaiveAllItemsPlayer(
     return useEmptyTable()
   }
 
-  private fun Table.use(): String = "USE $x $y ; MY MESSAGE IS HERE?!"
+  private fun Table.use(): String = "USE $x $y Food macht frei!"
 }
 

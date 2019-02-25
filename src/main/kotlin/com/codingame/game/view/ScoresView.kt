@@ -77,7 +77,7 @@ class ScoresView(matchPlayers: List<Player>) {
       zIndex = 200
     }!!
 
-    val group = graphicEntityModule.createGroup(*(scoreTexts + backgroundBox + playerAvatar + playerNameText).toTypedArray())!!
+    val group = graphicEntityModule.createGroup(*(scoreTexts + backgroundBox + playerAvatar + playerNameText + messageText).toTypedArray())!!
 
     fun update(entry: Referee.ScoreEntry) {
       entry.roundScores.zip(scoreTexts).forEach { (score, text) ->
