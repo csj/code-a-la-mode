@@ -6,7 +6,7 @@ import com.codingame.gameengine.module.entities.*
 import tooltipModule.TooltipModule
 
 
-class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule: TooltipModule) {
+class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   companion object {
     lateinit var yRange: IntRange
     lateinit var xRange: IntRange
@@ -17,19 +17,14 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
 
   lateinit var board: Board
   lateinit var players: List<Player>
-  lateinit var ovenSprite: Sprite
-
+  var ovenSprite: Sprite? = null
 
   private var cellViews: MutableList<CellView> = mutableListOf()
 
   init {
     fun setTooltip(tooltipModule: TooltipModule, cell: Cell, group: Group){
-      var toolTip = ""
-      if(cell.equipment != null){
-        toolTip += "Equipment:" + (cell.equipment?.toString);
-      }
-
-      tooltipModule.registerEntity(group, toolTip);
+      val toolTip = cell.equipment?.let { "Equipment:${it.tooltipString}" } ?: ""
+      tooltipModule.registerEntity(group, toolTip)
     }
 
     val floorColor = 0xe0e0eb
@@ -103,7 +98,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
             fillColor = 0
           }
 
-          itemSpriteGroup = ItemSpriteGroup(cellWidth, tooltipModule)
+          itemSpriteGroup = ItemSpriteGroup(cellWidth)
 
           group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
@@ -121,7 +116,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
         center()
         tint = player.colorToken
       }
-      player.itemSprite = ItemSpriteGroup(cellWidth, tooltipModule)
+      player.itemSprite = ItemSpriteGroup(cellWidth)
 
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
       tooltipModule.registerEntity(player.sprite, "Chef:" +player.nicknameToken)
@@ -140,12 +135,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
 //    scores[1] = graphicEntityModule.createText("0").setX(420).setY(20).setFillColor(0xffffff)
   }
 
-  fun updateCells(boardCells: List<Cell>) {
-    boardCells.zip(cellViews).forEach { (cell, view) ->
-      view.itemSpriteGroup.update(cell.item, tooltipModule) }
+  fun updateCells(board: Board) {
+    board.allCells.zip(cellViews).forEach { (cell, view) ->
+      view.itemSpriteGroup.update(cell.item) }
 
-    var oven = boardCells.first{ it -> it.equipment is Oven}.equipment as Oven
-    tooltipModule.updateExtraTooltipText(ovenSprite, oven.toViewString())
+    board.oven()?.also { tooltipModule.updateExtraTooltipText(ovenSprite, it.toViewString()) }
   }
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
@@ -169,7 +163,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
     player.characterSprite.isVisible = true
     player.itemSprite.isVisible = true
 
-    player.itemSprite.update(player.heldItem, tooltipModule)
+    player.itemSprite.update(player.heldItem)
 
     if (useTarget == null) {
       player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
@@ -189,7 +183,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
     player.itemSprite.isVisible = false
   }
 
-  inner class ItemSpriteGroup(width: Int = cellWidth, val tooltipModule: TooltipModule) {
+  inner class ItemSpriteGroup(width: Int = cellWidth) {
 
     val mainSprite = graphicEntityModule.createSprite().apply {
       center()
@@ -225,7 +219,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
         subSprites.forEach { it.isVisible = value }
       }
 
-    fun update(item: Item?, tooltipModule: TooltipModule) {
+    fun update(item: Item?) {
       subSprites.forEach { it.isVisible = false }
       mainSprite.apply {
         isVisible = true
@@ -266,11 +260,9 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>, val tooltipModule:
         }
       }
 
-      if(mainSprite.isVisible ){
-        tooltipModule.updateExtraTooltipText(group, "Item: " + item?.describe())
-      }else{
-        tooltipModule.updateExtraTooltipText(group, "")
-      }
+      tooltipModule.updateExtraTooltipText(group,
+          if(mainSprite.isVisible) "Item: " + item?.describe() else ""
+      )
     }
   }
 

@@ -40,7 +40,7 @@ abstract class Equipment {
   open fun reset() { }
 
   abstract val describeChar: Char?
-  abstract val toString: String
+  abstract val tooltipString: String
 }
 
 /**

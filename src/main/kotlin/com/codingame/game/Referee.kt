@@ -48,6 +48,7 @@ class Referee : AbstractReferee() {
   override fun init() {
     rand = Random(gameManager.seed)
     com.codingame.game.view.graphicEntityModule = graphicEntityModule
+    com.codingame.game.view.tooltipModule = tooltipModule
 
     matchPlayers = gameManager.players.toMutableList()
     scoreBoard = mapOf(
@@ -65,9 +66,9 @@ class Referee : AbstractReferee() {
     }
 
     board = buildBoard()
-    view.boardView = BoardView(board, matchPlayers, tooltipModule)
+    view.boardView = BoardView(board, matchPlayers)
 
-    view.queueView = QueueView(tooltipModule)
+    view.queueView = QueueView()
 
     view.scoresView = ScoresView(matchPlayers)
 
@@ -119,7 +120,7 @@ class Referee : AbstractReferee() {
 
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()
-    view.boardView.updateCells(board.allCells)
+    view.boardView.updateCells(board)
   }
 
   override fun onEnd() {
@@ -200,7 +201,7 @@ class Referee : AbstractReferee() {
             }
 
         // 3. Describe oven
-        board.allCells.map { it.equipment as? Oven }.find { it != null }.let {
+        board.oven().let {
           player.sendInputLine(it?.state?.toString() ?: "NONE 0")
         }
 

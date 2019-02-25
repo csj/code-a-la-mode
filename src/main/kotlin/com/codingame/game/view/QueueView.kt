@@ -5,7 +5,7 @@ import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Sprite
 import tooltipModule.TooltipModule
 
-class QueueView (private val tooltipModule: TooltipModule){
+class QueueView {
   lateinit var queue: CustomerQueue
 
   var failed = false
@@ -16,7 +16,7 @@ class QueueView (private val tooltipModule: TooltipModule){
   }
 
   private var customerViews: List<CustomerView> = List(3) {
-    CustomerView(tooltipModule)
+    CustomerView()
   }
 
   val failureBox = graphicEntityModule.createRectangle().apply {
@@ -50,7 +50,7 @@ class QueueView (private val tooltipModule: TooltipModule){
     failed = false
   }
 
-  inner class CustomerView (val tooltipModule: TooltipModule){
+  inner class CustomerView {
     val viewWidth = 420
     val viewHeight = 210
 
