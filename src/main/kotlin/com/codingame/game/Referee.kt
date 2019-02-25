@@ -130,7 +130,7 @@ class Referee : AbstractReferee() {
       player.score = entry.total()  // TODO not if they're dead ..
     }
     endScreenModule.titleRankingsSprite = "logo.png"
-    endScreenModule.setScores(gameManager.players.stream().mapToInt { p -> p.score }.toArray())
+    endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
 
   inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
@@ -222,16 +222,18 @@ class Referee : AbstractReferee() {
             "WAIT"
           }
 
-        var splittedOutput = line.split(";")
-        val toks = splittedOutput[0].split(" ").iterator()
+        val splittedOutput = line.split(";")
+        val fullCommand = splittedOutput[0]
+        val toks = fullCommand.split(" ").iterator()
+
         val command = toks.next()
         var useTarget: Cell? = null
 
         if (command != "WAIT") {
-          if(!toks.hasNext()) throw LogicException("Invalid command: ${splittedOutput[0]}")
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val cellx = toks.next().toInt()
 
-          if(!toks.hasNext()) throw LogicException("Invalid command: ${splittedOutput[0]}")
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val celly = toks.next().toInt()
 
           val target = board[cellx, celly]
@@ -242,7 +244,7 @@ class Referee : AbstractReferee() {
               if (player.use(target))
                 useTarget = target
             }
-            else -> throw LogicException("Invalid command: ${splittedOutput[0]}")
+            else -> throw Exception("Invalid command: $fullCommand")
           }
         }
 
@@ -259,13 +261,10 @@ class Referee : AbstractReferee() {
 
       try {
         processPlayerActions(thePlayer)
-      }
-      catch (ex: LogicException) {
-        thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
-      }
-      catch (ex: Exception) {
-        System.err.println("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
-        ex.printStackTrace()
+      } catch (ex: LogicException) {
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message}")
+      } catch (ex: Exception) {
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
       }
 
