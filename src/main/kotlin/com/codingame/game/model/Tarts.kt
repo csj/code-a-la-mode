@@ -23,6 +23,7 @@ sealed class OvenState(private val contentsStr: String, private val timer: Int) 
 }
 
 class Oven(private val cookTime: Int, private val burnTime: Int, var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
+
   override val tooltipString = "Oven"
 
   fun toViewString() : String {
