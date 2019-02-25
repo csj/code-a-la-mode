@@ -27,7 +27,7 @@
         <dependency>
             <groupId>com.codingame.gameengine</groupId>
             <artifactId>module-endscreen</artifactId>
-            <version>3.4.5</version>
+            <version>${gameengine.version}</version>
         </dependency>
 
         <dependency>
