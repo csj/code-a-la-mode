@@ -266,13 +266,15 @@ class Referee : AbstractReferee() {
       } catch (ex: Exception) {
         gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
+        if (thePlayer.heldItem is Dish) {
+          board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+              .first().let { it.dishes++ }
+        }
       }
 
       queue.updateRemainingCustomers()
     }
   }
-
-
 }
 
 private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {

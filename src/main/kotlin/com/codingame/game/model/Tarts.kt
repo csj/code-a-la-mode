@@ -22,10 +22,10 @@ sealed class OvenState(private val contentsStr: String, private val timer: Int) 
   object Burnt: OvenState(BurntFood.describe(), 0)
 }
 
-data class Oven(private val cookTime: Int, private val burnTime: Int, var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
+class Oven(private val cookTime: Int, private val burnTime: Int, var state: OvenState = OvenState.Empty) : TimeSensitiveEquipment() {
 
   override val tooltipString = "Oven"
-  
+
   fun toViewString() : String {
     val curState = state
     return when (curState) {
