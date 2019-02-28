@@ -2,7 +2,6 @@ package com.codingame.game.sample
 
 import com.codingame.game.model.Constants
 import sample.BaseCALMPlayer
-import sample.Item
 import java.io.InputStream
 import java.io.PrintStream
 
@@ -17,14 +16,13 @@ class IceCreamPlayer(
       val inputs = readInputs()
       val me = inputs.myPlayer
 
-      val iceCreamLoc = inputs.tables.firstOrNull { it.equipment?.equipmentType == "CRATE" &&
-      it.equipment.equipmentState() == "ICECREAM" }
+      val iceCreamLoc = inputs.tables.firstOrNull { it.equipment == 'I' }
         ?: throw Exception("Couldn't find ice cream crate")
-      val window = inputs.tables.firstOrNull { it.equipment?.equipmentType == Constants.EQUIPMENT.WINDOW.name }
+      val window = inputs.tables.firstOrNull { it.equipment == 'W' }
         ?: throw Exception("Couldn't find window")
-      val dishReturn = inputs.tables.firstOrNull { it.equipment?.equipmentType == Constants.EQUIPMENT.DISH_RETURN.name }
+      val dishReturn = inputs.tables.firstOrNull { it.equipment == 'D' }
         ?: throw Exception("Couldn't find dish return")
-      val emptyDishes = inputs.tables.filter { it.item?.itemType == Constants.ITEM.DISH.name && it.item.itemContents.isEmpty() }
+      val emptyDishes = inputs.tables.filter { it.item?.itemType == Constants.ITEM.DISH.name && it.item!!.itemContents.isEmpty() }
       val emptyDish = emptyDishes.firstOrNull() ?: dishReturn
 
       when {

@@ -13,6 +13,7 @@ abstract class EdibleItem(private val singleToken: String): Item() {
   }
 
   override fun describeTokens() = listOf(singleToken)
+  override fun toString() = singleToken
 }
 
 interface Container {

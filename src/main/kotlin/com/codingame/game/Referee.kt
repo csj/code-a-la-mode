@@ -8,8 +8,10 @@ import com.codingame.game.view.ScoresView
 import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
+import com.codingame.gameengine.module.endscreen.EndScreenModule
 import com.codingame.gameengine.module.entities.*
 import com.google.inject.Inject
+import tooltipModule.TooltipModule
 import java.util.*
 
 typealias ScoreBoard = Map<Player, Referee.ScoreEntry>
@@ -29,6 +31,8 @@ class Referee : AbstractReferee() {
   private lateinit var gameManager: MultiplayerGameManager<Player>
   @Inject
   private lateinit var graphicEntityModule: GraphicEntityModule
+  @Inject private lateinit var tooltipModule: TooltipModule
+  @Inject private lateinit var endScreenModule :EndScreenModule
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -46,6 +50,7 @@ class Referee : AbstractReferee() {
   override fun init() {
     rand = Random(gameManager.seed)
     com.codingame.game.view.graphicEntityModule = graphicEntityModule
+    com.codingame.game.view.tooltipModule = tooltipModule
 
     matchPlayers = gameManager.players.toMutableList()
     scoreBoard = mapOf(
@@ -75,14 +80,9 @@ class Referee : AbstractReferee() {
 
       player.describeCustomers(originalQueue)
 
-      board.allCells
-          .filter { it.isTable }
-          .also { player.sendInputLine(it.size.toString()) }
-          .also {
-            it.forEach { cell ->
-              player.sendInputLine("${cell.x} ${cell.y} ${cell.equipment?.describe() ?: "NONE"}")
-            }
-          }
+      board.cells.transpose().forEach { cellRow ->
+        player.sendInputLine(cellRow.map { it.describeChar() }.joinToString(""))
+      }
     }
 
     nextRound()
@@ -122,13 +122,15 @@ class Referee : AbstractReferee() {
 
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()
-    view.boardView.updateCells(board.allCells)
+    view.boardView.updateCells(board)
   }
 
   override fun onEnd() {
     scoreBoard.forEach { player, entry ->
       player.score = entry.total()  // TODO not if they're dead ..
     }
+    endScreenModule.titleRankingsSprite = "logo.png"
+    endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
 
   inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
@@ -173,34 +175,41 @@ class Referee : AbstractReferee() {
       }
 
       fun sendGameState(player: Player) {
+
+        // 0. Describe turns remaining
+        player.sendInputLine(200 - turn)
+
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
-          val item = it.heldItem?.describe() ?: "NONE"
 
           val toks = if (it.isActive) listOf(
               it.location.x,
               it.location.y,
-              item
+              it.heldItem?.describe() ?: "NONE"
           ) else listOf(-1, -1, "NONE")
 
 //          println("Sending player toks $toks to $player")
           player.sendInputLine(toks)
         }
 
-        // 2. Describe all table cells
-        board.allCells.filter { it.isTable }
+        // 2. Describe all table cells with items
+        board.allCells.filter { it.isTable && it.item != null }
+            .also { player.sendInputLine(it.size) }
             .forEach {
               val toks = listOf(
                   it.x,
                   it.y,
-                  it.equipment?.describe() ?: "NONE",
-                  it.item?.describe() ?: "NONE"
+                  it.item!!.describe()
               )
               player.sendInputLine(toks)
-//              println("Sending table toks $toks to $player")
             }
 
-        // 3. Describe customer queue
+        // 3. Describe oven
+        board.oven().let {
+          player.sendInputLine(it?.state?.toString() ?: "NONE 0")
+        }
+
+        // 4. Describe customer queue
         player.describeCustomers(queue.activeCustomers)
       }
 
@@ -213,13 +222,20 @@ class Referee : AbstractReferee() {
             "WAIT"
           }
 
-        val toks = line.split(" ").iterator()
+        val splittedOutput = line.split(";")
+        val fullCommand = splittedOutput[0]
+        val toks = fullCommand.split(" ").iterator()
+
         val command = toks.next()
         var useTarget: Cell? = null
 
         if (command != "WAIT") {
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val cellx = toks.next().toInt()
+
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val celly = toks.next().toInt()
+
           val target = board[cellx, celly]
 
           when (command) {
@@ -228,8 +244,12 @@ class Referee : AbstractReferee() {
               if (player.use(target))
                 useTarget = target
             }
+            else -> throw Exception("Invalid command: $fullCommand")
           }
         }
+
+        if(splittedOutput.size > 1) player.message = splittedOutput[1].take(20)
+
         view.boardView.updatePlayer(player, useTarget)
       }
 
@@ -242,18 +262,29 @@ class Referee : AbstractReferee() {
       try {
         processPlayerActions(thePlayer)
       } catch (ex: LogicException) {
-        System.err.println("${thePlayer.nicknameToken}: $ex")
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message}")
       } catch (ex: Exception) {
-        System.err.println("${thePlayer.nicknameToken}: $ex (deactivating!)")
-        ex.printStackTrace()
-        thePlayer.deactivate("${thePlayer.nicknameToken}: $ex")
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
+        thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
+        if (thePlayer.heldItem is Dish) {
+          board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+              .first().let { it.dishes++ }
+        }
       }
 
       queue.updateRemainingCustomers()
     }
   }
+}
 
-
+private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {
+  val rows = this.size
+  val cols = this[0].size
+  val trans = Array(cols) { Array(rows) { Cell(-1, -1) } }
+  for (i in 0 until cols) {
+    for (j in 0 until rows) trans[i][j] = this[j][i]
+  }
+  return trans
 }
 
 private fun Player.describeCustomers(customers: List<Customer>) {

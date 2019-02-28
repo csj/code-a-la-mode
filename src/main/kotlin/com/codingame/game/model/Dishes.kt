@@ -19,12 +19,21 @@ data class Dish(override val contents: MutableSet<EdibleItem> = mutableSetOf()) 
   }
 }
 
-class DishReturn: Equipment() {
-  override fun describe() = (listOf(Constants.EQUIPMENT.DISH_RETURN.name) + List(dishes) { Constants.ITEM.DISH.name }).joinToString("-")
+class DishWasher: Equipment() {
+  override val describeChar = 'D'
+  override val tooltipString = "Dish washer"
 
   override fun reset() { dishes = 4 }
 
   var dishes: Int = 4
+
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is Dish) {
+      player.heldItem = Dish()
+      return
+    }
+    super.receiveItem(player, item)
+  }
 
   override fun takeFrom(player: Player): Item {
     if (dishes <= 0) throw LogicException("Dishwasher is empty!")

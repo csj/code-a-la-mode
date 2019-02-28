@@ -1,8 +1,10 @@
 package com.codingame.game.view
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule
+import tooltipModule.TooltipModule
 
 lateinit var graphicEntityModule: GraphicEntityModule
+lateinit var tooltipModule: TooltipModule
 
 class GameView {
   lateinit var boardView: BoardView
