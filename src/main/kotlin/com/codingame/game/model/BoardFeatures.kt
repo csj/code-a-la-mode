@@ -28,8 +28,11 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
   var equipment: Equipment? = null
   var item: Item? = null
 
-  fun buildDistanceMap(blockedCell: Cell?): Map<Cell, Int> {
+  data class DistanceMap(val distances: Map<Cell, Int>, val traceBack: Map<Cell, Cell>)
+
+  fun buildDistanceMap(blockedCell: Cell?): DistanceMap {
     val visitedCells = mutableMapOf<Cell, Int>()
+    val traceBack = mutableMapOf<Cell, Cell>()
     val floodedCells = PriorityQueue<Pair<Cell, Int>> { (_,d1), (_,d2) -> d1.compareTo(d2) }
     floodedCells += this to 0
     var isFirst = true
@@ -42,15 +45,18 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
         floodedCells += cell.neighbours
             .filterNot { (nc, _) -> nc == blockedCell }
             .filterNot { (nc, _) -> nc in visitedCells.keys }
-            .map { (nc, nd) -> nc to dist + nd }
+            .map { (nc, nd) ->
+              traceBack[nc] = cell
+              nc to dist + nd
+            }
       }
       isFirst = false
     }
-    return visitedCells
+    return DistanceMap(visitedCells, traceBack)
   }
 
   fun distanceTo(target: Cell, partnerCell: Cell? = null): Int? {
-    return buildDistanceMap(partnerCell)[target]
+    return buildDistanceMap(partnerCell).distances[target]
   }
 
   fun describeChar() = if (!isTable) '.' else equipment?.describeChar ?: '#'
