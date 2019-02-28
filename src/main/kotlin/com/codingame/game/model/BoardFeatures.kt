@@ -19,7 +19,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
   private val diagonalNeighbours = mutableListOf<Cell>()
 
   val neighbours by lazy { straightNeighbours.map {it to 2} +
-      diagonalNeighbours.filter { it.isTable}.map {it to 3} }
+      diagonalNeighbours.filter { it.isTable || isTable }.map {it to 3} }
 
   fun connect(other: Cell, isStraight: Boolean) {
     (if (isStraight) straightNeighbours else diagonalNeighbours) += other

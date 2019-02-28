@@ -2,6 +2,7 @@ package com.codingame.game
 
 import com.codingame.game.model.Cell
 import com.codingame.game.model.Item
+import com.codingame.game.model.LogicException
 import com.codingame.game.view.BoardView
 import com.codingame.gameengine.core.AbstractMultiplayerPlayer
 import com.codingame.gameengine.module.entities.Group
@@ -12,11 +13,9 @@ const val WALK_DISTANCE = 9
 operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo(other)
 
 class Player : AbstractMultiplayerPlayer() {
-  public var message : String = "";
+  var message : String = ""
 
-  override fun toString(): String {
-    return this.nicknameToken
-  }
+  override fun toString() = this.nicknameToken
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
   lateinit var itemSprite: BoardView.ItemSpriteGroup
@@ -46,7 +45,7 @@ class Player : AbstractMultiplayerPlayer() {
     // try take
     cell.item?.also { it.take(this, cell); return true }
 
-    throw Exception("Cannot use this table, nothing to do!")
+    throw LogicException("Cannot USE this table now, nothing to do!")
   }
 
   fun moveTo(cell: Cell) {

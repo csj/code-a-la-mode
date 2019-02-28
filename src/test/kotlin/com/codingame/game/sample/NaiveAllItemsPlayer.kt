@@ -135,9 +135,9 @@ lunch, just eat it!""".split("\n").iterator()
 
       val dishContents = carrying.itemContents.toSet()
 
-      // if it has anything we don't need, jarbage it
+      // if it has anything we don't need, dishwasher it
       if ((dishContents - goalItems).isNotEmpty())
-        return findEquipment('G')!!.use()
+        return findEquipment('D')!!.use()
 
       // find next missing item from dish
       val missingItems = goalItems - dishContents
