@@ -130,7 +130,7 @@ class Referee : AbstractReferee() {
       player.score = entry.total()  // TODO not if they're dead ..
     }
     endScreenModule.titleRankingsSprite = "logo.png"
-    endScreenModule.setScores(gameManager.players.stream().mapToInt { p -> p.score }.toArray())
+    endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
 
   inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
@@ -222,16 +222,19 @@ class Referee : AbstractReferee() {
             "WAIT"
           }
 
-        val toks = line.split(" ").iterator()
+        val splittedOutput = line.split(";")
+        val fullCommand = splittedOutput[0]
+        val toks = fullCommand.split(" ").iterator()
+
         val command = toks.next()
         var useTarget: Cell? = null
 
         var commandLength = 4
         if (command != "WAIT") {
-          if(!toks.hasNext()) throw Exception("Invalid command: ${line}")
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val cellx = toks.next().toInt()
 
-          if(!toks.hasNext()) throw Exception("Invalid command: ${line}")
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
           val celly = toks.next().toInt()
 
           val target = board[cellx, celly]
@@ -242,7 +245,7 @@ class Referee : AbstractReferee() {
               if (player.use(target))
                 useTarget = target
             }
-            else -> throw Exception("Invalid command: ${line}")
+            else -> throw Exception("Invalid command: $fullCommand")
           }
 
           commandLength = command.length + (cellx.toString()).length+(celly.toString()).length+3
@@ -262,21 +265,20 @@ class Referee : AbstractReferee() {
 
       try {
         processPlayerActions(thePlayer)
-      }
-      catch (ex: LogicException) {
+      } catch (ex: LogicException) {
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message}")
+      } catch (ex: Exception) {
+        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
-      }
-      catch (ex: Exception) {
-        System.err.println("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
-        ex.printStackTrace()
-        thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
+        if (thePlayer.heldItem is Dish) {
+          board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+              .first().let { it.dishes++ }
+        }
       }
 
       queue.updateRemainingCustomers()
     }
   }
-
-
 }
 
 private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {

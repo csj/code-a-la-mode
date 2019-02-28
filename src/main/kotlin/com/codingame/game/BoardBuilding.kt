@@ -68,7 +68,6 @@ fun buildBoard(): Board {
   val equipmentLocs = equipment2.shuffled(rand).iterator()
 
   val equipments = listOfNotNull(
-      Jarbage(),
       (league >= League.IceCreamBerries).then(IceCreamCrate()),
       (league >= League.IceCreamBerries).then(BlueberryCrate()),
       (league >= League.StrawberriesChoppingBoard).then(StrawberryCrate()),
