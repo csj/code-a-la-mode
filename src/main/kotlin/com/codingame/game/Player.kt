@@ -2,20 +2,20 @@ package com.codingame.game
 
 import com.codingame.game.model.Cell
 import com.codingame.game.model.Item
+import com.codingame.game.model.LogicException
 import com.codingame.game.view.BoardView
 import com.codingame.gameengine.core.AbstractMultiplayerPlayer
 import com.codingame.gameengine.module.entities.Group
 import com.codingame.gameengine.module.entities.Sprite
 
 const val REACH_DISTANCE = 3
-const val WALK_DISTANCE = 7
+const val WALK_DISTANCE = 9
 operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo(other)
 
 class Player : AbstractMultiplayerPlayer() {
-  override fun toString(): String {
-    return this.nicknameToken
-  }
+  var message : String = ""
 
+  override fun toString() = this.nicknameToken
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
   lateinit var itemSprite: BoardView.ItemSpriteGroup
@@ -24,34 +24,35 @@ class Player : AbstractMultiplayerPlayer() {
   fun sendInputLine(toks: List<Any>) = sendInputLine(toks.joinToString(" ", transform = { it.toString() }))
   fun sendInputLine(singleTok: Int) = sendInputLine(singleTok.toString())
 
-  // Returns true if the use was successful
-  fun use(cell: Cell): Boolean {
+  fun use(cell: Cell): List<Cell> {
+    val useCellPath = listOf(location, cell, cell, location)
+
     if (!cell.isTable) throw Exception("Cannot use $cell: not a table!")
-    if (cell.distanceTo(location) > REACH_DISTANCE) { moveTo(cell); return false }
+    if (cell.distanceTo(location) > REACH_DISTANCE) return moveTo(cell)
     val equipment = cell.equipment
     if (equipment != null) {
       equipment.use(this)
-      return true
+      return useCellPath
     }
 
     // try drop
     if (heldItem != null) {
-      cell.item?.also { it.receiveItem(this, heldItem!!, cell); return true }
+      cell.item?.also { it.receiveItem(this, heldItem!!, cell); return useCellPath }
       cell.item = heldItem
       heldItem = null
-      return true
+      return useCellPath
     }
 
     // try take
-    cell.item?.also { it.take(this, cell); return true }
+    cell.item?.also { it.take(this, cell); return useCellPath }
 
-    throw Exception("Cannot use this table, nothing to do!")
+    throw LogicException("Cannot USE this table now, nothing to do!")
   }
 
-  fun moveTo(cell: Cell) {
+  fun moveTo(cell: Cell): List<Cell> {
     val blockedCell = if (partner.isActive) partner.location else null
 
-    val fromSource = location.buildDistanceMap(blockedCell)
+    val (fromSource, traceBack) = location.buildDistanceMap(blockedCell)
     val target =
         if (!cell.isTable && cell != blockedCell)
           cell
@@ -68,15 +69,29 @@ class Player : AbstractMultiplayerPlayer() {
 
     if (location.distanceTo(target, blockedCell) <= WALK_DISTANCE) {
       location = target
-      return
+      return trace(cell, location, traceBack)
     }
 
-    val fromTarget = target.buildDistanceMap(blockedCell)
+    val fromTarget = target.buildDistanceMap(blockedCell).distances
 
     location = fromSource
         .filter { (cell, dist) -> dist <= WALK_DISTANCE && !cell.isTable }
         .minBy { (cell, _) -> fromTarget[cell]!! }!!
         .key
+
+    return trace(cell, location, traceBack)
+  }
+
+  private fun trace(source: Cell, target: Cell, traceBack: Map<Cell, Cell>): List<Cell> {
+    return sequence {
+      var cur = target
+      yield(target)
+      while (cur != source) {
+        cur = traceBack[cur] ?: break
+        yield(cur)
+      }
+    }.toList().reversed()
+
   }
 
   var heldItem: Item? = null

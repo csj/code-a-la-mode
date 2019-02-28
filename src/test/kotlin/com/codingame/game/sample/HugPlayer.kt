@@ -4,11 +4,11 @@ import sample.BaseCALMPlayer
 import java.io.InputStream
 import java.io.PrintStream
 
-class WaitPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream): BaseCALMPlayer(stdin, stdout, stderr) {
+class HugPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream): BaseCALMPlayer(stdin, stdout, stderr) {
   init {
     while (true) {
       val inputs = readInputs()
-      stdout.println("WAIT")
+      stdout.println("MOVE ${inputs.myFriend.x} ${inputs.myFriend.y}")
     }
   }
 }

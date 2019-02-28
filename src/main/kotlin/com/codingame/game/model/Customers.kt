@@ -90,6 +90,7 @@ data class Customer(val dish: Dish, var award: Int) {
 }
 
 class Window(private val dishWasher: DishWasher? = null) : Equipment() {
+  override val tooltipString = "Window"
   var onDelivery: (Item) -> Unit = { }
 
   override val describeChar = 'W'
