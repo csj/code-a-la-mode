@@ -64,7 +64,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is Oven -> image = "oven.png"
               is Window -> image = "window.png"
               is DishWasher -> image = "dishwasher.png"
-              is Jarbage -> image = "trash.png"
             }
           }
 
