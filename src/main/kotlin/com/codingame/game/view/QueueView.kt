@@ -33,7 +33,7 @@ class QueueView {
 
   fun updateQueue() {
     customerViews.forEachIndexed { index, custView ->
-      custView.group.apply { x = 10 + index * 440; y = 10 }
+      custView.group.apply { y = 20 + index * 190; x = 10 }
 
       if (index >= queue.activeCustomers.size) {
         custView.group.isVisible = false
@@ -50,8 +50,8 @@ class QueueView {
   }
 
   inner class CustomerView {
-    val viewWidth = 420
-    val viewHeight = 210
+    val viewWidth = 340
+    val viewHeight = 185
 
     val customerSpritePadding = 5
     val customerSpriteWidth = viewWidth / 4 - customerSpritePadding*2
@@ -95,6 +95,7 @@ class QueueView {
       width = viewWidth
       height = viewHeight
       zIndex = 200
+      alpha = 0.5
     }
 
     val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())

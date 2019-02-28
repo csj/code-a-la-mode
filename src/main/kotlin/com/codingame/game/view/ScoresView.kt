@@ -9,7 +9,7 @@ class ScoresView(matchPlayers: List<Player>) {
   val playerScoreViews = matchPlayers.mapIndexed { i, player ->
     player to PlayerScoreView(player).apply {
       group.x = 10
-      group.y = 10 + i * 360
+      group.y = 10 + (i * (1080 - 20 - 200))
     }
   }.toMap()
 
@@ -20,8 +20,8 @@ class ScoresView(matchPlayers: List<Player>) {
   }
 
   inner class PlayerScoreView(player: Player) {
-    val viewWidth = 570
-    val viewHeight = 340
+    val viewWidth = 410
+    val viewHeight = 200
 
     private val playerAvatar = graphicEntityModule.createSprite().apply {
       image = player.avatarToken

@@ -10,9 +10,9 @@ class GameView {
   lateinit var scoresView: ScoresView
 
   init {
-    BoardView.xRange = 590..1910  // = 11 * 120
-    BoardView.yRange = 10..850 // = 7 * 120
-    QueueView.xRange = 590..1910
-    QueueView.yRange = 850..1080
+    BoardView.xRange = 430..1920  // = 11 * 120
+    BoardView.yRange = 190..1080 // = 7 * 120
+    QueueView.xRange = 10..410
+    QueueView.yRange = 240..840
   }
 }

@@ -12,6 +12,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 
   var cellWidth: Int = 0
+  var cellHeight: Int = 0
   val cellSpacing = 5
 
   lateinit var board: Board
@@ -25,36 +26,72 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 //    val floorColor = 0xe0e0eb
 //    val tableColor = 0xb35900
 
+    graphicEntityModule.createSprite().apply {
+      image = "background.jpg"
+      baseWidth = 1920
+      baseHeight = 1080
+      anchorX = 0.0
+      anchorY = 0.0
+      x = 0
+      y = 0
+    }
 
     val gridHeight = yRange.last - yRange.first
     val gridWidth = xRange.last - xRange.first
-    cellWidth = Math.min(gridHeight / baseBoard.height, gridWidth / baseBoard.width) - cellSpacing
 
-    for (cellCol in baseBoard.cells) {
+    //cellWidth = Math.min(gridHeight / baseBoard.height, gridWidth / baseBoard.width) - cellSpacing
 
-      for (cell in cellCol) {
-        val x = cell.x * (cellWidth + cellSpacing) + xRange.first
-        val y = cell.y * (cellWidth + cellSpacing) + yRange.first
+    var nextX = xRange.first
+    var nextY = yRange.first
+
+    baseBoard.cells.forEachIndexed { colIndex, cellCol ->
+      val isEdgeCol = colIndex == 0 || colIndex == 10
+      nextY = yRange.first
+
+      cellWidth = if (isEdgeCol) 140 else 132
+
+      cellCol.forEachIndexed { rowIndex, cell ->
+        val isFirstRow = rowIndex == 0
+        cellHeight = if (isFirstRow) 206 else 110
+        val x = nextX
+        val y = nextY
+
+//        println("${x} - ${y}")
+
+        nextY += cellHeight
 
         cellViews.add(CellView(cell).apply {
+
           background = graphicEntityModule
               .createRectangle()
-              .setHeight(cellWidth)
+              .setHeight(cellHeight)
               .setWidth(cellWidth)
-              .setFillColor(if (cell.isTable) tableColor else floorColor)
+              .setLineColor(0xffffff)
+              .setFillAlpha(0.0)
+              .setLineWidth(1)
+
+          println("${cell.x} ${cell.y}")
 
           val equipment = cell.equipment
           content = graphicEntityModule.createSprite().apply {
-            baseHeight = cellWidth - 8
-            baseWidth = cellWidth - 8
+            baseHeight = (110 * 0.75).toInt()
+            baseWidth = (132 * 0.75).toInt()
             anchorX = 0.5
-            anchorY = 0.5
-            setX(cellWidth / 2)
-            setY(cellWidth / 2)
+            anchorY = if(cell.x == 0 || cell.x == 10) 1.25 else 0.0
+            setX(cellWidth/2)
+            setY(0)
             when (equipment) {
               is ChoppingBoard -> image = "board.png"
-              is GeneralCrate -> image = "crate.png"
-              is Oven -> image = "oven.png"
+              is GeneralCrate -> image = "bowl.png"
+              is Oven -> {
+                image = if (cell.y == 0) "oven_top.png" else if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "oven.png"
+                baseHeight = if (cell.x == 0 || cell.x == 10) 215 else 206
+                baseWidth = if (cell.x == 0 || cell.x == 10) 140 else 132
+                anchorX = if(cell.x == 10) 1.0 else 0.0
+                anchorY = 1.0
+                if(cell.x == 0) setX(8) else if(cell.x == 10) setX(cellWidth - 8) else setX(0)
+                setY(cellHeight)
+              }
               is Window -> image = "window.png"
               is DishWasher -> image = "dishwasher.png"
               is Jarbage -> image = "trash.png"
@@ -68,38 +105,52 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is DoughCrate -> image = "dough.png"
               else -> isVisible = false
             }
-            baseHeight = cellWidth / 2
-            baseWidth = cellWidth / 2
+            baseHeight = 132 / 2
+            baseWidth = 110 / 2
             anchorX = 0.5
-            anchorY = 0.5
+            anchorY = if(cell.x == 0 || cell.x == 10) 1.5 else 0.0
+            alpha = 1.0
             setX(cellWidth / 2)
-            setY(cellWidth / 2)
+            setY(0)
           }
 
           text = graphicEntityModule.createText(cell.character?.toString() ?: "").apply {
             setX(cellWidth / 2)
-            setY(cellWidth / 2)
+            setY(cellHeight / 2)
             anchorX = 0.5
             anchorY = 0.5
             fontSize = 60
             fillColor = 0
+            alpha = 0.0
           }
 
           itemSpriteGroup = ItemSpriteGroup()
+
+          if(cell.x == 0 || cell.x == 10) {
+            itemSpriteGroup.mainSprite.apply {
+              anchorY = 1.0
+              setY(0)
+            }
+          }
 
           group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
 
         })
       }
+
+      nextX += cellWidth
     }
 
     for (player in matchPlayers) {
       player.characterSprite = graphicEntityModule.createSprite().apply {
-        image = "chef.png"
-        baseHeight = cellWidth
-        baseWidth = cellWidth
-        center()
+        image = "Player_blue_single.png"
+        baseHeight = 185
+        baseWidth = 126
+        anchorY = 1.0
+        anchorX = 0.0
+        x = 5
+        y = 105
         tint = player.colorToken
       }
 
@@ -122,12 +173,15 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
   fun updateCells(boardCells: List<Cell>) {
     boardCells.zip(cellViews).forEach { (cell, view) ->
-      view.itemSpriteGroup.update(cell.item) }
+      view.itemSpriteGroup.update(cell.item)
+    }
   }
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
-    val newX = cell.x * (cellWidth + cellSpacing) + xRange.first + 5
-    val newY = cell.y * (cellWidth + cellSpacing) + yRange.first + 5
+    println(cell)
+    val newX = 140 + (cell.x - 1) * (132) + xRange.first
+    val newY = 206 + (cell.y - 1) * (110) + yRange.first
+    println("$newX $newY")
 
     if (hardTransition) {
       setX(newX, Curve.NONE)
@@ -151,7 +205,9 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     if (useTarget == null) {
       player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
     } else {
-      player.sprite.setLocation(useTarget)
+      val actualTarget = if((useTarget.x == 0 || useTarget.x == 10) && useTarget.y > 0) Cell(useTarget.x, useTarget.y - 1) else useTarget
+
+      player.sprite.setLocation(actualTarget)
       graphicEntityModule.commitEntityState(0.3, player.sprite)
       player.sprite.setLocation(board[player.location.x, player.location.y])
       graphicEntityModule.commitEntityState(0.6, player.sprite)
@@ -166,11 +222,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     player.itemSprite.isVisible = false
   }
 
-  inner class ItemSpriteGroup(width: Int = cellWidth) {
+  inner class ItemSpriteGroup(width: Int = 132) {
     val mainSprite = graphicEntityModule.createSprite().apply {
       center()
-      baseHeight = width + 4
-      baseWidth = width + 4
+      baseHeight = width - 15
+      baseWidth = width - 15
       zIndex = 50
       isVisible = false
     }
@@ -199,7 +255,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       mainSprite.apply {
         isVisible = true
 
-        when(item) {
+        when (item) {
           is IceCream -> image = "ice-cream.png"
           is Blueberries -> image = "blueberries.png"
           is Dough -> image = "dough.png"
@@ -209,7 +265,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is Tart -> image = "tart.png"
           is BurntFood -> image = "coal.png"
           is Dish -> {
-            image = "dish.png"
+            image = "plate.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->
               subSprite.apply {
                 isVisible = true
@@ -243,8 +299,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     x = cellWidth / 2
     y = cellWidth / 2
   }
-
-
 
 
 }
