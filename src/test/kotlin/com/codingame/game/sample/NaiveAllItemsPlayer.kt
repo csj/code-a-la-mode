@@ -1,6 +1,7 @@
 package com.codingame.game.sample
 
 import com.codingame.game.model.*
+import com.codingame.game.tryNext
 import sample.*
 import sample.Item
 import java.io.InputStream
@@ -107,7 +108,7 @@ lunch, just eat it!""".split("\n").iterator()
         item.name to (inputs.tables.firstOrNull { it.equipment == char } )
       }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
-      stdout.println((act() ?: "WAIT") /* + ";" + lyrics.next() */)
+      stdout.println((act() ?: "WAIT") + ";" + (lyrics.tryNext() ?: ""))
     }
   }
 

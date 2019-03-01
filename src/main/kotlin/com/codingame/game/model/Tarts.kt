@@ -7,22 +7,19 @@ object Blueberries: EdibleItem(Constants.FOOD.BLUEBERRIES.name)
 object Tart: EdibleItem(Constants.FOOD.TART.name)
 object Croissant: EdibleItem(Constants.FOOD.CROISSANT.name)
 
-object BurntCroissant: EasilyDescribedItem(Constants.ITEM.BURNT_CROISSANT.name)
-object BurntTart: EasilyDescribedItem(Constants.ITEM.BURNT_TART.name)
 object Dough: EasilyDescribedItem(Constants.ITEM.DOUGH.name)
 
 sealed class OvenState(private val contentsStr: String, private val timer: Int) {
   override fun toString() = "$contentsStr $timer"
 
   object Empty: OvenState("NONE", 0)
-  class Baking(val contents: EdibleItem, val timeUntilCooked: Int): OvenState(
+  class Baking(val contents: Item, val timeUntilCooked: Int): OvenState(
       contents.describe(), timeUntilCooked
   )
   class Ready(val contents: EdibleItem, val timeUntilBurnt: Int): OvenState(
       contents.describe(), timeUntilBurnt
   )
-  object BurnedCroissant: OvenState(BurntCroissant.describe(), 0)
-  object BurnedTart: OvenState(BurntTart.describe(), 0)
+  object Burning: OvenState("NONE", 0)
 }
 
 class Oven(
@@ -49,20 +46,26 @@ class Oven(
     val curState = state
     state = when (curState) {
       is OvenState.Empty -> return
+      is OvenState.Burning -> OvenState.Empty
       is OvenState.Baking -> {
         if (curState.timeUntilCooked == 1)
-          OvenState.Ready(curState.contents, burnTime)
+          OvenState.Ready(
+              when (curState.contents) {
+                is Dough -> Croissant
+                is Shell -> Tart
+                else -> throw Exception("Wasn't expecting oven contents: ${curState.contents}!")
+              },
+              burnTime)
         else
           OvenState.Baking(curState.contents, curState.timeUntilCooked - 1)
       }
       is OvenState.Ready -> {
         val time = curState.timeUntilBurnt
         if (time == 1)
-          (if (curState.contents is Croissant) OvenState.BurnedCroissant else OvenState.BurnedTart)
+          OvenState.Burning.also { System.err.println("BURRRRN") }
         else
           OvenState.Ready(curState.contents, curState.timeUntilBurnt - 1)
       }
-      else -> return
     }
   }
 
@@ -74,17 +77,17 @@ class Oven(
       return
     }
 
-    if (state !== OvenState.Empty)
+    if (state !in listOf(OvenState.Empty, OvenState.Burning))
       throw LogicException("Cannot insert: oven not empty!")
 
     if (item is Shell && item.hasBlueberry) {
-      state = OvenState.Baking(Tart, cookTime)
+      state = OvenState.Baking(item, cookTime)
       player.heldItem = null
       return
     }
 
     if (item is Dough) {
-      state = OvenState.Baking(Croissant, cookTime)
+      state = OvenState.Baking(item, cookTime)
       player.heldItem = null
       return
     }
@@ -96,11 +99,10 @@ class Oven(
     lateinit var retVal: Item
     val curState = state
     state = when (curState) {
-      OvenState.Empty -> throw LogicException("Cannot take from $this: nothing inside!")
+      OvenState.Empty, OvenState.Burning ->
+        throw LogicException("Cannot take from $this: nothing inside!")
       is OvenState.Baking -> throw LogicException("Cannot take from $this: food is baking!")
       is OvenState.Ready -> OvenState.Empty.also { retVal = curState.contents }
-      OvenState.BurnedCroissant -> OvenState.Empty.also { retVal = BurntCroissant }
-      OvenState.BurnedTart -> OvenState.Empty.also { retVal = BurntTart }
     }
     return retVal
   }

@@ -97,7 +97,10 @@ class QueueView {
       height = viewHeight
       zIndex = 200
     }
-    val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
+    val group = graphicEntityModule.createGroup(*foodSprites.toTypedArray()).apply {
+      add(awardText)
+      add(backgroundBox)
+    }
 
     init {
       tooltipModule.registerEntity(group)
