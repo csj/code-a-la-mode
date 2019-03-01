@@ -27,6 +27,14 @@ class DishWasher: Equipment() {
 
   var dishes: Int = 4
 
+  override fun receiveItem(player: Player, item: Item) {
+    if (item is Dish) {
+      player.heldItem = Dish()
+      return
+    }
+    super.receiveItem(player, item)
+  }
+
   override fun takeFrom(player: Player): Item {
     if (dishes <= 0) throw LogicException("Dishwasher is empty!")
     dishes--

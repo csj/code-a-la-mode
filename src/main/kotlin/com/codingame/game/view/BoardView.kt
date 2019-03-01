@@ -64,7 +64,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is Oven -> image = "oven.png"
               is Window -> image = "window.png"
               is DishWasher -> image = "dishwasher.png"
-              is Jarbage -> image = "trash.png"
             }
           }
 
@@ -159,22 +158,22 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     players.forEach { updatePlayer(it, null, true) }
   }
 
-  fun updatePlayer(player: Player, useTarget: Cell?, hardTransition: Boolean = false) {
+  fun updatePlayer(player: Player, playerPath: List<Cell>?, hardTransition: Boolean = false) {
     player.characterSprite.isVisible = true
     player.itemSprite.isVisible = true
 
     player.itemSprite.update(player.heldItem)
 
-    if (useTarget == null) {
+    if (playerPath == null) {
       player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
     } else {
-      player.sprite.setLocation(useTarget)
-      graphicEntityModule.commitEntityState(0.3, player.sprite)
-      player.sprite.setLocation(board[player.location.x, player.location.y])
-      graphicEntityModule.commitEntityState(0.6, player.sprite)
+      playerPath.forEachIndexed { index, cell ->
+        player.sprite.setLocation(cell)
+        graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.sprite)
+      }
     }
 
-    graphicEntityModule.commitEntityState(0.5, player.sprite)
+    graphicEntityModule.commitEntityState(0.9, player.sprite)
 
   }
 
@@ -232,7 +231,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is ChoppedStrawberries -> image = "strawberries-cut.png"
           is Croissant -> image = "croissant.png"
           is Tart -> image = "tart.png"
-          is BurntFood -> image = "coal.png"
+          is BurntCroissant -> image = "coal.png"
+          is BurntTart -> image = "coal.png"
           is Dish -> {
             image = "dish.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->

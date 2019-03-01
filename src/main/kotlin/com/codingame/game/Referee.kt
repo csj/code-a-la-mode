@@ -227,7 +227,7 @@ class Referee : AbstractReferee() {
         val toks = fullCommand.split(" ").iterator()
 
         val command = toks.next()
-        var useTarget: Cell? = null
+        var path: List<Cell>? = null
 
         if (command != "WAIT") {
           if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
@@ -238,19 +238,16 @@ class Referee : AbstractReferee() {
 
           val target = board[cellx, celly]
 
-          when (command) {
+          path = when (command) {
             "MOVE" -> player.moveTo(target)
-            "USE" -> {
-              if (player.use(target))
-                useTarget = target
-            }
+            "USE" -> player.use(target)
             else -> throw Exception("Invalid command: $fullCommand")
           }
         }
 
         if(splittedOutput.size > 1) player.message = splittedOutput[1].take(20)
 
-        view.boardView.updatePlayer(player, useTarget)
+        view.boardView.updatePlayer(player, path)
       }
 
 //      println("Current players: ${players.map { it.nicknameToken }}")
@@ -266,13 +263,15 @@ class Referee : AbstractReferee() {
       } catch (ex: Exception) {
         gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
+        if (thePlayer.heldItem is Dish) {
+          board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+              .first().let { it.dishes++ }
+        }
       }
 
       queue.updateRemainingCustomers()
     }
   }
-
-
 }
 
 private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {
