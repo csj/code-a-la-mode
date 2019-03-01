@@ -71,7 +71,6 @@ class Referee : AbstractReferee() {
     view.boardView = BoardView(board, matchPlayers)
 
     view.queueView = QueueView()
-
     view.scoresView = ScoresView(matchPlayers)
 
     matchPlayers.forEach { player ->

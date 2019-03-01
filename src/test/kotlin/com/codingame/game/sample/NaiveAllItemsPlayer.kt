@@ -242,12 +242,12 @@ lunch, just eat it!""".split("\n").iterator()
       carrying.itemType == Constants.ITEM.DOUGH.name ->
         return findEquipment('C')!!.use()
 
-      carrying.itemType == Constants.ITEM.SHELL.name -> {
-        stderr.println("doing stuff: carrying = $carrying, contents = ${carrying.itemContents}")
-        return if (Constants.FOOD.BLUEBERRIES.name in carrying.itemContents) {
-          stderr.println("shell is complete; heading for oven")
-          findEquipment('O')!!.use()
-        } else crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
+      carrying.itemType == Constants.ITEM.SHELL.name ->
+        return crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
+
+      carrying.itemType == Constants.ITEM.RAW_TART.name -> {
+        stderr.println("shell is complete; heading for oven")
+        return findEquipment('O')!!.use()
       }
     }
 
