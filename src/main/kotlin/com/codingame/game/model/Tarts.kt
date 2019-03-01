@@ -122,11 +122,7 @@ data class Shell(var hasBlueberry: Boolean = false): Item() {
     player.heldItem = null
   }
 
-  override fun describeTokens(): List<String> {
-    return listOfNotNull(
-        Constants.ITEM.SHELL.name,
-        hasBlueberry.then(Constants.FOOD.BLUEBERRIES.name)
-    )
-  }
+  override fun describeTokens() =
+      listOf(if (hasBlueberry) Constants.ITEM.RAW_TART.name else Constants.ITEM.SHELL.name)
 }
 
