@@ -100,7 +100,7 @@ lunch, just eat it!""".split("\n").iterator()
 
       crates = listOf(
           Constants.FOOD.BLUEBERRIES to 'B',
-          Constants.FOOD.ICECREAM to 'I',
+          Constants.FOOD.ICE_CREAM to 'I',
           Constants.ITEM.DOUGH to 'H',
           Constants.ITEM.STRAWBERRIES to 'S'
       ).map { (item, char) ->
@@ -118,7 +118,7 @@ lunch, just eat it!""".split("\n").iterator()
     if (inputs.ovenContents in listOf(
         Constants.FOOD.CROISSANT.name,
         Constants.FOOD.TART.name,
-        Constants.ITEM.BURNT_FOOD.name
+        Constants.ITEM.BURNT_CROISSANT.name
     ))
       return if (carrying == null) findEquipment('O')!!.use() else useEmptyTable()
 
@@ -168,7 +168,7 @@ lunch, just eat it!""".split("\n").iterator()
       return when(item) {
         Constants.FOOD.CROISSANT.name -> buildCroissant()
         Constants.FOOD.TART.name -> buildTart()
-        Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> buildStrawberries()
+        Constants.FOOD.CHOPPED_STRAWBERRIES.name -> buildStrawberries()
         else -> throw Exception("Unrecognized dish: $item")
       }
     }
@@ -184,7 +184,7 @@ lunch, just eat it!""".split("\n").iterator()
     return when {
       carrying == null -> crates[Constants.ITEM.STRAWBERRIES.name]!!.use()
       carrying.itemType == Constants.ITEM.STRAWBERRIES.name -> findEquipment('C')?.use()
-      carrying.itemType == Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> useEmptyTable()
+      carrying.itemType == Constants.FOOD.CHOPPED_STRAWBERRIES.name -> useEmptyTable()
       else -> { stderr.println("uhhh, holding: $carrying"); return useEmptyTable() }
     }
   }

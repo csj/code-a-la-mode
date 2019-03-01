@@ -4,21 +4,17 @@ object Constants {
   const val CUSTOMER_VALUE_DECAY = 30   // higher => slower decay
 
   enum class ITEM {
-    FOOD, DOUGH, DISH, STRAWBERRIES, SHELL, BURNT_FOOD
+    FOOD, DOUGH, DISH, STRAWBERRIES, SHELL, BURNT_CROISSANT, BURNT_TART
   }
   
   enum class FOOD {
-    ICECREAM,
+    ICE_CREAM,
     BLUEBERRIES,
-    CHOPPEDSTRAWBERRIES,
+    CHOPPED_STRAWBERRIES,
     CROISSANT,
     TART
   }
   
-  enum class EQUIPMENT {
-    WINDOW, DISHWASHER, OVEN, CHOPPING_BOARD, CRATE, GARBAGE
-  }
-
   const val OVEN_COOKTIME = 10
   const val OVEN_BURNTIME = 10
 }

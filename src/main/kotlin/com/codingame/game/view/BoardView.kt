@@ -231,7 +231,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is ChoppedStrawberries -> image = "strawberries-cut.png"
           is Croissant -> image = "croissant.png"
           is Tart -> image = "tart.png"
-          is BurntFood -> image = "coal.png"
+          is BurntCroissant -> image = "coal.png"
+          is BurntTart -> image = "coal.png"
           is Dish -> {
             image = "dish.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->
