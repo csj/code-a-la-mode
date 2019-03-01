@@ -118,8 +118,7 @@ lunch, just eat it!""".split("\n").iterator()
     // 0. If the oven has something ready, go get it!
     if (inputs.ovenContents in listOf(
         Constants.FOOD.CROISSANT.name,
-        Constants.FOOD.TART.name,
-        Constants.ITEM.BURNT_CROISSANT.name
+        Constants.FOOD.TART.name
     ))
       return if (carrying == null) findEquipment('O')!!.use() else useEmptyTable()
 

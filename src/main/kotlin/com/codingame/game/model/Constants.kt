@@ -1,8 +1,6 @@
 package com.codingame.game.model
 
 object Constants {
-  const val CUSTOMER_VALUE_DECAY = 30   // higher => slower decay
-
   enum class ITEM {
     FOOD, DOUGH, DISH, STRAWBERRIES, SHELL
   }

@@ -56,7 +56,7 @@ data class Customer(val dish: Dish, var award: Int) {
   var satisfaction: Satisfaction = Satisfaction.Waiting
 
   fun updateSatisfaction() {
-    award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
+    award -= 1
     satisfaction = when {
       award > 25 -> Satisfaction.Waiting
       award > 10 -> Satisfaction.Danger
