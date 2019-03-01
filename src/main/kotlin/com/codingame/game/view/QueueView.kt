@@ -109,10 +109,11 @@ class QueueView {
     fun update(customer: Customer) {
       tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
 
-      val award = customer.award
+      val baseAward = customer.originalAward - Constants.TIP
+      val tip = customer.award - baseAward
       val edibles = customer.dish.contents
 
-      awardText.text = award.toString()
+      awardText.text = "$baseAward + $tip"
 
       backgroundBox.setFillColor(
           when(customer.satisfaction) {

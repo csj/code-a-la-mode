@@ -15,4 +15,5 @@ object Constants {
   
   const val OVEN_COOKTIME = 10
   const val OVEN_BURNTIME = 10
+  val TIP = 200
 }

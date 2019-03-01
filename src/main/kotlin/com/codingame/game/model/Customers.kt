@@ -83,7 +83,7 @@ data class Customer(val dish: Dish, var award: Int) {
 
     fun randomCustomer(): Customer {
       val order = randomOrder()
-      val price = 300 + order.contents.sumBy { possiblePlateContents[it]!! }
+      val price = Constants.TIP + order.contents.sumBy { possiblePlateContents[it]!! }
       return Customer(order, price)
     }
   }
