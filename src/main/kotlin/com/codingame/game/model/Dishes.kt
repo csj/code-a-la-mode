@@ -23,9 +23,10 @@ class DishWasher: Equipment() {
   override val describeChar = 'D'
   override val tooltipString = "Dish washer"
 
-  override fun reset() { dishes = 4 }
+  override fun reset() { dishes = 3 }
 
-  var dishes: Int = 4
+  var dishes: Int = 3
+    private set
 
   override fun receiveItem(player: Player, item: Item) {
     if (item is Dish) {
@@ -41,7 +42,7 @@ class DishWasher: Equipment() {
     return Dish()
   }
 
-  fun addDishToQueue() {
+  fun addDish() {
     dishes++
   }
 

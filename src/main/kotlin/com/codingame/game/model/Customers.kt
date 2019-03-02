@@ -8,10 +8,6 @@ import com.codingame.game.rand
 val originalQueue = List(50) { Customer.randomCustomer() }
 
 class CustomerQueue() {
-  constructor(eagerPointsAwarded: (Int) -> Unit): this() {
-    onPointsAwarded = eagerPointsAwarded
-  }
-
   val queueIterator = originalQueue.iterator()
 
   val activeCustomers: MutableList<Customer> = mutableListOf()
@@ -56,7 +52,7 @@ data class Customer(val dish: Dish, var award: Int) {
   var satisfaction: Satisfaction = Satisfaction.Waiting
 
   fun updateSatisfaction() {
-    award = award * (Constants.CUSTOMER_VALUE_DECAY - 1) / Constants.CUSTOMER_VALUE_DECAY
+    award -= 1
     satisfaction = when {
       award > 25 -> Satisfaction.Waiting
       award > 10 -> Satisfaction.Danger
@@ -83,7 +79,7 @@ data class Customer(val dish: Dish, var award: Int) {
 
     fun randomCustomer(): Customer {
       val order = randomOrder()
-      val price = 300 + order.contents.sumBy { possiblePlateContents[it]!! }
+      val price = Constants.TIP + order.contents.sumBy { possiblePlateContents[it]!! }
       return Customer(order, price)
     }
   }
@@ -97,7 +93,7 @@ class Window(private val dishWasher: DishWasher? = null) : Equipment() {
 
   private fun deliver(dish: Dish) {
     onDelivery(dish)
-    dishWasher?.addDishToQueue()
+    dishWasher?.addDish()
   }
 
   override fun receiveItem(player: Player, item: Item) {

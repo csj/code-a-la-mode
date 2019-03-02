@@ -22,6 +22,7 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
   protected fun readInputs(): GameState {
 //    scanner.next().also { stderr.println("Read: $it, expecting number of turns")}
     val turnsRemaining = scanner.nextInt()
+        .also { stderr.println("Turns remaining: $it") }
     val myPlayer = Player(scanner.nextInt(), scanner.nextInt(), Item.parse(scanner.next()))
     val myFriend = Player(scanner.nextInt(), scanner.nextInt(), Item.parse(scanner.next()))
 
@@ -30,14 +31,10 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
         .map { col -> Table(col, row, layout[row][col].nullIf('#')) }
     }
 
-    repeat(scanner.nextInt()
-        .also { stderr.println("$it tables with items")}
-    ) {
+    repeat(scanner.nextInt()) {
       val x = scanner.nextInt()
       val y = scanner.nextInt()
-      tables.find { it.x == x && it.y == y }!!.item = Item.parse(scanner.next()).also {
-        stderr.println("Setting table $x $y to $it")
-      }
+      tables.find { it.x == x && it.y == y }!!.item = Item.parse(scanner.next())
     }
 
     val ovenContents = scanner.next()

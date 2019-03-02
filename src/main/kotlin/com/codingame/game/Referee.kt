@@ -58,9 +58,9 @@ class Referee : AbstractReferee() {
         matchPlayers[1] to ScoreEntry(arrayOf(0, null, 0)),
         matchPlayers[2] to ScoreEntry(arrayOf(null, 0, 0))
     )
-    gameManager.maxTurns = 600
+    gameManager.maxTurns = 606
 
-    league = when (4) {  // when (gameManager.leagueLevel) {
+    league = when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.StrawberriesChoppingBoard
       3 -> League.Croissants
@@ -71,33 +71,28 @@ class Referee : AbstractReferee() {
     view.boardView = BoardView(board, matchPlayers)
 
     view.queueView = QueueView()
-
     view.scoresView = ScoresView(matchPlayers)
 
     matchPlayers.forEach { player ->
-      //      println("Sending board size to $player")
-      //      player.sendInputLine("${board.width} ${board.height}")
-
       player.describeCustomers(originalQueue)
 
-      board.cells.transpose().forEach { cellRow ->
+      board.cells.transpose { Cell() }.forEach { cellRow ->
         player.sendInputLine(cellRow.map { it.describeChar() }.joinToString(""))
       }
     }
 
-    nextRound()
-
   }
 
-  private lateinit var currentRound: RoundReferee
+  private var currentRound: RoundReferee? = null
   private var roundNumber: Int = 0
 
-  private fun nextRound() {
+  private fun nextRound(): RoundReferee {
     val roundPlayers = matchPlayers.take(2)
     view.boardView.removePlayer(matchPlayers[2])
     Collections.rotate(matchPlayers, 1)
     board.reset()
     queue = CustomerQueue()
+    queue.getNewCustomers()
     queue.onFailure = { view.queueView.failed = true }
 
     roundPlayers[0].apply { location = board["D3"]; heldItem = null }
@@ -106,18 +101,18 @@ class Referee : AbstractReferee() {
     view.boardView.players = roundPlayers
     view.queueView.queue = queue
 
-    currentRound = RoundReferee(roundPlayers, roundNumber++)
+    return RoundReferee(roundPlayers, roundNumber++)
   }
 
   override fun gameTurn(turn: Int) {
-    if (currentRound.isOver()) {
+    if (currentRound == null || currentRound!!.isOver()) {
       if (roundNumber >= 3) gameManager.endGame()
       else {
-        nextRound()
+        currentRound = nextRound()
         view.boardView.resetPlayers()
       }
     } else {
-      currentRound.gameTurn(turn)
+      currentRound!!.gameTurn(turn)
     }
 
     view.scoresView.update(scoreBoard)
@@ -158,7 +153,7 @@ class Referee : AbstractReferee() {
     var turn = 0
     var nextPlayerId = 0
 
-    fun isOver(): Boolean = turn >= 200
+    fun isOver(): Boolean = turn > 200
 
     fun gameTurn(matchTurn: Int) {
       turn++
@@ -177,7 +172,7 @@ class Referee : AbstractReferee() {
       fun sendGameState(player: Player) {
 
         // 0. Describe turns remaining
-        player.sendInputLine(200 - turn)
+        player.sendInputLine((200 - turn) / 2)
 
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
@@ -265,23 +260,13 @@ class Referee : AbstractReferee() {
         thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
         if (thePlayer.heldItem is Dish) {
           board.allCells.mapNotNull { (it.equipment as? DishWasher) }
-              .first().let { it.dishes++ }
+              .first().let { it.addDish() }
         }
       }
 
       queue.updateRemainingCustomers()
     }
   }
-}
-
-private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {
-  val rows = this.size
-  val cols = this[0].size
-  val trans = Array(cols) { Array(rows) { Cell(-1, -1) } }
-  for (i in 0 until cols) {
-    for (j in 0 until rows) trans[i][j] = this[j][i]
-  }
-  return trans
 }
 
 private fun Player.describeCustomers(customers: List<Customer>) {

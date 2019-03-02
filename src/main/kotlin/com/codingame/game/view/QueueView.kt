@@ -102,7 +102,10 @@ class QueueView {
       zIndex = 200
       alpha = 0.0
     }
-    val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
+    val group = graphicEntityModule.createGroup(*foodSprites.toTypedArray()).apply {
+      add(awardText)
+      add(backgroundBox)
+    }
 
     init {
       tooltipModule.registerEntity(group)
@@ -111,10 +114,11 @@ class QueueView {
     fun update(customer: Customer) {
       tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
 
-      val award = customer.award
+      val baseAward = customer.originalAward - Constants.TIP
+      val tip = customer.award - baseAward
       val edibles = customer.dish.contents
 
-      awardText.text = award.toString()
+      awardText.text = "$baseAward + $tip"
 
       backgroundBox.setFillColor(
           when(customer.satisfaction) {

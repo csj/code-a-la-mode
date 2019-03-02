@@ -1,6 +1,7 @@
 package com.codingame.game.sample
 
 import com.codingame.game.model.*
+import com.codingame.game.tryNext
 import sample.*
 import sample.Item
 import java.io.InputStream
@@ -100,14 +101,14 @@ lunch, just eat it!""".split("\n").iterator()
 
       crates = listOf(
           Constants.FOOD.BLUEBERRIES to 'B',
-          Constants.FOOD.ICECREAM to 'I',
+          Constants.FOOD.ICE_CREAM to 'I',
           Constants.ITEM.DOUGH to 'H',
           Constants.ITEM.STRAWBERRIES to 'S'
       ).map { (item, char) ->
         item.name to (inputs.tables.firstOrNull { it.equipment == char } )
       }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
-      stdout.println((act() ?: "WAIT") /* + ";" + lyrics.next() */)
+      stdout.println((act() ?: "WAIT") + ";" + (lyrics.tryNext() ?: ""))
     }
   }
 
@@ -117,8 +118,7 @@ lunch, just eat it!""".split("\n").iterator()
     // 0. If the oven has something ready, go get it!
     if (inputs.ovenContents in listOf(
         Constants.FOOD.CROISSANT.name,
-        Constants.FOOD.TART.name,
-        Constants.ITEM.BURNT_FOOD.name
+        Constants.FOOD.TART.name
     ))
       return if (carrying == null) findEquipment('O')!!.use() else useEmptyTable()
 
@@ -168,7 +168,7 @@ lunch, just eat it!""".split("\n").iterator()
       return when(item) {
         Constants.FOOD.CROISSANT.name -> buildCroissant()
         Constants.FOOD.TART.name -> buildTart()
-        Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> buildStrawberries()
+        Constants.FOOD.CHOPPED_STRAWBERRIES.name -> buildStrawberries()
         else -> throw Exception("Unrecognized dish: $item")
       }
     }
@@ -184,7 +184,7 @@ lunch, just eat it!""".split("\n").iterator()
     return when {
       carrying == null -> crates[Constants.ITEM.STRAWBERRIES.name]!!.use()
       carrying.itemType == Constants.ITEM.STRAWBERRIES.name -> findEquipment('C')?.use()
-      carrying.itemType == Constants.FOOD.CHOPPEDSTRAWBERRIES.name -> useEmptyTable()
+      carrying.itemType == Constants.FOOD.CHOPPED_STRAWBERRIES.name -> useEmptyTable()
       else -> { stderr.println("uhhh, holding: $carrying"); return useEmptyTable() }
     }
   }
@@ -242,12 +242,12 @@ lunch, just eat it!""".split("\n").iterator()
       carrying.itemType == Constants.ITEM.DOUGH.name ->
         return findEquipment('C')!!.use()
 
-      carrying.itemType == Constants.ITEM.SHELL.name -> {
-        stderr.println("doing stuff: carrying = $carrying, contents = ${carrying.itemContents}")
-        return if (Constants.FOOD.BLUEBERRIES.name in carrying.itemContents) {
-          stderr.println("shell is complete; heading for oven")
-          findEquipment('O')!!.use()
-        } else crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
+      carrying.itemType == Constants.ITEM.SHELL.name ->
+        return crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
+
+      carrying.itemType == Constants.ITEM.RAW_TART.name -> {
+        stderr.println("shell is complete; heading for oven")
+        return findEquipment('O')!!.use()
       }
     }
 

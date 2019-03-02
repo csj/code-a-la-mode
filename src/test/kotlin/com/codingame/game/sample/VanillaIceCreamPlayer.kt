@@ -9,7 +9,7 @@ class IceCreamPlayer(
     stdin: InputStream, stdout: PrintStream, stderr: PrintStream)
   : BaseCALMPlayer(stdin, stdout, stderr) {
 
-  private val ballVal = Constants.FOOD.ICECREAM.name
+  private val ballVal = Constants.FOOD.ICE_CREAM.name
 
   init {
     while (true) {
