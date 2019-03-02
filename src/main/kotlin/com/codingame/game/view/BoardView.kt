@@ -59,7 +59,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
       cellCol.forEachIndexed { rowIndex, cell ->
         val isFirstRow = rowIndex == 0
-        cellHeight = if (isFirstRow) 206 else 110
+        cellHeight = if (isFirstRow) 136 else 110
         val x = nextX
         val y = nextY
 
@@ -75,7 +75,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               .setWidth(cellWidth)
               .setLineColor(0xffffff)
               .setFillAlpha(0.0)
-              .setLineWidth(1)
+              .setLineWidth(0)
 
           println("${cell.x} ${cell.y}")
 
@@ -84,20 +84,22 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
             baseHeight = (110 * 0.75).toInt()
             baseWidth = (132 * 0.75).toInt()
             anchorX = 0.5
-            anchorY = if(cell.x == 0 || cell.x == 10) 1.25 else 0.0
-            setX(cellWidth/2)
-            setY(0)
+            anchorY = 0.0
+            setX(cellWidth / 2)
+            setY(10)
             when (equipment) {
               is ChoppingBoard -> image = "board.png"
               is GeneralCrate -> image = "bowl.png"
               is Oven -> {
                 image = if (cell.y == 0) "oven_top.png" else if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "oven.png"
-                baseHeight = if (cell.x == 0 || cell.x == 10) 215 else 206
-                baseWidth = if (cell.x == 0 || cell.x == 10) 140 else 132
-                anchorX = if(cell.x == 10) 1.0 else 0.0
-                anchorY = 1.0
-                if(cell.x == 0) setX(8) else if(cell.x == 10) setX(cellWidth - 8) else setX(0)
-                setY(cellHeight)
+//                baseHeight = if (cell.x == 0 || cell.x == 10) 131 else 99
+//                baseWidth = if (cell.x == 0 || cell.x == 10) 140 else 132
+                baseHeight = cellHeight
+                baseWidth = cellWidth
+                anchorX = if (cell.x == 10) 1.0 else 0.0
+                anchorY = 0.0
+                if (cell.x == 0) setX(8) else if (cell.x == 10) setX(cellWidth - 8) else setX(0)
+                setY(0)
               }
               is Window -> image = "window.png"
               is DishWasher -> image = "dishwasher.png"
@@ -117,13 +119,13 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is DoughCrate -> image = "dough.png"
               else -> isVisible = false
             }
-            baseHeight = 132 / 2
-            baseWidth = 110 / 2
+            baseHeight = 132 * 4 / 5 / 2
+            baseWidth = 132 / 2
             anchorX = 0.5
-            anchorY = if(cell.x == 0 || cell.x == 10) 1.5 else 0.0
+            anchorY = 0.0
             alpha = 1.0
             setX(cellWidth / 2)
-            setY(0)
+            setY(20)
           }
 
           text = graphicEntityModule.createText(cell.character?.toString() ?: "").apply {
@@ -136,14 +138,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
             alpha = 0.0
           }
 
-          itemSpriteGroup = ItemSpriteGroup(cellWidth)
-
-          if(cell.x == 0 || cell.x == 10) {
-            itemSpriteGroup.mainSprite.apply {
-              anchorY = 1.0
-              setY(0)
-            }
-          }
+          itemSpriteGroup = ItemSpriteGroup(110)
 
           group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
@@ -158,31 +153,18 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     for (player in matchPlayers) {
       player.characterSprite = graphicEntityModule.createSprite().apply {
         image = "Player_blue_single.png"
-        baseHeight = 185
-        baseWidth = 126
+        baseHeight = 187
+        baseWidth = 132
+        x = 132 / 2
+        y = 90
+        anchorX = 0.5
         anchorY = 1.0
-        anchorX = 0.0
-        x = 5
-        y = 105
         tint = player.colorToken
       }
       player.itemSprite = ItemSpriteGroup(cellWidth)
 
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
-      tooltipModule.registerEntity(player.sprite, "Chef:" +player.nicknameToken)
-
-//          .setX(player.location.view.group.x + 5)
-//          .setY(player.location.view.group.y + 5)
     }
-
-    // TODO: Replace this
-//    graphicEntityModule.createRectangle().setX(0).setY(10).setFillColor(players[0].colorToken).setHeight(15).setWidth(15)
-//    graphicEntityModule.createRectangle().setX(0).setY(30).setFillColor(players[3].colorToken).setHeight(15).setWidth(15)
-//    scores[0] = graphicEntityModule.createText("0").setX(20).setY(20).setFillColor(0xffffff)
-//
-//    graphicEntityModule.createRectangle().setX(400).setY(10).setFillColor(players[1].colorToken).setHeight(15).setWidth(15)
-//    graphicEntityModule.createRectangle().setX(400).setY(30).setFillColor(players[2].colorToken).setHeight(15).setWidth(15)
-//    scores[1] = graphicEntityModule.createText("0").setX(420).setY(20).setFillColor(0xffffff)
   }
 
   fun updateCells(board: Board) {
@@ -195,7 +177,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
     println(cell)
     val newX = 140 + (cell.x - 1) * (132) + xRange.first
-    val newY = 206 + (cell.y - 1) * (110) + yRange.first
+    val newY = 136 + (cell.y - 1) * (110) + yRange.first
     println("$newX $newY")
 
     if (hardTransition) {
@@ -237,21 +219,25 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
   inner class ItemSpriteGroup(width: Int = 132) {
     val mainSprite = graphicEntityModule.createSprite().apply {
-      center()
-      baseHeight = width - 15
-      baseWidth = width - 15
+      anchorY = 0.5
+      anchorX = 0.5
+      x = width / 2
+      y = width / 2
+      baseHeight = width * 3 / 4
+      baseWidth = width * 3 / 4
       zIndex = 50
       isVisible = false
     }
 
     val subSprites = List(4) { i ->
       graphicEntityModule.createSprite().apply {
-        center()
-        baseHeight = width / 2
-        baseWidth = width / 2
+        anchorX = 0.0
+        anchorY = 0.0
+        baseHeight = 35
+        baseWidth = 45
         zIndex = 50 + i
-        x = ((i - 1.5) * 8 + width / 2).toInt()
-        y = ((i - 1.5) * 8 + width / 2).toInt()
+        x = 15 + (i % 2) * 45
+        y = if (i < 2) 10 else 45
         isVisible = false
       }
     }
@@ -320,8 +306,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   private fun Sprite.center() {
     anchorY = 0.5
     anchorX = 0.5
-    x = cellWidth / 2
-    y = cellWidth / 2
+    x = 132 / 2
+    y = 110 / 2
   }
 
 

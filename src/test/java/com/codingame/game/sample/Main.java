@@ -11,7 +11,8 @@ public class Main {
 //        System.err.println("mcfly?");
 
         // Adds as many player as you need to test your game
-        gameRunner.addAgent(IceCreamPlayer.class);
+//        gameRunner.addAgent(IceCreamPlayer.class);
+        gameRunner.addAgent(NaiveAllItemsPlayer.class);
         gameRunner.addAgent(NaiveAllItemsPlayer.class);
         gameRunner.addAgent(HugPlayer.class);
 

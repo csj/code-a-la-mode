@@ -13,7 +13,7 @@ class GameView {
 
   init {
     BoardView.xRange = 430..1920  // = 11 * 120
-    BoardView.yRange = 190..1080 // = 7 * 120
+    BoardView.yRange = 264..1080 // = 7 * 120
     QueueView.xRange = 10..410
     QueueView.yRange = 240..840
   }
