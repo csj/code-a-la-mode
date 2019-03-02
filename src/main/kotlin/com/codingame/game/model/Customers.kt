@@ -8,10 +8,6 @@ import com.codingame.game.rand
 val originalQueue = List(50) { Customer.randomCustomer() }
 
 class CustomerQueue() {
-  constructor(eagerPointsAwarded: (Int) -> Unit): this() {
-    onPointsAwarded = eagerPointsAwarded
-  }
-
   val queueIterator = originalQueue.iterator()
 
   val activeCustomers: MutableList<Customer> = mutableListOf()

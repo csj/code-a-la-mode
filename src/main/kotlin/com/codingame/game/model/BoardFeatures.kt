@@ -14,6 +14,7 @@ class CellView(val cell: Cell) {
 }
 
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null) {
+  constructor(): this(-1, -1)
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
