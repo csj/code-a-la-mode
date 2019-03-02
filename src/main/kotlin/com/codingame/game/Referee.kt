@@ -84,7 +84,7 @@ class Referee : AbstractReferee() {
   }
 
   private var currentRound: RoundReferee? = null
-  private var roundNumber: Int = 0
+  private var roundNumber: Int = -1
 
   private fun nextRound(): RoundReferee {
     val roundPlayers = matchPlayers.take(2)
@@ -101,7 +101,8 @@ class Referee : AbstractReferee() {
     view.boardView.players = roundPlayers
     view.queueView.queue = queue
 
-    return RoundReferee(roundPlayers, roundNumber++)
+    roundNumber++
+    return RoundReferee(roundPlayers, roundNumber)
   }
 
   override fun gameTurn(turn: Int) {
@@ -115,6 +116,7 @@ class Referee : AbstractReferee() {
       currentRound!!.gameTurn(turn)
     }
 
+    view.scoresView.currentRoundNumber = roundNumber
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()
     view.boardView.updateCells(board)

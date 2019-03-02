@@ -6,6 +6,8 @@ import com.codingame.game.ScoreBoard
 
 class ScoresView(matchPlayers: List<Player>) {
 
+  var currentRoundNumber = 0    /* 0, 1, 2 */
+
   val playerScoreViews = matchPlayers.mapIndexed { i, player ->
     player to PlayerScoreView(player).apply {
       group.x = 10
@@ -46,17 +48,17 @@ class ScoresView(matchPlayers: List<Player>) {
 
     }
 
-    private val scoreTexts = List(3) { i ->
+    private val scoreTexts = // List(3) { i ->
       graphicEntityModule.createText("--").apply {
         fillColor = 0xffffff
         fontSize = 45
-        x = ((i + 1.5) * viewWidth / 4).toInt()
+        x = viewWidth / 2
         y = viewHeight * 1 / 4
         anchorX = 0.5
         anchorY = 0.5
         zIndex = 350
       }
-    }
+    //}
 
     val messageText =
       graphicEntityModule.createText("").apply {
@@ -77,7 +79,8 @@ class ScoresView(matchPlayers: List<Player>) {
       zIndex = 200
     }!!
 
-    val group = graphicEntityModule.createGroup(*scoreTexts.toTypedArray()).apply {
+    val group = graphicEntityModule.createGroup().apply {
+      add(scoreTexts)
       add(backgroundBox)
       add(playerAvatar)
       add(playerNameText)
@@ -85,9 +88,8 @@ class ScoresView(matchPlayers: List<Player>) {
     }
 
     fun update(entry: Referee.ScoreEntry) {
-      entry.roundScores.zip(scoreTexts).forEach { (score, text) ->
-        if (score != null) text.text = score.toString()
-      }
+      if (currentRoundNumber >= 3) return
+      entry.roundScores[currentRoundNumber]?.let { scoreTexts.text = it.toString() }
     }
 
   }
