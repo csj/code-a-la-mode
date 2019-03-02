@@ -97,7 +97,7 @@ class Window(private val dishWasher: DishWasher? = null) : Equipment() {
 
   private fun deliver(dish: Dish) {
     onDelivery(dish)
-    dishWasher?.addDishToQueue()
+    dishWasher?.addDish()
   }
 
   override fun receiveItem(player: Player, item: Item) {
