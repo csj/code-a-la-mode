@@ -98,7 +98,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 if (cell.x == 0) setX(8) else if (cell.x == 10) setX(cellWidth - 8) else setX(0)
                 setY(0)
               }
-              is Window -> image = "window.png"
+              is Window -> {
+                image = "window.png"
+                baseWidth = cellWidth / 2
+                baseHeight = cellHeight / 2
+              }
               is DishWasher -> image = "dishwasher.png"
             }
           }
