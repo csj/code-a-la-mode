@@ -56,7 +56,7 @@ class QueueView {
     val viewHeight = 187
 
     val customerSpritePadding = 5
-    val customerSpriteWidth = 214 / 2 - customerSpritePadding*2
+    val customerSpriteWidth = 214 / 2 - customerSpritePadding * 2
 
     private fun Sprite.center() {
       anchorY = 0.0
@@ -70,8 +70,8 @@ class QueueView {
         baseHeight = customerSpriteWidth * 3 / 4
         baseWidth = customerSpriteWidth * 3 / 4
         anchorX = 0.5
-        x = (135 + (i % 2) * (customerSpriteWidth + customerSpritePadding*2)) + customerSpriteWidth / 2
-        y = if(i < 2) 11 else 99
+        x = (135 + (i % 2) * (customerSpriteWidth + customerSpritePadding * 2)) + customerSpriteWidth / 2
+        y = if (i < 2) 11 else 99
         zIndex = 300
         isVisible = false
       }
@@ -83,11 +83,13 @@ class QueueView {
       strokeThickness = 2.0
       fontSize = 35
       fontWeight = Text.FontWeight.BOLDER
+
       x = 127 / 2
       y = viewHeight / 2
       anchorX = 0.5
       anchorY = 0.5
       zIndex = 350
+      alpha = 0.0
     }
 
     val waitingColour = 0x4286f4
@@ -118,14 +120,19 @@ class QueueView {
       val tip = customer.award - baseAward
       val edibles = customer.dish.contents
 
-      awardText.text = "$baseAward + $tip"
+      awardText.text = "${baseAward.toString().padStart(4)}\r\n    +\r\n${tip.toString().padStart(4)}"
+      awardText.alpha = 1.0
 
       backgroundBox.setFillColor(
-          when(customer.satisfaction) {
+          when (customer.satisfaction) {
             Satisfaction.Waiting -> waitingColour
             Satisfaction.Satisfied -> happyColour
             Satisfaction.Danger -> dangerColour
             Satisfaction.Leaving -> angryColour
+          }, Curve.IMMEDIATE).setAlpha(
+          when (customer.satisfaction) {
+            Satisfaction.Waiting -> 0.0
+            else -> 0.5
           }, Curve.IMMEDIATE)
 
       foodSprites.forEach { it.isVisible = false }

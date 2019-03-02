@@ -64,8 +64,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         val x = nextX
         val y = nextY
 
-//        println("${x} - ${y}")
-
         nextY += cellHeight
 
         cellViews.add(CellView(cell).apply {
@@ -77,8 +75,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               .setLineColor(0xffffff)
               .setFillAlpha(0.0)
               .setLineWidth(0)
-
-          println("${cell.x} ${cell.y}")
 
           val equipment = cell.equipment
           content = graphicEntityModule.createSprite().apply {
@@ -191,10 +187,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
-    println(cell)
     val newX = 140 + (cell.x - 1) * (132) + xRange.first
     val newY = 136 + (cell.y - 1) * (110) + yRange.first
-    println("$newX $newY")
 
     if (hardTransition) {
       setX(newX, Curve.NONE)
