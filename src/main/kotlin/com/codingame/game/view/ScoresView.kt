@@ -3,13 +3,14 @@ package com.codingame.game.view
 import com.codingame.game.Player
 import com.codingame.game.Referee
 import com.codingame.game.ScoreBoard
+import com.codingame.gameengine.module.entities.Text
 
 class ScoresView(matchPlayers: List<Player>) {
 
   val playerScoreViews = matchPlayers.mapIndexed { i, player ->
     player to PlayerScoreView(player).apply {
-      group.x = 10
-      group.y = 10 + (i * (1080 - 20 - 200))
+      group.x = 36
+      group.y = 34 + (i * (1080 - 36 - 36 - 186))
     }
   }.toMap()
 
@@ -21,27 +22,30 @@ class ScoresView(matchPlayers: List<Player>) {
   }
 
   inner class PlayerScoreView(player: Player) {
-    val viewWidth = 410
-    val viewHeight = 200
+    val viewWidth = 343
+    val viewHeight = 186
 
     private val playerAvatar = graphicEntityModule.createSprite().apply {
       image = player.avatarToken
-      x = (0.5 * viewWidth / 4).toInt()
-      y = viewHeight / 4
-      anchorX = 0.5
-      anchorY = 0.5
-      baseWidth = viewWidth / 4
-      baseHeight = viewWidth / 4
+      x = 22
+      y = 72
+      anchorX = 0.0
+      anchorY = 0.0
+      baseWidth = 93
+      baseHeight = 93
       zIndex = 350
     }
 
     private val playerNameText = graphicEntityModule.createText(player.nicknameToken).apply {
       x = viewWidth / 2
-      y = viewHeight * 3 / 4
+      y = 20
       anchorX = 0.5
-      anchorY = 0.5
-      fontSize = 50
-      fillColor = 0
+      anchorY = 0.0
+      fontSize = 40
+      fontWeight = Text.FontWeight.BOLDER
+      fillColor = 0xFFFFFF
+      strokeThickness = 3.0
+      strokeColor = 0
       zIndex = 350
 
     }
@@ -49,11 +53,11 @@ class ScoresView(matchPlayers: List<Player>) {
     private val scoreTexts = List(3) { i ->
       graphicEntityModule.createText("--").apply {
         fillColor = 0xffffff
-        fontSize = 45
+        fontSize = 35
         x = ((i + 1.5) * viewWidth / 4).toInt()
-        y = viewHeight * 1 / 4
-        anchorX = 0.5
-        anchorY = 0.5
+        y = 72
+        anchorX = 0.0
+        anchorY = 0.0
         zIndex = 350
       }
     }
@@ -61,11 +65,11 @@ class ScoresView(matchPlayers: List<Player>) {
     val messageText =
       graphicEntityModule.createText("").apply {
         fillColor = 0xffffff
-        fontSize = 35
-        x = ((1 + 1.5) * viewWidth / 4).toInt()
-        y = viewHeight * 2 / 4
-        anchorX = 0.5
-        anchorY = 0.5
+        fontSize = 25
+        x = 120
+        y = viewHeight - 20
+        anchorX = 0.0
+        anchorY = 1.0
         zIndex = 350
       }
 
@@ -75,6 +79,7 @@ class ScoresView(matchPlayers: List<Player>) {
       width = viewWidth
       height = viewHeight
       zIndex = 200
+      alpha = 0.5
     }!!
 
     val group = graphicEntityModule.createGroup(*scoreTexts.toTypedArray()).apply {
