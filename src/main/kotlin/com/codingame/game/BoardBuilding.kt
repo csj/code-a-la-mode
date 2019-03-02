@@ -42,7 +42,7 @@ val boardLayout2 = listOf(
 /* 3 */  "*.*..*..*.*",  // 3
 /* 4 */  "*.LA.MODE.*",  // 4
 /* 5 */  "*.........*",  // 5
-/* 6 */  "*..*****..*"   // 6
+/* 6 */  "***********"   // 6
 //        ABCDEFGHIJK
 )
 
@@ -51,7 +51,7 @@ val equipment2 = listOf(
     "A1", "A2", "A3", "A4", "A5",
     "K1", "K2", "K3", "K4", "K5",
 //    "H2", "C3", "F3", "I3",
-    "A6", "D6", "E6"       ,"G6", "H6", "K6"
+    "A6", "B6", "C6", "D6", "E6"       ,"G6", "H6", "I6", "J6", "K6"
     )
 
 fun buildEmptyBoard(): Board = Board(boardLayout2)

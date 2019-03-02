@@ -91,7 +91,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               is ChoppingBoard -> image = "board.png"
               is GeneralCrate -> image = "bowl.png"
               is Oven -> {
-                image = if (cell.y == 0) "oven_top.png" else if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "oven.png"
+                image = if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "oven_top.png"
 //                baseHeight = if (cell.x == 0 || cell.x == 10) 131 else 99
 //                baseWidth = if (cell.x == 0 || cell.x == 10) 140 else 132
                 baseHeight = cellHeight
@@ -233,11 +233,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       graphicEntityModule.createSprite().apply {
         anchorX = 0.0
         anchorY = 0.0
-        baseHeight = 35
-        baseWidth = 45
+        baseHeight = 40
+        baseWidth = 50
         zIndex = 50 + i
-        x = 15 + (i % 2) * 45
-        y = if (i < 2) 10 else 45
+        x = 20 + (i % 2) * 52
+        y = if (i < 2) 30 else 70
         isVisible = false
       }
     }
