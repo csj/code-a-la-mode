@@ -5,8 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.codingame.game.Player;
-import com.codingame.game.view.BoardView;
 import com.codingame.gameengine.core.AbstractPlayer;
 import com.codingame.gameengine.core.GameManager;
 import com.codingame.gameengine.core.Module;
