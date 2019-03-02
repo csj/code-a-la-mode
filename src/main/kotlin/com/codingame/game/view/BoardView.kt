@@ -19,6 +19,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   lateinit var board: Board
   lateinit var players: List<Player>
   var ovenSprite: Sprite? = null
+  var ovenFireSprite: Sprite? = null
 
   private var cellViews: MutableList<CellView> = mutableListOf()
 
@@ -106,24 +107,36 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
           if(equipment is Oven) {
             ovenSprite = content
-            tooltipModule.registerEntity(ovenSprite)
-          }
-
-          secondaryContent = graphicEntityModule.createSprite().apply {
-            when (equipment) {
-              is StrawberryCrate -> image = "strawberry.png"
-              is BlueberryCrate -> image = "blueberries.png"
-              is IceCreamCrate -> image = "ice-cream.png"
-              is DoughCrate -> image = "dough.png"
-              else -> isVisible = false
+            secondaryContent = graphicEntityModule.createSprite().apply {
+              baseHeight = cellWidth - 8
+              baseWidth = cellWidth - 8
+              anchorX = 0.5
+              anchorY = 0.5
+              setX(cellWidth / 2)
+              setY(cellWidth / 2)
+              image = "fire.png"
+              zIndex = 4000
+              isVisible = false
             }
+            ovenFireSprite = secondaryContent
+            tooltipModule.registerEntity(ovenSprite)
+          } else {
+            secondaryContent = graphicEntityModule.createSprite().apply {
+              when (equipment) {
+                is StrawberryCrate -> image = "strawberry.png"
+                is BlueberryCrate -> image = "blueberries.png"
+                is IceCreamCrate -> image = "ice-cream.png"
+                is DoughCrate -> image = "dough.png"
+                else -> isVisible = false
+              }
             baseHeight = 132 / 2
             baseWidth = 110 / 2
-            anchorX = 0.5
+              anchorX = 0.5
             anchorY = if(cell.x == 0 || cell.x == 10) 1.5 else 0.0
             alpha = 1.0
-            setX(cellWidth / 2)
+              setX(cellWidth / 2)
             setY(0)
+            }
           }
 
           text = graphicEntityModule.createText(cell.character?.toString() ?: "").apply {
@@ -189,7 +202,10 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     board.allCells.zip(cellViews).forEach { (cell, view) ->
       view.itemSpriteGroup.update(cell.item) }
 
-    board.oven()?.also { tooltipModule.updateExtraTooltipText(ovenSprite, it.toViewString()) }
+    board.oven()?.also {
+      tooltipModule.updateExtraTooltipText(ovenSprite, it.toViewString())
+      ovenFireSprite!!.isVisible = it.state is OvenState.Burning
+    }
   }
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
@@ -256,7 +272,9 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       }
     }
 
-    val group = graphicEntityModule.createGroup(*(subSprites + mainSprite).toTypedArray())
+    val group = graphicEntityModule.createGroup(*subSprites.toTypedArray()).apply {
+      add(mainSprite)
+    }
 
 
     init {
@@ -268,6 +286,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       set(value) {
         mainSprite.isVisible = value
         subSprites.forEach { it.isVisible = value }
+        field = value
       }
 
     fun update(item: Item?) {
@@ -283,7 +302,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is ChoppedStrawberries -> image = "strawberries-cut.png"
           is Croissant -> image = "croissant.png"
           is Tart -> image = "tart.png"
-          is BurntFood -> image = "coal.png"
           is Dish -> {
             image = "plate.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->
