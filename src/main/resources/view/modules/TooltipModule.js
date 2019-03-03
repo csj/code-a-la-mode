@@ -87,7 +87,7 @@ function getMouseMoveFunc(tooltip, container, module) {
                         if (params != null)
                             for (var key in params) {
                                 // check if the property/key is defined in the object itself, not in parent
-                                if (params.hasOwnProperty(key)) {
+                                if (params.hasOwnProperty(key) && key.length > 0) {
                                     var txt = key + ": " + params[key];
                                     if((tooltipBlocks.indexOf(txt) > -1)) continue;
                                     found = true;

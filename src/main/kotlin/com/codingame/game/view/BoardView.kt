@@ -173,6 +173,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         anchorX = 0.5
         anchorY = 1.0
         tint = player.colorToken
+        isVisible = false
       }
       player.itemSprite = ItemSpriteGroup(cellWidth)
 

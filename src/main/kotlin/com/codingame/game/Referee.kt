@@ -242,8 +242,8 @@ class Referee : AbstractReferee() {
           }
         }
 
-        if(splittedOutput.size > 1) player.message = splittedOutput[1].take(20)
-
+        if(splittedOutput.size > 1) player.message = splittedOutput[1].take(9)
+        else player.message = ""
         view.boardView.updatePlayer(player, path)
       }
 
