@@ -1,8 +1,10 @@
 package com.codingame.game.model
 
+import com.codingame.game.rand
 import com.codingame.game.view.BoardView
 import com.codingame.gameengine.module.entities.*
 import java.util.*
+import kotlin.math.absoluteValue
 
 class CellView(val cell: Cell) {
   lateinit var background: Rectangle
@@ -13,7 +15,7 @@ class CellView(val cell: Cell) {
   lateinit var text: Text
 }
 
-class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null) {
+class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null, val playerId: Int? = null) {
   constructor(): this(-1, -1)
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
@@ -60,14 +62,32 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
     return buildDistanceMap(partnerCell).distances[target]
   }
 
-  fun describeChar() = if (!isTable) '.' else equipment?.describeChar ?: '#'
+  fun describeChar(player : Int) : Char {
+    if(playerId != null){
+      if(player == 1) return (1 - playerId).toString()[0]
+
+      return playerId.toString()[0]
+    }
+
+    return if (!isTable) '.' else equipment?.describeChar ?: '#'
+  }
 }
 
 
-class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
+class Board(val width: Int, val height: Int, allSpawns: String, val layout: List<String>? = null) {
   lateinit var window: Window
+  constructor(layout: List<String>, allSpawns : String): this(layout[0].length, layout.size, allSpawns, layout)
+  val spawnLocations = arrayOf("D3", "H3")
 
-  constructor(layout: List<String>): this(layout[0].length, layout.size, layout)
+  init {
+    var spawns = allSpawns.split(' ')
+
+    spawnLocations[0] = spawns[rand.nextInt(spawns.count())]
+    spawnLocations[1] = spawns[rand.nextInt(spawns.count())]
+
+    while(spawnLocations[0] == spawnLocations[1])
+      spawnLocations[1] = spawns[rand.nextInt(spawns.count())]
+  }
 
   fun reset() { allCells.forEach { c ->
     c.equipment?.reset()
@@ -77,12 +97,21 @@ class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
   val cells = Array(width) { x ->
     Array(height) { y ->
       Cell(x, y, layout != null && layout[y][x] != '.',
-          layout?.get(y)?.get(x)?.let { if (it !in listOf('*', '.')) it else null })
+          layout?.get(y)?.get(x)?.let { if (it !in listOf('*', '.')) it else null }, getPlayerPos(x, y))
     }
   }
 
   val allCells = cells.flatten()
 
+  fun getPlayerPos(x: Int, y: Int) : Int?{
+    for (i in 0..1){
+      var posX = spawnLocations[i][0]-'A'
+      var posY = spawnLocations[i][1]-'0'
+      if(posX == x && posY == y) return i
+    }
+
+    return null
+  }
   operator fun get(x: Int, y: Int): Cell = cells[x][y]
   operator fun get(cellName: String): Cell {
     val file = cellName[0]
