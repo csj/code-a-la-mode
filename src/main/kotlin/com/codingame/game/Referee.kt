@@ -257,19 +257,29 @@ class Referee : AbstractReferee() {
         processPlayerActions(thePlayer)
       } catch (ex: LogicException) {
         gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message}")
-      } catch (ex: Exception) {
-          gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
-          thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
-          if (thePlayer.heldItem is Dish) {
-            board.allCells.mapNotNull { (it.equipment as? DishWasher) }
-                .first().let { it.addDish() }
-          }
+      }
+      catch(ex: AbstractPlayer.TimeoutException){
+        disablePlayer(thePlayer, "timeout")
+      }
+      catch (ex: Exception) {
+        disablePlayer(thePlayer, ex.message)
       }
 
       queue.updateRemainingCustomers()
     }
+
+    fun disablePlayer(player: Player, message: String?){
+      player.crashed = true
+      gameManager.addToGameSummary("${player.nicknameToken}: ${message} (deactivating?)")
+      player.deactivate("${player.nicknameToken}: ${message}")
+      if (player.heldItem is Dish) {
+        board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+                .first().let { it.addDish() }
+      }
+    }
   }
 }
+
 
 private fun Player.describeCustomers(customers: List<Customer>) {
   customers
