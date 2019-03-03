@@ -177,6 +177,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       player.itemSprite = ItemSpriteGroup(cellWidth)
 
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
+      tooltipModule.registerEntity(player.sprite, player.toViewString())
     }
   }
 

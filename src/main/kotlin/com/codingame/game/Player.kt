@@ -14,8 +14,12 @@ operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo
 
 class Player : AbstractMultiplayerPlayer() {
   var message : String = ""
-
+  fun toViewString()  : String
+  {
+    return "CHEF:${this.nicknameToken}"
+  }
   override fun toString() = this.nicknameToken
+
   override fun getExpectedOutputLines() = 1
   lateinit var sprite:Group
   lateinit var itemSprite: BoardView.ItemSpriteGroup
