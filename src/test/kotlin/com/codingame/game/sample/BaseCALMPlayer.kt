@@ -17,10 +17,10 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
     }
 
     layout = List(height) { scanner.next() }
+        .also { stderr.println("Table layout:\n$it")}
   }
 
   protected fun readInputs(): GameState {
-//    scanner.next().also { stderr.println("Read: $it, expecting number of turns")}
     val turnsRemaining = scanner.nextInt()
         .also { stderr.println("Turns remaining: $it") }
     val myPlayer = Player(scanner.nextInt(), scanner.nextInt(), Item.parse(scanner.next()))

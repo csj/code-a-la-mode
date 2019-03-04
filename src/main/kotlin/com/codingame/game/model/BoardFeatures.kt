@@ -62,14 +62,10 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
     return buildDistanceMap(partnerCell).distances[target]
   }
 
-  fun describeChar(player : Int) : Char {
-    if(playerId != null){
-      if(player == 1) return (1 - playerId).toString()[0]
-
-      return playerId.toString()[0]
-    }
-
-    return if (!isTable) '.' else equipment?.describeChar ?: '#'
+  fun describeChar(invert: Boolean): Char = if(playerId != null) {
+    '0' + if(invert) (1 - playerId) else playerId
+  } else {
+    if (!isTable) '.' else equipment?.describeChar ?: '#'
   }
 }
 
@@ -77,17 +73,7 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
 class Board(val width: Int, val height: Int, allSpawns: String, val layout: List<String>? = null) {
   lateinit var window: Window
   constructor(layout: List<String>, allSpawns : String): this(layout[0].length, layout.size, allSpawns, layout)
-  val spawnLocations = arrayOf("D3", "H3")
-
-  init {
-    var spawns = allSpawns.split(' ')
-
-    spawnLocations[0] = spawns[rand.nextInt(spawns.count())]
-    spawnLocations[1] = spawns[rand.nextInt(spawns.count())]
-
-    while(spawnLocations[0] == spawnLocations[1])
-      spawnLocations[1] = spawns[rand.nextInt(spawns.count())]
-  }
+  val spawnLocations = allSpawns.split(' ').shuffled(rand).take(2)
 
   fun reset() { allCells.forEach { c ->
     c.equipment?.reset()
@@ -103,10 +89,10 @@ class Board(val width: Int, val height: Int, allSpawns: String, val layout: List
 
   val allCells = cells.flatten()
 
-  fun getPlayerPos(x: Int, y: Int) : Int?{
+  private fun getPlayerPos(x: Int, y: Int) : Int?{
     for (i in 0..1){
-      var posX = spawnLocations[i][0]-'A'
-      var posY = spawnLocations[i][1]-'0'
+      val posX = spawnLocations[i][0]-'A'
+      val posY = spawnLocations[i][1]-'0'
       if(posX == x && posY == y) return i
     }
 

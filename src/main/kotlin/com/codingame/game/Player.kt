@@ -15,10 +15,7 @@ operator fun Int?.compareTo(other: Int): Int = (this ?: Int.MAX_VALUE).compareTo
 class Player : AbstractMultiplayerPlayer() {
   var message : String = ""
   var crashed : Boolean = false
-  fun toViewString()  : String
-  {
-    return "CHEF:${this.nicknameToken}"
-  }
+  fun toViewString() = "CHEF:${this.nicknameToken}"
   override fun toString() = this.nicknameToken
 
   override fun getExpectedOutputLines() = 1

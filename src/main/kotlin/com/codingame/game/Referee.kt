@@ -77,7 +77,7 @@ class Referee : AbstractReferee() {
       player.describeCustomers(originalQueue)
 
       board.cells.transpose { Cell() }.forEach { cellRow ->
-        player.sendInputLine(cellRow.map { it.describeChar(player.index) }.joinToString(""))
+        player.sendInputLine(cellRow.map { it.describeChar(player.index == 1) }.joinToString(""))
       }
     }
 
@@ -125,10 +125,7 @@ class Referee : AbstractReferee() {
 
   override fun onEnd() {
     scoreBoard.forEach { player, entry ->
-      if(!player.crashed)
-        player.score = entry.total()
-      else
-        player.score= -1
+      player.score = if (player.crashed) -1 else entry.total()
     }
 
     endScreenModule.titleRankingsSprite = "logo.png"
