@@ -64,8 +64,8 @@ data class Customer(val dish: Dish, var award: Int) {
     private val possiblePlateContents =
         mapOf(IceCream to 200, Blueberries to 250) +
         (if (league >= League.StrawberriesChoppingBoard) mapOf(ChoppedStrawberries to 400) else mapOf()) +
-        (if (league >= League.Croissants) mapOf(Croissant to 600) else mapOf()) +
-        (if (league >= League.All) mapOf(Tart to 800) else mapOf())
+        (if (league >= League.Croissants) mapOf(Croissant to 650) else mapOf()) +
+        (if (league >= League.All) mapOf(Tart to 1000) else mapOf())
 
     private fun randomOrder(): Dish =
         Dish(possiblePlateContents.keys.shuffled(rand)
