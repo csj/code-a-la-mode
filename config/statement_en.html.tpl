@@ -66,7 +66,7 @@
       </p>
       <p>
         Round 1: player A with player B <br>
-        Round 2: player A with player C <br>
+        Round 2: player C with player A <br>
         Round 3: player B with player C <br>
       </p>
       <p>
@@ -88,7 +88,7 @@
         <b>The kitchen</b>
       </p>
       <p>
-        The kitchen contains: floor cells (on which the chefs can move) (<const>.</const>), a bin (<const>G</const>, empty tables (<const>#</const>), a dish disposer (<const>D</const>) and a customer window (<const>W</const>).
+        The kitchen contains: floor cells (on which the chefs can move) (<const>.</const>), empty tables (<const>#</const>), a dishwasher (<const>D</const>) and a customer window (<const>W</const>).
       </p>
       <!-- BEGIN level1 -->
       <p>
@@ -131,7 +131,7 @@
         <b>The customers</b>
       </p>
       <p>
-        At most 3 customers are waiting for their order. A customer's order can contain 2 to 4 desserts. Each delivered order rewards the team of chefs with points, but the longer the customer waits, the less points they get.
+        At most 3 customers are waiting for their order. A customer's order can contain 2 to 4 desserts. Each delivered order rewards the team of chefs with points, but the longer the customer waits, the fewer points the chefs get.
       </p>
       <!-- BEGIN level1 -->
       <p>
@@ -148,7 +148,7 @@
       </div>
       <!-- END -->
       <p>
-        There are maximum 3 dishes in play. As soon as an order is validated, a new dish is made available in the disposer.
+        There are maximum 3 dishes in play. As soon as an order is sent through the window, a new dish appears in the dishwasher.
       </p>
       <p>
         <b>The desserts</b>
@@ -164,8 +164,8 @@
           The chefs can also prepare a classic dessert: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>). 
         </p>
         <p>
-          Strawberries need to be cut at the chopping board before being dressed. </br>
-          Chopping board: <const>CHOPPED_STRAWBERRIES</const> => (<const>STRAWBERRIES</const>)
+          Strawberries need to be cut at the chopping board before being added to a dish. </br>
+          Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
         </p>
       </div>
       <!-- END -->
@@ -174,29 +174,29 @@
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
         <p>
-          The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANTS</const>).
+          The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANT</const>).
         </p>
         <p>
-          Strawberries need to be cut at the chopping board before being dressed. </br>
+          Strawberries need to be cut at the chopping board before being added to a dish. </br>
           Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
         </p>
         <p>
-          A dough needs to be cooked into croissants at the oven before being dressed. </br>
-          Oven: <const>DOUGH</const> => <const>CROISSANTS</const>
+          A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
+          Oven: <const>DOUGH</const> => <const>CROISSANT</const>
         </p>
       </div>
       <!-- END -->
       <!-- BEGIN level4 -->
       <p>
-          The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANTS</const>).
+          The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANT</const>).
         </p>
         <p>
           Strawberries need to be cut at the chopping board before being dressed. </br>
           Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
         </p>
         <p>
-          A dough needs to be cooked into croissants at the oven before being dressed. </br>
-          Oven: <const>DOUGH</const> => <const>CROISSANTS</const>
+          A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
+          Oven: <const>DOUGH</const> => <const>CROISSANT</const>
         </p>
       <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
@@ -205,13 +205,13 @@
           The chefs can also prepare one advanced dessert: blueberry tart (<const>TART</const>).
         </p>
         <p>
-          A dough needs to be chopped at the chopping board first, then mixed with blueberries and cooked into a blueberry tart in the oven before being dressed. </br>
+          A ball of dough needs to be chopped at the chopping board first, then mixed with blueberries and cooked into a blueberry tart in the oven before being added to a dish. </br>
           Chopping board: <const>DOUGH</const> => <const>CHOPPED_DOUGH</const>
           <const>CHOPPED_DOUGH</const> + <const>BLUEBERRIES</const> => <const>RAW_TART</const>
           Oven: <const>RAW_TART</const> => <const>TART</const>
         </p>
         <p>
-          Cooking takes <const>5</const> turns. If food is not taken from the oven after <const>5</const> turns, the food gets burned and must be thrown into the bin.
+          Cooking takes <const>5</const> turns, after which the food is READY. The food will remain READY for <const>5</const> more turns, after which it will be burned away and need to be restarted.
         </p>
       </div>
       <!-- END -->
@@ -219,7 +219,7 @@
         <b>Actions</b>
       </p>
       <p>
-        To move to a different cell, use the command <action>MOVE x y</action>. The chefs move horizontally and vertically, of <const>4</const> cells at most. They can't pass onto each other.
+        To move to a different cell, use the command <action>MOVE x y</action>. The chefs move horizontally and vertically, of <const>4</const> cells at most. They can't occupy the same cell or pass through each other.
       </p>
       <p>
         To interact with a cell (x,y), use the command <action>USE x y</action>. If the chef is adjacent to the cell when using the <action>USE</action> command, the action is successful; else, the chef will move closer to that cell. The <action>USE</action> command works diagonally (8-adjacency).
@@ -286,10 +286,13 @@
             The chefs cannot put food on the floor.
           </li>
           <li>
+            The chefs cannot put a ball of ice cream on the table (it will melt). But all other items can be placed on a table.
+          </li>
+          <li>
             The chefs cannot pick up a dish if they're already carrying one.
           </li>
           <li>
-            As soon as food is put on a dish, it cannot be removed from it. To empty a plate, USE the bin.
+            As soon as food is put on a dish, it cannot be removed from it. To empty a dish, USE the dishwasher.
           </li>
           <li>
             For every turn a customer waits for an order, the reward is decreased by 1.
