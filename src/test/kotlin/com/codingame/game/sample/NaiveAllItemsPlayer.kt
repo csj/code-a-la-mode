@@ -1,6 +1,7 @@
 package com.codingame.game.sample
 
 import com.codingame.game.model.*
+import com.codingame.game.splitAccumulate
 import com.codingame.game.tryNext
 import sample.*
 import sample.Item
@@ -84,7 +85,11 @@ Have a banana
 Have a whole bunch
 It doesn't matter
 what you had for
-lunch, just eat it!""".split("\n").iterator()
+lunch, just eat it!"""
+      .split("\n", " ")
+      .asSequence()
+      .splitAccumulate()
+      .iterator()
 
   lateinit var goal: Item
   lateinit var inputs: GameState

@@ -4,6 +4,7 @@ import com.codingame.game.Player
 import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.*
 import tooltipModule.TooltipModule
+import java.lang.Exception
 
 
 class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
@@ -173,10 +174,12 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         anchorX = 0.5
         anchorY = 1.0
         tint = player.colorToken
+        isVisible = false
       }
       player.itemSprite = ItemSpriteGroup(cellWidth)
 
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
+      tooltipModule.registerEntity(player.sprite, player.toViewString())
     }
   }
 
@@ -208,22 +211,23 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 
   fun updatePlayer(player: Player, playerPath: List<Cell>?, hardTransition: Boolean = false) {
-    player.characterSprite.isVisible = true
-    player.itemSprite.isVisible = true
+    if(!player.crashed){
+      player.characterSprite.isVisible = true
+      player.itemSprite.isVisible = true
 
-    player.itemSprite.update(player.heldItem)
+      player.itemSprite.update(player.heldItem)
 
-    if (playerPath == null) {
-      player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
-    } else {
-      playerPath.forEachIndexed { index, cell ->
-        player.sprite.setLocation(cell)
-        graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.sprite)
+      if (playerPath == null) {
+          player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
+      } else {
+        playerPath.forEachIndexed { index, cell ->
+          player.sprite.setLocation(cell)
+          graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.sprite)
+        }
       }
+
+      graphicEntityModule.commitEntityState(0.9, player.sprite)
     }
-
-    graphicEntityModule.commitEntityState(0.9, player.sprite)
-
   }
 
   fun removePlayer(player: Player) {

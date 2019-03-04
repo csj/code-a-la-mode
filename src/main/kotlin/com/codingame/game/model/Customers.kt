@@ -5,7 +5,7 @@ import com.codingame.game.Player
 import com.codingame.game.league
 import com.codingame.game.rand
 
-val originalQueue = List(50) { Customer.randomCustomer() }
+val originalQueue = List(20) { Customer.randomCustomer() }
 
 class CustomerQueue() {
   val queueIterator = originalQueue.iterator()

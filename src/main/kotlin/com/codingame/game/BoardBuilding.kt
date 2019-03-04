@@ -37,7 +37,10 @@ val ovenLocs = listOf(
     "K1", "K2", "K3", "K4", "K5"
 )
 
-fun buildEmptyBoard(): Board = Board(boardLayout)
+val spawnLocs = "B1 C1 D1 E1 F1 G1 H1 I1 J1 B5 C5 D5 E5 F5 G5 H5 I5 J5 B2 B3 B4 J2 J3 J4 D3 E3 E4 G2 G3 H3"
+
+
+fun buildEmptyBoard(): Board = Board(boardLayout, spawnLocs)
 
 fun buildBoard(): Board {
   val board = buildEmptyBoard()

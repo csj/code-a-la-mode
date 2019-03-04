@@ -62,6 +62,7 @@ class ScoresView(matchPlayers: List<Player>) {
     }
     scores.forEach { player, entry ->
       playerScoreViews[player]!!.update(entry)
+
       playerScoreViews[player]!!.messageText.text = (player.message)
     }
   }
@@ -136,6 +137,9 @@ class ScoresView(matchPlayers: List<Player>) {
     }
 
     fun update(entry: Referee.ScoreEntry) {
+      if(playerNameText.text.length > 8 && !playerNameText.text.endsWith("..."))
+        playerNameText.text = playerNameText.text.substring(0,8) + "..."
+
       if (currentRoundNumber >= 3) return
       entry.roundScores[currentRoundNumber]?.let { scoreTexts.text = it.toString() }
     }
