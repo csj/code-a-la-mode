@@ -1,14 +1,11 @@
 package com.codingame.game.model
 
-import com.codingame.game.League
-import com.codingame.game.Player
-import com.codingame.game.league
-import com.codingame.game.rand
+import com.codingame.game.*
 
 val originalQueue = List(20) { Customer.randomCustomer() }
 
-class CustomerQueue() {
-  val queueIterator = originalQueue.iterator()
+class CustomerQueue {
+  private val queueIterator = originalQueue.loopingIterator()
 
   val activeCustomers: MutableList<Customer> = mutableListOf()
 

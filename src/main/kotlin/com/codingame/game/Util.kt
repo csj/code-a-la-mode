@@ -34,3 +34,7 @@ fun Sequence<String>.splitAccumulate() = sequence {
 
   yield(currentLine.substring(1))
 }
+
+fun <E> List<E>.loopingIterator(): Iterator<E> =
+    sequence { while (true) yieldAll(this@loopingIterator) }.iterator()
+
