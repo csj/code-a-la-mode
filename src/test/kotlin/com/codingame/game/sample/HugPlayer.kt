@@ -8,7 +8,7 @@ class HugPlayer(stdin: InputStream, stdout: PrintStream, stderr: PrintStream): B
   init {
     while (true) {
       val inputs = readInputs()
-     // stdout.println("MOVE ${inputs.myFriend.x} ${inputs.myFriend.y}; WWWWWWWWWWWWWWWWWWWWWWW")
+      stdout.println("MOVE ${inputs.myFriend.x} ${inputs.myFriend.y}; WWWWWWWWWWWWWWWWWWWWWWW")
     }
   }
 }

@@ -22,3 +22,17 @@ inline fun <reified T> Array<Array<T>>.transpose(default: () -> T): Array<Array<
   }
   return trans
 }
+
+fun Sequence<String>.splitAccumulate() = sequence {
+  var currentLine = ""
+
+  forEach { tok ->
+    if (currentLine.length + tok.length > 9) {
+      yield(currentLine.substring(1))
+      currentLine = ""
+    }
+    currentLine += " $tok"
+  }
+
+  yield(currentLine.substring(1))
+}
