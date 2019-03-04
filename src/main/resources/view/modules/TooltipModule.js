@@ -61,17 +61,18 @@ function getMouseMoveFunc(tooltip, container, module) {
 
             if (showing.length) {
 
-                var width = 1910-590;
-                var height = 840;
-                var x0 = 590;
-                var y0 = 10;
+                var width = 1910-430;
+                var height = 1080-264;
+                var x0 = 430;
+                var y0 = 264;
 
                 var columns = 11;
                 var rows = 7;
-                var cellsize = width / columns;
+//                var cellsize = width / columns;
+                var cellsize = 132; // TODO : Variable cell size & hardcoded cellX/Y calcs
                 var scale = height / (cellsize * (rows ))
-                var cellX = (Math.floor((point.x - x0) / cellsize / scale));
-                var cellY = (Math.floor((point.y - y0) / cellsize / scale) );
+                var cellX = (Math.floor((point.x - x0) / 132));
+                var cellY = (Math.floor((point.y - y0) / 110));
 
                 const tooltipBlocks = [];
                 var found = false;
@@ -86,7 +87,7 @@ function getMouseMoveFunc(tooltip, container, module) {
                         if (params != null)
                             for (var key in params) {
                                 // check if the property/key is defined in the object itself, not in parent
-                                if (params.hasOwnProperty(key)) {
+                                if (params.hasOwnProperty(key) && key.length > 0) {
                                     var txt = key + ": " + params[key];
                                     if((tooltipBlocks.indexOf(txt) > -1)) continue;
                                     found = true;
@@ -157,10 +158,10 @@ export class TooltipModule {
         };
         this.lastProgress = 1;
         this.lastFrame = 0;
-        this.width = 1320;
-        this.height = 840;
-        this.x0 = 570;
-        this.y0 = 10;
+        this.width = 1910 - 430;
+        this.height = 1080-264;
+        this.x0 = 430;
+        this.y0 = 264;
     }
 
     static get name() {

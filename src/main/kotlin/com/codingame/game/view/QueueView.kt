@@ -3,6 +3,7 @@ package com.codingame.game.view
 import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Sprite
+import com.codingame.gameengine.module.entities.Text
 import tooltipModule.TooltipModule
 
 class QueueView {
@@ -34,7 +35,7 @@ class QueueView {
 
   fun updateQueue() {
     customerViews.forEachIndexed { index, custView ->
-      custView.group.apply { x = 10 + index * 440; y = 10 }
+      custView.group.apply { y = index * (187 + 20); x = 36 }
 
       if (index >= queue.activeCustomers.size) {
         custView.group.isVisible = false
@@ -51,14 +52,14 @@ class QueueView {
   }
 
   inner class CustomerView {
-    val viewWidth = 420
-    val viewHeight = 210
+    val viewWidth = 343
+    val viewHeight = 187
 
     val customerSpritePadding = 5
-    val customerSpriteWidth = viewWidth / 4 - customerSpritePadding*2
+    val customerSpriteWidth = 214 / 2 - customerSpritePadding * 2
 
     private fun Sprite.center() {
-      anchorY = 0.5
+      anchorY = 0.0
       anchorX = 0.5
       x = customerSpriteWidth / 2
       y = customerSpriteWidth / 2
@@ -66,11 +67,11 @@ class QueueView {
 
     val foodSprites = List(4) { i ->
       graphicEntityModule.createSprite().apply {
-        center()
-        baseHeight = customerSpriteWidth
-        baseWidth = customerSpriteWidth
-        x = ((i + 0.5) * (customerSpriteWidth + customerSpritePadding*2)).toInt()
-        y = (0.5 * customerSpriteWidth + customerSpritePadding).toInt()
+        baseHeight = customerSpriteWidth * 3 / 4
+        baseWidth = customerSpriteWidth * 3 / 4
+        anchorX = 0.5
+        x = (135 + (i % 2) * (customerSpriteWidth + customerSpritePadding * 2)) + customerSpriteWidth / 2
+        y = if (i < 2) 11 else 99
         zIndex = 300
         isVisible = false
       }
@@ -78,12 +79,17 @@ class QueueView {
 
     val awardText = graphicEntityModule.createText("0").apply {
       fillColor = 0xffffff
-      fontSize = 50
-      x = viewWidth / 2
-      y = viewHeight * 3 / 4
+      strokeColor = 0x000000
+      strokeThickness = 2.0
+      fontSize = 35
+      fontWeight = Text.FontWeight.BOLDER
+
+      x = 127 / 2
+      y = viewHeight / 2
       anchorX = 0.5
       anchorY = 0.5
       zIndex = 350
+      alpha = 0.0
     }
 
     val waitingColour = 0x4286f4
@@ -96,8 +102,12 @@ class QueueView {
       width = viewWidth
       height = viewHeight
       zIndex = 200
+      alpha = 0.0
     }
-    val group = graphicEntityModule.createGroup(*(foodSprites + awardText + backgroundBox).toTypedArray())
+    val group = graphicEntityModule.createGroup(*foodSprites.toTypedArray()).apply {
+      add(awardText)
+      add(backgroundBox)
+    }
 
     init {
       tooltipModule.registerEntity(group)
@@ -106,17 +116,23 @@ class QueueView {
     fun update(customer: Customer) {
       tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
 
-      val award = customer.award
+      val baseAward = customer.originalAward - Constants.TIP
+      val tip = customer.award - baseAward
       val edibles = customer.dish.contents
 
-      awardText.text = award.toString()
+      awardText.text = "${baseAward.toString().padStart(4)}\r\n    +\r\n${tip.toString().padStart(4)}"
+      awardText.alpha = 1.0
 
       backgroundBox.setFillColor(
-          when(customer.satisfaction) {
+          when (customer.satisfaction) {
             Satisfaction.Waiting -> waitingColour
             Satisfaction.Satisfied -> happyColour
             Satisfaction.Danger -> dangerColour
             Satisfaction.Leaving -> angryColour
+          }, Curve.IMMEDIATE).setAlpha(
+          when (customer.satisfaction) {
+            Satisfaction.Waiting -> 0.0
+            else -> 0.5
           }, Curve.IMMEDIATE)
 
       foodSprites.forEach { it.isVisible = false }

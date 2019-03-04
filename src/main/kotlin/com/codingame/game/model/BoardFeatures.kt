@@ -1,8 +1,10 @@
 package com.codingame.game.model
 
+import com.codingame.game.rand
 import com.codingame.game.view.BoardView
 import com.codingame.gameengine.module.entities.*
 import java.util.*
+import kotlin.math.absoluteValue
 
 class CellView(val cell: Cell) {
   lateinit var background: Rectangle
@@ -13,7 +15,8 @@ class CellView(val cell: Cell) {
   lateinit var text: Text
 }
 
-class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null) {
+class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null, val playerId: Int? = null) {
+  constructor(): this(-1, -1)
   override fun toString(): String = "($x, $y)"
   private val straightNeighbours = mutableListOf<Cell>()
   private val diagonalNeighbours = mutableListOf<Cell>()
@@ -59,14 +62,18 @@ class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: C
     return buildDistanceMap(partnerCell).distances[target]
   }
 
-  fun describeChar() = if (!isTable) '.' else equipment?.describeChar ?: '#'
+  fun describeChar(invert: Boolean): Char = if(playerId != null) {
+    '0' + if(invert) (1 - playerId) else playerId
+  } else {
+    if (!isTable) '.' else equipment?.describeChar ?: '#'
+  }
 }
 
 
-class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
+class Board(val width: Int, val height: Int, allSpawns: String, val layout: List<String>? = null) {
   lateinit var window: Window
-
-  constructor(layout: List<String>): this(layout[0].length, layout.size, layout)
+  constructor(layout: List<String>, allSpawns : String): this(layout[0].length, layout.size, allSpawns, layout)
+  val spawnLocations = allSpawns.split(' ').shuffled(rand).take(2)
 
   fun reset() { allCells.forEach { c ->
     c.equipment?.reset()
@@ -76,12 +83,21 @@ class Board(val width: Int, val height: Int, val layout: List<String>? = null) {
   val cells = Array(width) { x ->
     Array(height) { y ->
       Cell(x, y, layout != null && layout[y][x] != '.',
-          layout?.get(y)?.get(x)?.let { if (it !in listOf('*', '.')) it else null })
+          layout?.get(y)?.get(x)?.let { if (it !in listOf('*', '.')) it else null }, getPlayerPos(x, y))
     }
   }
 
   val allCells = cells.flatten()
 
+  private fun getPlayerPos(x: Int, y: Int) : Int?{
+    for (i in 0..1){
+      val posX = spawnLocations[i][0]-'A'
+      val posY = spawnLocations[i][1]-'0'
+      if(posX == x && posY == y) return i
+    }
+
+    return null
+  }
   operator fun get(x: Int, y: Int): Cell = cells[x][y]
   operator fun get(cellName: String): Cell {
     val file = cellName[0]

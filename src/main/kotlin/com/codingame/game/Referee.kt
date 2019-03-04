@@ -58,9 +58,9 @@ class Referee : AbstractReferee() {
         matchPlayers[1] to ScoreEntry(arrayOf(0, null, 0)),
         matchPlayers[2] to ScoreEntry(arrayOf(null, 0, 0))
     )
-    gameManager.maxTurns = 600
+    gameManager.maxTurns = 606
 
-    league = when (4) {  // when (gameManager.leagueLevel) {
+    league = when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.StrawberriesChoppingBoard
       3 -> League.Croissants
@@ -71,55 +71,53 @@ class Referee : AbstractReferee() {
     view.boardView = BoardView(board, matchPlayers)
 
     view.queueView = QueueView()
-
     view.scoresView = ScoresView(matchPlayers)
 
     matchPlayers.forEach { player ->
-      //      println("Sending board size to $player")
-      //      player.sendInputLine("${board.width} ${board.height}")
-
       player.describeCustomers(originalQueue)
 
-      board.cells.transpose().forEach { cellRow ->
-        player.sendInputLine(cellRow.map { it.describeChar() }.joinToString(""))
+      board.cells.transpose { Cell() }.forEach { cellRow ->
+        player.sendInputLine(cellRow.map { it.describeChar(player.index == 1) }.joinToString(""))
       }
     }
 
-    nextRound()
-
   }
 
-  private lateinit var currentRound: RoundReferee
-  private var roundNumber: Int = 0
+  private var currentRound: RoundReferee? = null
+  private var roundNumber: Int = -1
 
-  private fun nextRound() {
+  private fun nextRound(): RoundReferee {
     val roundPlayers = matchPlayers.take(2)
     view.boardView.removePlayer(matchPlayers[2])
     Collections.rotate(matchPlayers, 1)
     board.reset()
     queue = CustomerQueue()
+    queue.getNewCustomers()
     queue.onFailure = { view.queueView.failed = true }
 
-    roundPlayers[0].apply { location = board["D3"]; heldItem = null }
-    roundPlayers[1].apply { location = board["H3"]; heldItem = null }
+    roundPlayers[0].apply { location = board[board.spawnLocations[0]]; heldItem = null }
+    roundPlayers[1].apply { location = board[board.spawnLocations[1]]; heldItem = null }
     view.boardView.board = board
     view.boardView.players = roundPlayers
     view.queueView.queue = queue
 
-    currentRound = RoundReferee(roundPlayers, roundNumber++)
+    roundNumber++
+    return RoundReferee(roundPlayers, roundNumber)
   }
 
   override fun gameTurn(turn: Int) {
-    if (currentRound.isOver()) {
-      if (roundNumber >= 3) gameManager.endGame()
-      else {
-        nextRound()
-        view.boardView.resetPlayers()
+    if (currentRound == null || currentRound!!.isOver()) {
+      currentRound = nextRound()
+      if (roundNumber >= 3) {
+        gameManager.endGame()
+        return
       }
+      view.boardView.resetPlayers()
     } else {
-      currentRound.gameTurn(turn)
+      currentRound!!.gameTurn(turn)
     }
 
+    view.scoresView.currentRoundNumber = roundNumber
     view.scoresView.update(scoreBoard)
     view.queueView.updateQueue()
     view.boardView.updateCells(board)
@@ -127,8 +125,9 @@ class Referee : AbstractReferee() {
 
   override fun onEnd() {
     scoreBoard.forEach { player, entry ->
-      player.score = entry.total()  // TODO not if they're dead ..
+      player.score = if (player.crashed) -1 else entry.total()
     }
+
     endScreenModule.titleRankingsSprite = "logo.png"
     endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
@@ -158,7 +157,7 @@ class Referee : AbstractReferee() {
     var turn = 0
     var nextPlayerId = 0
 
-    fun isOver(): Boolean = turn >= 200
+    fun isOver(): Boolean = turn > 200
 
     fun gameTurn(matchTurn: Int) {
       turn++
@@ -170,6 +169,7 @@ class Referee : AbstractReferee() {
       if (!thePlayer.isActive) {
         System.err.println("(Turn $turn) WARNING: ${thePlayer.nicknameToken} is dead; skipping")
         if (thePlayer.score == 0) thePlayer.score = -1000 + matchTurn
+        thePlayer.crashed = true
         view.boardView.removePlayer(thePlayer)
         return gameTurn(matchTurn)
       }
@@ -177,7 +177,7 @@ class Referee : AbstractReferee() {
       fun sendGameState(player: Player) {
 
         // 0. Describe turns remaining
-        player.sendInputLine(200 - turn)
+        player.sendInputLine((200 - turn) / 2)
 
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
@@ -214,44 +214,38 @@ class Referee : AbstractReferee() {
       }
 
       fun processPlayerActions(player: Player) {
-        val line = if (!player.isActive) "WAIT" else
-          try {
-            player.outputs[0].trim()
-          } catch (ex: AbstractPlayer.TimeoutException) {
-            player.deactivate("Player $player timed out!")
-            "WAIT"
+          var line = if (!player.isActive) "WAIT" else player.outputs[0].trim()
+          if(line.isEmpty()) line = "WAIT"
+
+          val splittedOutput = ("$line ").split(";")
+          val fullCommand = splittedOutput[0]
+          val toks = fullCommand.split(" ").iterator()
+
+          val command = toks.next()
+          var path: List<Cell>? = null
+
+          if (command != "WAIT") {
+            if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
+            val cellx = toks.next().toInt()
+
+            if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
+            val celly = toks.next().toInt()
+
+            val target = board[cellx, celly]
+
+            path = when (command) {
+              "MOVE" -> player.moveTo(target)
+              "USE" -> player.use(target)
+              else -> throw Exception("Invalid command: $fullCommand")
+            }
           }
 
-        val splittedOutput = line.split(";")
-        val fullCommand = splittedOutput[0]
-        val toks = fullCommand.split(" ").iterator()
-
-        val command = toks.next()
-        var path: List<Cell>? = null
-
-        if (command != "WAIT") {
-          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-          val cellx = toks.next().toInt()
-
-          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-          val celly = toks.next().toInt()
-
-          val target = board[cellx, celly]
-
-          path = when (command) {
-            "MOVE" -> player.moveTo(target)
-            "USE" -> player.use(target)
-            else -> throw Exception("Invalid command: $fullCommand")
-          }
-        }
-
-        if(splittedOutput.size > 1) player.message = splittedOutput[1].take(20)
-
-        view.boardView.updatePlayer(player, path)
+          if(splittedOutput.size > 1) player.message = splittedOutput[1].take(9)
+          else player.message = ""
+          view.boardView.updatePlayer(player, path)
       }
 
 //      println("Current players: ${players.map { it.nicknameToken }}")
-
       queue.getNewCustomers()
       sendGameState(thePlayer)
       thePlayer.execute()
@@ -260,29 +254,29 @@ class Referee : AbstractReferee() {
         processPlayerActions(thePlayer)
       } catch (ex: LogicException) {
         gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message}")
-      } catch (ex: Exception) {
-        gameManager.addToGameSummary("${thePlayer.nicknameToken}: ${ex.message} (deactivating!)")
-        thePlayer.deactivate("${thePlayer.nicknameToken}: ${ex.message}")
-        if (thePlayer.heldItem is Dish) {
-          board.allCells.mapNotNull { (it.equipment as? DishWasher) }
-              .first().let { it.dishes++ }
-        }
+      }
+      catch(ex: AbstractPlayer.TimeoutException){
+        disablePlayer(thePlayer, "timeout")
+      }
+      catch (ex: Exception) {
+        disablePlayer(thePlayer, ex.message)
       }
 
       queue.updateRemainingCustomers()
     }
+
+    fun disablePlayer(player: Player, message: String?){
+      player.crashed = true
+      gameManager.addToGameSummary("${player.nicknameToken}: ${message} (deactivating?)")
+      player.deactivate("${player.nicknameToken}: ${message}")
+      if (player.heldItem is Dish) {
+        board.allCells.mapNotNull { (it.equipment as? DishWasher) }
+                .first().let { it.addDish() }
+      }
+    }
   }
 }
 
-private fun Array<Array<Cell>>.transpose(): Array<Array<Cell>> {
-  val rows = this.size
-  val cols = this[0].size
-  val trans = Array(cols) { Array(rows) { Cell(-1, -1) } }
-  for (i in 0 until cols) {
-    for (j in 0 until rows) trans[i][j] = this[j][i]
-  }
-  return trans
-}
 
 private fun Player.describeCustomers(customers: List<Customer>) {
   customers

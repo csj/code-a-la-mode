@@ -1,6 +1,8 @@
 package com.codingame.game.sample
 
 import com.codingame.game.model.*
+import com.codingame.game.splitAccumulate
+import com.codingame.game.tryNext
 import sample.*
 import sample.Item
 import java.io.InputStream
@@ -83,7 +85,11 @@ Have a banana
 Have a whole bunch
 It doesn't matter
 what you had for
-lunch, just eat it!""".split("\n").iterator()
+lunch, just eat it!"""
+      .split("\n", " ")
+      .asSequence()
+      .splitAccumulate()
+      .iterator()
 
   lateinit var goal: Item
   lateinit var inputs: GameState
@@ -107,7 +113,7 @@ lunch, just eat it!""".split("\n").iterator()
         item.name to (inputs.tables.firstOrNull { it.equipment == char } )
       }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
-      stdout.println((act() ?: "WAIT") /* + ";" + lyrics.next() */)
+      stdout.println((act() ?: "WAIT") + ";" + (lyrics.tryNext() ?: ""))
     }
   }
 
@@ -117,8 +123,7 @@ lunch, just eat it!""".split("\n").iterator()
     // 0. If the oven has something ready, go get it!
     if (inputs.ovenContents in listOf(
         Constants.FOOD.CROISSANT.name,
-        Constants.FOOD.TART.name,
-        Constants.ITEM.BURNT_CROISSANT.name
+        Constants.FOOD.TART.name
     ))
       return if (carrying == null) findEquipment('O')!!.use() else useEmptyTable()
 
@@ -242,12 +247,12 @@ lunch, just eat it!""".split("\n").iterator()
       carrying.itemType == Constants.ITEM.DOUGH.name ->
         return findEquipment('C')!!.use()
 
-      carrying.itemType == Constants.ITEM.SHELL.name -> {
-        stderr.println("doing stuff: carrying = $carrying, contents = ${carrying.itemContents}")
-        return if (Constants.FOOD.BLUEBERRIES.name in carrying.itemContents) {
-          stderr.println("shell is complete; heading for oven")
-          findEquipment('O')!!.use()
-        } else crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
+      carrying.itemType == Constants.ITEM.SHELL.name ->
+        return crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
+
+      carrying.itemType == Constants.ITEM.RAW_TART.name -> {
+        stderr.println("shell is complete; heading for oven")
+        return findEquipment('O')!!.use()
       }
     }
 

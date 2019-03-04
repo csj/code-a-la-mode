@@ -13,9 +13,9 @@ val boardLayout = listOf(
 //        ABCDEFGHIJK
 /* 0 */  "***********",  // 0
 /* 1 */  "*.........*",  // 1
-/* 2 */  "*.CODE.*A.*",  // 2
+/* 2 */  "*.****.**.*",  // 2
 /* 3 */  "*.*..*..*.*",  // 3
-/* 4 */  "*.LA.MODE.*",  // 4
+/* 4 */  "*.**.****.*",  // 4
 /* 5 */  "*.........*",  // 5
 /* 6 */  "***********"   // 6
 //        ABCDEFGHIJK
@@ -25,7 +25,9 @@ val equipment = listOf(
     "A0", "B0", "C0", "D0", "E0"       ,"G0", "H0", "I0", "J0", "K0",
     "A1", "A2", "A3", "A4", "A5",
     "K1", "K2", "K3", "K4", "K5",
-    "H2", "C3", "F3", "I3",
+    "C2", "D2", "E2", "F2",       "H2", "I2",
+    "C3",             "F3",             "I3",
+    "C4", "D4",       "F4", "G4", "H4", "I4",
     "A6", "B6", "C6", "D6", "E6"       ,"G6", "H6", "I6", "J6", "K6"
     )
 
@@ -35,7 +37,10 @@ val ovenLocs = listOf(
     "K1", "K2", "K3", "K4", "K5"
 )
 
-fun buildEmptyBoard(): Board = Board(boardLayout)
+val spawnLocs = "B1 C1 D1 E1 F1 G1 H1 I1 J1 B5 C5 D5 E5 F5 G5 H5 I5 J5 B2 B3 B4 J2 J3 J4 D3 E3 E4 G2 G3 H3"
+
+
+fun buildEmptyBoard(): Board = Board(boardLayout, spawnLocs)
 
 fun buildBoard(): Board {
   val board = buildEmptyBoard()
