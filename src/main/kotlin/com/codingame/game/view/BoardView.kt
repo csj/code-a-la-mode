@@ -20,12 +20,13 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   lateinit var board: Board
   lateinit var players: List<Player>
   var ovenSprite: Sprite? = null
-  var ovenFireSprite: Sprite? = null
+  var ovenContentSprite: Sprite? = null
+  lateinit var dishesSprites: List<Sprite>
 
   private var cellViews: MutableList<CellView> = mutableListOf()
 
   init {
-    fun setTooltip(tooltipModule: TooltipModule, cell: Cell, group: Group){
+    fun setTooltip(tooltipModule: TooltipModule, cell: Cell, group: Group) {
       val toolTip = cell.equipment?.let { "Equipment:${it.tooltipString}" } ?: ""
       tooltipModule.registerEntity(group, toolTip)
     }
@@ -69,14 +70,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
         cellViews.add(CellView(cell).apply {
 
-          background = graphicEntityModule
-              .createRectangle()
-              .setHeight(cellHeight)
-              .setWidth(cellWidth)
-              .setLineColor(0xffffff)
-              .setFillAlpha(0.0)
-              .setLineWidth(0)
-
           val equipment = cell.equipment
           content = graphicEntityModule.createSprite().apply {
             baseHeight = (110 * 0.75).toInt()
@@ -104,27 +97,44 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 baseWidth = cellWidth / 2
                 baseHeight = cellHeight / 2
               }
-              is DishWasher -> image = "dishwasher.png"
+//              is DishWasher -> image = "dishwasher.png"
             }
           }
 
-          if(equipment is Oven) {
-            ovenSprite = content
-            secondaryContent = graphicEntityModule.createSprite().apply {
-              baseHeight = cellWidth - 8
-              baseWidth = cellWidth - 8
-              anchorX = 0.5
-              anchorY = 0.5
-              setX(cellWidth / 2)
-              setY(cellWidth / 2)
-              image = "fire.png"
-              zIndex = 4000
-              isVisible = false
+          when (equipment) {
+            is Oven -> {
+              ovenSprite = content
+              secondaryContent = graphicEntityModule.createSprite().apply {
+                baseHeight = cellWidth * 3 / 4
+                baseWidth = cellHeight * 3 / 4
+                anchorX = 0.5
+                anchorY = 0.5
+                setX(cellWidth / 2)
+                setY(cellHeight / 2)
+                zIndex = 4000
+                isVisible = false
+                alpha = 0.5
+              }
+              ovenContentSprite = secondaryContent
+              tooltipModule.registerEntity(ovenSprite)
             }
-            ovenFireSprite = secondaryContent
-            tooltipModule.registerEntity(ovenSprite)
-          } else {
-            secondaryContent = graphicEntityModule.createSprite().apply {
+            is DishWasher -> {
+              secondaryContent = graphicEntityModule.createSprite().apply { isVisible = false }
+              dishesSprites = List(3) { i ->
+                graphicEntityModule.createSprite().apply {
+                  anchorX = 0.5
+                  anchorY = 0.0
+                  baseHeight = 78 + (7 * i)
+                  baseWidth = 78 + (7 * i)
+                  zIndex = 50 + i
+                  image = "plate.png"
+                  setX((132 + (-10..10).random()) / 2)
+                  setY(15-(20 * i))
+                  isVisible = true
+                }
+              }
+            }
+            else -> secondaryContent = graphicEntityModule.createSprite().apply {
               when (equipment) {
                 is StrawberryCrate -> image = "strawberry.png"
                 is BlueberryCrate -> image = "blueberries.png"
@@ -132,13 +142,13 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 is DoughCrate -> image = "dough.png"
                 else -> isVisible = false
               }
-            baseHeight = 132 * 4 / 5 / 2
-            baseWidth = 132 / 2
-            anchorX = 0.5
-            anchorY = 0.0
-            alpha = 1.0
-            setX(cellWidth / 2)
-            setY(20)
+              baseHeight = 132 * 4 / 5 / 2
+              baseWidth = 132 / 2
+              anchorX = 0.5
+              anchorY = 0.0
+              alpha = 1.0
+              setX(cellWidth / 2)
+              setY(20)
             }
           }
 
@@ -154,8 +164,12 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
           itemSpriteGroup = ItemSpriteGroup(110)
 
-          group = graphicEntityModule.createGroup(background, content, secondaryContent, text, itemSpriteGroup.group)
+          group = graphicEntityModule.createGroup(content, secondaryContent, text, itemSpriteGroup.group)
               .setX(x).setY(y)
+
+          if (equipment is DishWasher) {
+            graphicEntityModule.createGroup(*dishesSprites.toTypedArray()).setX(x).setY(y)
+          }
 
           setTooltip(tooltipModule, cell, group)
         })
@@ -178,6 +192,10 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       }
       player.itemSprite = ItemSpriteGroup(cellWidth)
 
+      player.itemSprite.group.apply {
+        y = -165 + (132 / 2)
+      }
+
       player.sprite = graphicEntityModule.createGroup(player.characterSprite, player.itemSprite.group)
       tooltipModule.registerEntity(player.sprite, player.toViewString())
     }
@@ -185,12 +203,39 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
   fun updateCells(board: Board) {
     board.allCells.zip(cellViews).forEach { (cell, view) ->
-      view.itemSpriteGroup.update(cell.item) }
+      view.itemSpriteGroup.update(cell.item)
+      if (cell.equipment is DishWasher) {
+        var dishCount = (cell.equipment as DishWasher).dishes
+        for ((index, dishSprite) in dishesSprites.withIndex()) {
+          dishSprite.isVisible = index <= dishCount - 1
+        }
+
+      }
+    }
 
     board.oven()?.also {
       tooltipModule.updateExtraTooltipText(ovenSprite, it.toViewString())
-      ovenFireSprite!!.isVisible = it.state is OvenState.Burning
+      var showOvenOverlay = it.state is OvenState.Burning || it.state is OvenState.Baking || it.state is OvenState.Ready
+      var ovenImage = when (it.state) {
+        is OvenState.Baking -> when ((it.state as OvenState.Baking).contents.describe()) {
+          Constants.ITEM.DOUGH.name -> "dough.png"
+          Constants.ITEM.RAW_TART.name -> "empty-tart.png"
+          else -> ""
+        }
+        is OvenState.Ready -> when ((it.state as OvenState.Ready).contents.describe()) {
+          Constants.FOOD.CROISSANT.name -> "croissant.png"
+          Constants.FOOD.TART.name -> "tart.png"
+          else -> ""
+        }
+        else -> "fire.png"
+      }
+      ovenContentSprite!!.apply {
+        isVisible = showOvenOverlay
+        image = ovenImage
+      }
     }
+
+
   }
 
   fun <T : Entity<*>?> Entity<T>.setLocation(cell: Cell, hardTransition: Boolean = false) {
@@ -203,6 +248,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     } else {
       x = newX
       y = newY
+      zIndex = 200 + newY
     }
   }
 
@@ -211,14 +257,14 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 
   fun updatePlayer(player: Player, playerPath: List<Cell>?, hardTransition: Boolean = false) {
-    if(!player.crashed){
+    if (!player.crashed) {
       player.characterSprite.isVisible = true
       player.itemSprite.isVisible = true
 
       player.itemSprite.update(player.heldItem)
 
       if (playerPath == null) {
-          player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
+        player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
       } else {
         playerPath.forEachIndexed { index, cell ->
           player.sprite.setLocation(cell)
@@ -266,7 +312,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
 
     init {
-        tooltipModule.registerEntity(group)
+      tooltipModule.registerEntity(group)
 
     }
 
@@ -318,7 +364,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       }
 
       tooltipModule.updateExtraTooltipText(group,
-          if(mainSprite.isVisible) "Item: " + item?.describe() else ""
+          if (mainSprite.isVisible) "Item: " + item?.describe() else ""
       )
     }
   }
