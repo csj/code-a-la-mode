@@ -153,10 +153,14 @@
         <p>
           The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANT</const>).
         </p>
-        <p>
-          Strawberries need to be cut at the chopping board before being added to a dish. </br>
-          Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
-        </p>
+      </div>
+      <p>
+        Strawberries need to be cut at the chopping board before being added to a dish. </br>
+        Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
+      </p>
+      <div style="color: #7cc576;
+        background-color: rgba(124, 197, 118,.1);
+        padding: 2px;">
         <p>
           A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
           Oven: <const>DOUGH</const> => <const>CROISSANT</const>
@@ -165,16 +169,16 @@
       <!-- END -->
       <!-- BEGIN level4 -->
       <p>
-          The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANT</const>).
-        </p>
-        <p>
-          Strawberries need to be cut at the chopping board before being dressed. </br>
-          Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
-        </p>
-        <p>
-          A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
-          Oven: <const>DOUGH</const> => <const>CROISSANT</const>
-        </p>
+        The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANT</const>).
+      </p>
+      <p>
+        Strawberries need to be cut at the chopping board before being dressed. </br>
+        Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
+      </p>
+      <p>
+        A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
+        Oven: <const>DOUGH</const> => <const>CROISSANT</const>
+      </p>
       <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
@@ -224,7 +228,7 @@
         A customer's order should be served on a dish (<const>DISH</const>).
       </p>
       <!-- END -->
-      <!-- BEGIN level2 level3 level4 -->
+      <!-- BEGIN level2 -->
       <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
@@ -232,6 +236,11 @@
           A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
         </p>
       </div>
+      <!-- END -->
+      <!-- BEGIN level3 level4 -->
+      <p>
+        A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
+      </p>
       <!-- END -->
       <p>
         There are maximum 3 dishes in play. As soon as an order is sent through the window, a new dish appears in the dishwasher.
