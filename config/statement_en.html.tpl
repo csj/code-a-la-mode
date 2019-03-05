@@ -165,6 +165,9 @@
           A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. <br/>
           Oven: <const>DOUGH</const> => <const>CROISSANT</const>
         </p>
+        <p>
+          Cooking takes <const>10</const> turns, after which the food is READY. The food will remain READY for <const>10</const> more turns, after which it will be burned away and need to be restarted.
+        </p>
       </div>
       <!-- END -->
       <!-- BEGIN level4 -->
@@ -191,10 +194,10 @@
           <const>CHOPPED_DOUGH</const> + <const>BLUEBERRIES</const> => <const>RAW_TART</const>
           Oven: <const>RAW_TART</const> => <const>TART</const>
         </p>
-        <p>
-          Cooking takes <const>10</const> turns, after which the food is READY. The food will remain READY for <const>10</const> more turns, after which it will be burned away and need to be restarted.
-        </p>
       </div>
+      <p>
+        Cooking takes <const>10</const> turns, after which the food is READY. The food will remain READY for <const>10</const> more turns, after which it will be burned away and need to be restarted.
+      </p>
       <!-- END -->
       <p>
         <b>The customers</b>
@@ -314,9 +317,6 @@
           </li>
           <li>
             The chefs cannot put food on the floor.
-          </li>
-          <li>
-            The chefs cannot put a ball of ice cream on the table (it will melt). But all other items can be placed on a table.
           </li>
           <li>
             The chefs cannot pick up a dish if they're already carrying one.
