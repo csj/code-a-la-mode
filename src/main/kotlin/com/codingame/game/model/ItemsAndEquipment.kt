@@ -51,4 +51,3 @@ abstract class Equipment {
 abstract class TimeSensitiveEquipment: Equipment() {
   abstract fun tick()
 }
-

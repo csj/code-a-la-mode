@@ -128,29 +128,6 @@
       </p>
       <!-- END -->
       <p>
-        <b>The customers</b>
-      </p>
-      <p>
-        At most 3 customers are waiting for their order. A customer's order can contain 2 to 4 desserts. Each delivered order rewards the team of chefs with points, but the longer the customer waits, the fewer points the chefs get.
-      </p>
-      <!-- BEGIN level1 -->
-      <p>
-        A customer's order should be served on a dish (<const>DISH</const>).
-      </p>
-      <!-- END -->
-      <!-- BEGIN level2 level3 level4 -->
-      <div style="color: #7cc576;
-        background-color: rgba(124, 197, 118,.1);
-        padding: 2px;">
-        <p>
-          A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
-        </p>
-      </div>
-      <!-- END -->
-      <p>
-        There are maximum 3 dishes in play. As soon as an order is sent through the window, a new dish appears in the dishwasher.
-      </p>
-      <p>
         <b>The desserts</b>
       </p>
       <p>
@@ -215,6 +192,50 @@
         </p>
       </div>
       <!-- END -->
+      <p>
+        <b>The customers</b>
+      </p>
+      <p>
+        At most 3 customers are waiting for their order. Each delivered order rewards the team of chefs with points, but the longer the customer waits, the fewer points the chefs get.
+      </p>
+      <!-- BEGIN level1 -->
+      <p>
+        Every customer requests exactly <const>ICE_CREAM</const> and <const>BLUEBERRIES</const>.
+      </p>
+      <!-- END -->
+      <!-- BEGIN level2 -->
+      <p>
+        Every customer requests between 2-3 items, among <const>ICE_CREAM</const>, <const>BLUEBERRIES</const>, and <const>CHOPPED_STRAWBERRIES</const> (no repeats).
+      </p>
+      <!-- END -->
+      <!-- BEGIN level3 -->
+      <p>
+        Every customer requests between 2-4 items, among <const>ICE_CREAM</const>, <const>BLUEBERRIES</const>, <const>CHOPPED_STRAWBERRIES</const> and <const>CROISSANT</const> (no repeats).
+      </p>
+      <!-- END -->
+      <!-- BEGIN level4 -->
+      <p>
+        Every customer requests between 2-4 items, among <const>ICE_CREAM</const>, <const>BLUEBERRIES</const>, <const>CHOPPED_STRAWBERRIES</const>, <const>CROISSANT</const> and <const>TART</const> (no repeats).
+      </p>
+      <!-- END -->
+
+      <!-- BEGIN level1 -->
+      <p>
+        A customer's order should be served on a dish (<const>DISH</const>).
+      </p>
+      <!-- END -->
+      <!-- BEGIN level2 level3 level4 -->
+      <div style="color: #7cc576;
+        background-color: rgba(124, 197, 118,.1);
+        padding: 2px;">
+        <p>
+          A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
+        </p>
+      </div>
+      <!-- END -->
+      <p>
+        There are maximum 3 dishes in play. As soon as an order is sent through the window, a new dish appears in the dishwasher.
+      </p>
       <p>
         <b>Actions</b>
       </p>
