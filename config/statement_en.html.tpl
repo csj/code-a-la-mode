@@ -138,7 +138,7 @@
         A customer's order should be served on a dish (<const>DISH</const>).
       </p>
       <!-- END -->
-      <!-- BEGIN level2 level3 level4-->
+      <!-- BEGIN level2 level3 level4 -->
       <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
@@ -394,6 +394,7 @@
           <li>
             A String <var>item</var> for what's on the table. </br>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+          </li>
         </ul>
         <!-- BEGIN level1 level2 -->
         <span class="statement-lineno">Next line</span>: to ignore in this league </br>
@@ -443,7 +444,7 @@
     </div>
   </div>
 
-  <!-- BEGIN level1 level2 level3-->
+  <!-- BEGIN level1 level2 level3 -->
   <div style="color: #7cc576;
       background-color: rgba(124, 197, 118,.1);
       padding: 20px;
