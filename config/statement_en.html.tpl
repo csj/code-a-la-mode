@@ -50,7 +50,7 @@
       <span>The Goal</span>
     </h2>
     <div class="statement-goal-content">
-      Control a chef and prepare food for customers as quick as possible, and earn more points than other players.
+      Control a chef and prepare food for customers as quickly as possible, and earn more points than other players.
     </div>
   </div>
 
@@ -70,10 +70,10 @@
         Round 3: player B with player C <br>
       </p>
       <p>
-        Each player will thus play two rounds in each match. A player total points is the sum of both rounds' points. 
+        Each player will thus play two rounds in each match. A player's total points is the sum of both rounds' points.
       </p>
       <p>
-        Each round lasts for <const>100</const> turns and plays the same kitchen and customers conditions.
+        Each round lasts for <const>200</const> turns and is played with the same kitchen and customers conditions.
       </p>
       <p>
         <b>A round</b>
@@ -82,7 +82,7 @@
         Each player controls a chef who moves around the kitchen and prepares food for customers.
       </p>
       <p>
-        Both players play collaboratively, and one after the other.
+        Both players play collaboratively, and one after the other. Each player will have 100 turns to act per round.
        </p>
       <p>
         <b>The kitchen</b>
@@ -138,7 +138,7 @@
         A customer's order should be served on a dish (<const>DISH</const>).
       </p>
       <!-- END -->
-      <!-- BEGIN level2 level3 level4-->
+      <!-- BEGIN level2 level3 level4 -->
       <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
@@ -211,7 +211,7 @@
           Oven: <const>RAW_TART</const> => <const>TART</const>
         </p>
         <p>
-          Cooking takes <const>5</const> turns, after which the food is READY. The food will remain READY for <const>5</const> more turns, after which it will be burned away and need to be restarted.
+          Cooking takes <const>10</const> turns, after which the food is READY. The food will remain READY for <const>10</const> more turns, after which it will be burned away and need to be restarted.
         </p>
       </div>
       <!-- END -->
@@ -292,7 +292,7 @@
             The chefs cannot pick up a dish if they're already carrying one.
           </li>
           <li>
-            As soon as food is put on a dish, it cannot be removed from it. To empty a dish, USE the dishwasher.
+            As soon as food is put on a dish, it cannot be removed from it. To empty a dish, USE the dishwasher while holding it.
           </li>
           <li>
             For every turn a customer waits for an order, the reward is decreased by 1.
@@ -332,7 +332,7 @@
             <const>.</const>: walkable cell
           </li>
           <li>
-            <const>D</const>: the dish dispenser
+            <const>D</const>: the dishwasher
           </li>
           <li>
             <const>W</const>: the window
@@ -394,6 +394,7 @@
           <li>
             A String <var>item</var> for what's on the table. </br>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+          </li>
         </ul>
         <!-- BEGIN level1 level2 -->
         <span class="statement-lineno">Next line</span>: to ignore in this league </br>
@@ -443,7 +444,7 @@
     </div>
   </div>
 
-  <!-- BEGIN level1 level2 level3-->
+  <!-- BEGIN level1 level2 level3 -->
   <div style="color: #7cc576;
       background-color: rgba(124, 197, 118,.1);
       padding: 20px;
