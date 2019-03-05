@@ -67,8 +67,6 @@ class Referee : AbstractReferee() {
       else -> League.All
     }
 
-    league = League.All
-
     board = buildBoard()
     view.boardView = BoardView(board, matchPlayers)
 
