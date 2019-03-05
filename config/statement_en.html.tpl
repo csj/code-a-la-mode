@@ -50,7 +50,7 @@
       <span>The Goal</span>
     </h2>
     <div class="statement-goal-content">
-      Control a chef and prepare food for customers as quick as possible, and earn more points than other players.
+      Control a chef and prepare food for customers as quickly as possible, and earn more points than other players.
     </div>
   </div>
 
@@ -70,10 +70,10 @@
         Round 3: player B with player C <br>
       </p>
       <p>
-        Each player will thus play two rounds in each match. A player total points is the sum of both rounds' points. 
+        Each player will thus play two rounds in each match. A player's total points is the sum of both rounds' points.
       </p>
       <p>
-        Each round lasts for <const>100</const> turns and plays the same kitchen and customers conditions.
+        Each round lasts for <const>200</const> turns and is played with the same kitchen and customers conditions.
       </p>
       <p>
         <b>A round</b>
@@ -82,13 +82,13 @@
         Each player controls a chef who moves around the kitchen and prepares food for customers.
       </p>
       <p>
-        Both players play collaboratively, and one after the other.
+        Both players play collaboratively, and one after the other. Each player will have 100 turns to act per round.
        </p>
       <p>
         <b>The kitchen</b>
       </p>
       <p>
-        The kitchen contains: floor cells (on which the chefs can move) (<const>.</const>), empty tables (<const>#</const>), a dishwasher (<const>D</const>) and a customer window (<const>W</const>).
+        The kitchen contains: floor cells (on which the chefs can move) (<const>.</const>), empty tables (<const>#</const>), a dishwasher (<const>D</const>) and a customer window represented by a bell (<const>W</const>).
       </p>
       <!-- BEGIN level1 -->
       <p>
@@ -127,29 +127,6 @@
         It also contains two different appliances: a chopping board (<const>C</const>) and an oven (<const>O</const>).
       </p>
       <!-- END -->
-      <p>
-        <b>The customers</b>
-      </p>
-      <p>
-        At most 3 customers are waiting for their order. A customer's order can contain 2 to 4 desserts. Each delivered order rewards the team of chefs with points, but the longer the customer waits, the fewer points the chefs get.
-      </p>
-      <!-- BEGIN level1 -->
-      <p>
-        A customer's order should be served on a dish (<const>DISH</const>).
-      </p>
-      <!-- END -->
-      <!-- BEGIN level2 level3 level4-->
-      <div style="color: #7cc576;
-        background-color: rgba(124, 197, 118,.1);
-        padding: 2px;">
-        <p>
-          A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
-        </p>
-      </div>
-      <!-- END -->
-      <p>
-        There are maximum 3 dishes in play. As soon as an order is sent through the window, a new dish appears in the dishwasher.
-      </p>
       <p>
         <b>The desserts</b>
       </p>
@@ -211,10 +188,54 @@
           Oven: <const>RAW_TART</const> => <const>TART</const>
         </p>
         <p>
-          Cooking takes <const>5</const> turns, after which the food is READY. The food will remain READY for <const>5</const> more turns, after which it will be burned away and need to be restarted.
+          Cooking takes <const>10</const> turns, after which the food is READY. The food will remain READY for <const>10</const> more turns, after which it will be burned away and need to be restarted.
         </p>
       </div>
       <!-- END -->
+      <p>
+        <b>The customers</b>
+      </p>
+      <p>
+        At most 3 customers are waiting for their order. Each delivered order rewards the team of chefs with points, but the longer the customer waits, the fewer points the chefs get.
+      </p>
+      <!-- BEGIN level1 -->
+      <p>
+        Every customer requests exactly <const>ICE_CREAM</const> and <const>BLUEBERRIES</const>.
+      </p>
+      <!-- END -->
+      <!-- BEGIN level2 -->
+      <p>
+        Every customer requests between 2-3 items, among <const>ICE_CREAM</const>, <const>BLUEBERRIES</const>, and <const>CHOPPED_STRAWBERRIES</const> (no repeats).
+      </p>
+      <!-- END -->
+      <!-- BEGIN level3 -->
+      <p>
+        Every customer requests between 2-4 items, among <const>ICE_CREAM</const>, <const>BLUEBERRIES</const>, <const>CHOPPED_STRAWBERRIES</const> and <const>CROISSANT</const> (no repeats).
+      </p>
+      <!-- END -->
+      <!-- BEGIN level4 -->
+      <p>
+        Every customer requests between 2-4 items, among <const>ICE_CREAM</const>, <const>BLUEBERRIES</const>, <const>CHOPPED_STRAWBERRIES</const>, <const>CROISSANT</const> and <const>TART</const> (no repeats).
+      </p>
+      <!-- END -->
+
+      <!-- BEGIN level1 -->
+      <p>
+        A customer's order should be served on a dish (<const>DISH</const>).
+      </p>
+      <!-- END -->
+      <!-- BEGIN level2 level3 level4 -->
+      <div style="color: #7cc576;
+        background-color: rgba(124, 197, 118,.1);
+        padding: 2px;">
+        <p>
+          A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
+        </p>
+      </div>
+      <!-- END -->
+      <p>
+        There are maximum 3 dishes in play. As soon as an order is sent through the window, a new dish appears in the dishwasher.
+      </p>
       <p>
         <b>Actions</b>
       </p>
@@ -292,7 +313,7 @@
             The chefs cannot pick up a dish if they're already carrying one.
           </li>
           <li>
-            As soon as food is put on a dish, it cannot be removed from it. To empty a dish, USE the dishwasher.
+            As soon as food is put on a dish, it cannot be removed from it. To empty a dish, USE the dishwasher while holding it.
           </li>
           <li>
             For every turn a customer waits for an order, the reward is decreased by 1.
@@ -332,7 +353,7 @@
             <const>.</const>: walkable cell
           </li>
           <li>
-            <const>D</const>: the dish dispenser
+            <const>D</const>: the dishwasher
           </li>
           <li>
             <const>W</const>: the window
@@ -394,6 +415,7 @@
           <li>
             A String <var>item</var> for what's on the table. </br>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+          </li>
         </ul>
         <!-- BEGIN level1 level2 -->
         <span class="statement-lineno">Next line</span>: to ignore in this league </br>
@@ -443,7 +465,7 @@
     </div>
   </div>
 
-  <!-- BEGIN level1 level2 level3-->
+  <!-- BEGIN level1 level2 level3 -->
   <div style="color: #7cc576;
       background-color: rgba(124, 197, 118,.1);
       padding: 20px;

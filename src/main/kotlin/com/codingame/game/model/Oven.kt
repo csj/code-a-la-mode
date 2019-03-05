@@ -1,13 +1,6 @@
 package com.codingame.game.model
 
 import com.codingame.game.Player
-import com.codingame.game.then
-
-object Blueberries: EdibleItem(Constants.FOOD.BLUEBERRIES.name)
-object Tart: EdibleItem(Constants.FOOD.TART.name)
-object Croissant: EdibleItem(Constants.FOOD.CROISSANT.name)
-
-object Dough: EasilyDescribedItem(Constants.ITEM.DOUGH.name)
 
 sealed class OvenState(private val contentsStr: String, private val timer: Int) {
   override fun toString() = "$contentsStr $timer"
@@ -62,7 +55,7 @@ class Oven(
       is OvenState.Ready -> {
         val time = curState.timeUntilBurnt
         if (time == 1)
-          OvenState.Burning.also { System.err.println("BURRRRN") }
+          OvenState.Burning
         else
           OvenState.Ready(curState.contents, curState.timeUntilBurnt - 1)
       }
@@ -107,22 +100,3 @@ class Oven(
     return retVal
   }
 }
-
-data class Shell(var hasBlueberry: Boolean = false): Item() {
-  override fun receiveItem(player: Player, item: Item, cell: Cell?) {
-    when (item) {
-      is Blueberries -> {
-        if (hasBlueberry) throw LogicException("This already has blueberries!")
-        hasBlueberry = true
-      }
-      else -> {
-        throw LogicException("Cannot add $item to $this!")
-      }
-    }
-    player.heldItem = null
-  }
-
-  override fun describeTokens() =
-      listOf(if (hasBlueberry) Constants.ITEM.RAW_TART.name else Constants.ITEM.SHELL.name)
-}
-

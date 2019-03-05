@@ -60,7 +60,9 @@ class Referee : AbstractReferee() {
     )
     gameManager.maxTurns = 606
 
-    league = when (gameManager.leagueLevel) {
+    league =
+//        when(4) {
+        when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.StrawberriesChoppingBoard
       3 -> League.Croissants
@@ -177,7 +179,7 @@ class Referee : AbstractReferee() {
       fun sendGameState(player: Player) {
 
         // 0. Describe turns remaining
-        player.sendInputLine((200 - turn) / 2)
+        player.sendInputLine(200 - turn)
 
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
