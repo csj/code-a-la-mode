@@ -328,7 +328,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       graphicEntityModule.createSprite().apply {
         anchorX = 0.0
         anchorY = 0.0
-        baseHeight = 50
+        baseHeight = 40
         baseWidth = 50
         zIndex = 50 + i
         x = 20 + (i % 2) * 52
