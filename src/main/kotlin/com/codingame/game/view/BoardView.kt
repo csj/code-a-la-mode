@@ -196,14 +196,13 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
     for (player in matchPlayers) {
       player.characterSprite = graphicEntityModule.createSprite().apply {
-        image = "Player_blue_single.png"
+        image = "player00"
         baseHeight = 187
         baseWidth = 132
         x = 132 / 2
         y = 100
         anchorX = 0.5
         anchorY = 1.0
-        tint = player.colorToken
         isVisible = false
       }
       player.itemSprite = ItemSpriteGroup(cellWidth)
@@ -280,7 +279,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
       player.itemSprite.update(player.heldItem)
 
-      player.characterSprite.image = playerSprites[0]
+      player.characterSprite.image = playerSprites[player.index][0]
 
       if (playerPath == null) {
         player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
@@ -295,7 +294,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               nextCell.y > cell.y -> spriteNum = 3
               nextCell.y < cell.y -> spriteNum = 4
             }
-            player.characterSprite.image = playerSprites[spriteNum]
+            player.characterSprite.image = playerSprites[player.index][spriteNum]
             graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.characterSprite)
           }
           player.sprite.setLocation(cell)
@@ -411,17 +410,19 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
     y = 110 / 2
   }
 
-  val playerSprites = graphicEntityModule.createSpriteSheetSplitter()
-      .setSourceImage("Player_blue.png")
-      .setImageCount(5)
-      .setWidth(143)
-      .setHeight(204)
-      .setOrigRow(0)
-      .setOrigCol(0)
-      .setImagesPerRow(5)
-      .setName("player")
-      .split()
 
+
+  val playerSprites = arrayOf("red", "blue", "green").mapIndexed { index, col -> graphicEntityModule.createSpriteSheetSplitter()
+          .setSourceImage("Player_$col.png")
+          .setImageCount(5)
+          .setWidth(143)
+          .setHeight(204)
+          .setOrigRow(0)
+          .setOrigCol(0)
+          .setImagesPerRow(5)
+          .setName("player$index")
+          .split()
+  }
 
 }
 
