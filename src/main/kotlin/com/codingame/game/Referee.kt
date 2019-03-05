@@ -60,7 +60,9 @@ class Referee : AbstractReferee() {
     )
     gameManager.maxTurns = 606
 
-    league = when (gameManager.leagueLevel) {
+    league =
+//        when(4) {
+        when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.StrawberriesChoppingBoard
       3 -> League.Croissants

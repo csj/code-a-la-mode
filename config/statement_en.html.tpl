@@ -88,7 +88,7 @@
         <b>The kitchen</b>
       </p>
       <p>
-        The kitchen contains: floor cells (on which the chefs can move) (<const>.</const>), empty tables (<const>#</const>), a dishwasher (<const>D</const>) and a customer window (<const>W</const>).
+        The kitchen contains: floor cells (on which the chefs can move) (<const>.</const>), empty tables (<const>#</const>), a dishwasher (<const>D</const>) and a customer window represented by a bell (<const>W</const>).
       </p>
       <!-- BEGIN level1 -->
       <p>
