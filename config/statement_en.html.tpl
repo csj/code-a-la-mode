@@ -141,7 +141,7 @@
           The chefs can also prepare a classic dessert: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>). 
         </p>
         <p>
-          Strawberries need to be cut at the chopping board before being added to a dish. </br>
+          Strawberries need to be cut at the chopping board before being added to a dish. <br/>
           Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
         </p>
       </div>
@@ -155,14 +155,14 @@
         </p>
       </div>
       <p>
-        Strawberries need to be cut at the chopping board before being added to a dish. </br>
+        Strawberries need to be cut at the chopping board before being added to a dish. <br/>
         Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
       </p>
       <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
         <p>
-          A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
+          A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. <br/>
           Oven: <const>DOUGH</const> => <const>CROISSANT</const>
         </p>
       </div>
@@ -172,11 +172,11 @@
         The chefs can also prepare two classic desserts: chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>) and croissants (<const>CROISSANT</const>).
       </p>
       <p>
-        Strawberries need to be cut at the chopping board before being dressed. </br>
+        Strawberries need to be cut at the chopping board before being dressed. <br/>
         Chopping board: <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
       </p>
       <p>
-        A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. </br>
+        A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. <br/>
         Oven: <const>DOUGH</const> => <const>CROISSANT</const>
       </p>
       <div style="color: #7cc576;
@@ -186,7 +186,7 @@
           The chefs can also prepare one advanced dessert: blueberry tart (<const>TART</const>).
         </p>
         <p>
-          A ball of dough needs to be chopped at the chopping board first, then mixed with blueberries and cooked into a blueberry tart in the oven before being added to a dish. </br>
+          A ball of dough needs to be chopped at the chopping board first, then mixed with blueberries and cooked into a blueberry tart in the oven before being added to a dish. <br/>
           Chopping board: <const>DOUGH</const> => <const>CHOPPED_DOUGH</const>
           <const>CHOPPED_DOUGH</const> + <const>BLUEBERRIES</const> => <const>RAW_TART</const>
           Oven: <const>RAW_TART</const> => <const>TART</const>
@@ -349,14 +349,14 @@
         <span class="statement-lineno">Next <var>numAllCustomers</var> lines</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            A String <var>customerItem</var> for the customer's order </br>
+            A String <var>customerItem</var> for the customer's order <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
             An Integer <var>customerAward</var> for the number of points awarded if the customer's order is delivered
           </li>
         </ul>
-        <span class="statement-lineno">Next <const>7</const> lines</span>: A String <var>kitchenLine</var> of size 11 representing a part of the kitchen. </br>
+        <span class="statement-lineno">Next <const>7</const> lines</span>: A String <var>kitchenLine</var> of size 11 representing a part of the kitchen. <br/>
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: walkable cell
@@ -395,14 +395,14 @@
     <div class="blk">
       <div class="title">Input for one game turn</div>
       <div class="text">
-        <span class="statement-lineno">First line</span>: An Integer <var>turnsRemaining</var> for the number of turns remaining before the end of the current round. </br>
+        <span class="statement-lineno">First line</span>: An Integer <var>turnsRemaining</var> for the number of turns remaining before the end of the current round. <br/>
         <span class="statement-lineno">Next <const>3</const> lines</span>: 
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             Two Integers <var>playerX</var> and <var>playerY</var> for the player's chef position
           </li>
           <li>
-            A String <var>playerItem</var> for what the player's chef is carrying </br>
+            A String <var>playerItem</var> for what the player's chef is carrying <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
@@ -415,28 +415,28 @@
             A String <var>partnerItem</var> for what the other player's chef is carrying
           </li>
         </ul>
-        <span class="statement-lineno">Next line</span>: An Integer <var>numTablesWithItems</var> for the number of non-empty tables </br>
+        <span class="statement-lineno">Next line</span>: An Integer <var>numTablesWithItems</var> for the number of non-empty tables <br/>
         <span class="statement-lineno">Next <var>numTablesWithItems</var> lines</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             Two Integers <var>tableX</var> and <var>tableY</var> for the table's position
           </li>
           <li>
-            A String <var>item</var> for what's on the table. </br>
+            A String <var>item</var> for what's on the table. <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
         <!-- BEGIN level1 level2 -->
-        <span class="statement-lineno">Next line</span>: to ignore in this league </br>
+        <span class="statement-lineno">Next line</span>: to ignore in this league <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 -->
-        <span class="statement-lineno">Next line</span>: A String <var>ovenContents</var> for what's in the oven and an Integer <var>ovenTimer</var> for the number of turns the food has been put in the oven. </br>
+        <span class="statement-lineno">Next line</span>: A String <var>ovenContents</var> for what's in the oven and an Integer <var>ovenTimer</var> for the number of turns the food has been put in the oven. <br/>
         <!-- END -->
-        <span class="statement-lineno">First line</span>: an Integer <var>numCustomers</var> for the current number of customers waiting for their order. </br>
+        <span class="statement-lineno">First line</span>: an Integer <var>numCustomers</var> for the current number of customers waiting for their order. <br/>
         <span class="statement-lineno">Next <var>numCustomers</var> lines</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            A String <var>customerItem</var> for the customer's order </br>
+            A String <var>customerItem</var> for the customer's order <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
