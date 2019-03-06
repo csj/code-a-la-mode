@@ -41,7 +41,6 @@ class QueueView {
         custView.group.isVisible = false
       } else {
         queue.activeCustomers[index].let {
-          custView.group.isVisible = it.award > 0
           custView.update(it)
         }
       }
