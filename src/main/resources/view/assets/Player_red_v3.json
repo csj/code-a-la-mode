@@ -1,0 +1,114 @@
+{
+  "frames": {
+    "player01": {
+      "frame": {
+        "x": 157,
+        "y": 0,
+        "w": 117,
+        "h": 205
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 117,
+        "h": 205
+      },
+      "sourceSize": {
+        "w": 117,
+        "h": 205
+      }
+    },
+    "player00": {
+      "frame": {
+        "x": 0,
+        "y": 35,
+        "w": 135,
+        "h": 162
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 135,
+        "h": 162
+      },
+      "sourceSize": {
+        "w": 135,
+        "h": 162
+      }
+    },
+    "player02": {
+      "frame": {
+        "x": 291,
+        "y": 39,
+        "w": 116,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 116,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 116,
+        "h": 156
+      }
+    },
+    "player04": {
+      "frame": {
+        "x": 575,
+        "y": 39,
+        "w": 143,
+        "h": 158
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 143,
+        "h": 158
+      },
+      "sourceSize": {
+        "w": 143,
+        "h": 158
+      }
+    },
+    "player03": {
+      "frame": {
+        "x": 415,
+        "y": 41,
+        "w": 141,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 141,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 141,
+        "h": 160
+      }
+    }
+  },
+  "meta": {
+    "app": "https://www.leshylabs.com/apps/sstool/",
+    "version": "Leshy SpriteSheet Tool v0.8.4",
+    "image": "Player_red_v3.png",
+    "size": {
+      "w": 718,
+      "h": 205
+    },
+    "scale": 1
+  }
+}
