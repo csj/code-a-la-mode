@@ -526,14 +526,14 @@
         </ul>
       </div>
     </div>
-  </div>
-
-  <!-- Constraints block -->
-  <div class="blk">
-    <div class="title">Contraintes</div>
-    <div class="text">
-      Temps de réponse pour le premier tour ≤ <const>1</const>s<br>
-      Temps de réponse pour un tour de jeu ≤ <const>50</const>ms<br>
+  
+    <!-- Constraints block -->
+    <div class="blk">
+      <div class="title">Contraintes</div>
+      <div class="text">
+        Temps de réponse pour le premier tour ≤ <const>1</const>s<br>
+        Temps de réponse pour un tour de jeu ≤ <const>50</const>ms<br>
+      </div>
     </div>
   </div>
 
