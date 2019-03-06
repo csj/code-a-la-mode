@@ -526,14 +526,14 @@
         </ul>
       </div>
     </div>
-  </div>
 
-  <!-- Constraints block -->
-  <div class="blk">
-    <div class="title">Constraints</div>
-    <div class="text">
-      Response time for the first turn ≤ <const>1</const>s<br>
-      Response time per turn ≤ <const>50</const>ms<br>
+    <!-- Constraints block -->
+    <div class="blk">
+      <div class="title">Constraints</div>
+      <div class="text">
+        Response time for the first turn ≤ <const>1</const>s<br>
+        Response time per turn ≤ <const>50</const>ms<br>
+      </div>
     </div>
   </div>
 
