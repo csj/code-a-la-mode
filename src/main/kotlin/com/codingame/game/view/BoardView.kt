@@ -37,7 +37,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 //    val tableColor = 0xb35900
 
     graphicEntityModule.createSprite().apply {
-      image = "background.jpg"
+      image = "background03.jpg"
       baseWidth = 1920
       baseHeight = 1080
       anchorX = 0.0
@@ -79,7 +79,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
             setX(cellWidth / 2)
             setY(10)
             when (equipment) {
-              is ChoppingBoard -> image = "board.png"
+              is ChoppingBoard -> image = "board02.png"
               is GeneralCrate -> image = "bowl.png"
               is Oven -> {
                 image = if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "oven_top.png"
@@ -239,10 +239,10 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         }
         is OvenState.Ready -> when ((it.state as OvenState.Ready).contents) {
           is Croissant -> "croissant.png"
-          is Tart -> "tart_small_bb.png"
+          is Tart -> "tart_big_bb.png"
           else -> ""
         }
-        else -> "fire.png"
+        else -> "smoke.png"
       }
       ovenContentSprite!!.apply {
         isVisible = showOvenOverlay
@@ -369,7 +369,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is Strawberries -> image = "strawberry.png"
           is ChoppedStrawberries -> image = "strawberries-cut.png"
           is Croissant -> image = "croissant.png"
-          is Tart -> image = "tart_small_bb.png"
+          is Tart -> image = "tart_big_bb.png"
           is Dish -> {
             image = "plate.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->
@@ -380,7 +380,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                   is Blueberries -> image = "blueberries.png"
                   is ChoppedStrawberries -> image = "strawberries-cut.png"
                   is Croissant -> image = "croissant.png"
-                  is Tart -> image = "tart_small_bb.png"
+                  is Tart -> image = "tart_big_bb.png"
                 }
               }
             }
@@ -389,7 +389,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
             if (item.hasBlueberry) {
               image = "paton_bb.png"
             } else {
-              image = "paton_cut.png"
+              image = "paton_cut_big.png"
             }
           }
 
@@ -413,7 +413,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
 
   val playerSprites = arrayOf("red", "blue", "green").mapIndexed { index, col -> graphicEntityModule.createSpriteSheetSplitter()
-          .setSourceImage("Player_$col.png")
+          .setSourceImage("Player_${col}_v3.png")
           .setImageCount(5)
           .setWidth(143)
           .setHeight(204)

@@ -35,14 +35,14 @@ class ScoresView(matchPlayers: List<Player>) {
       }
       1 -> {
         playerScoreViews[players[0]]!!.group.apply {
-          y = 34
+          y = 857
           isVisible = true
         }
         playerScoreViews[players[1]]!!.group.apply {
           isVisible = false
         }
         playerScoreViews[players[2]]!!.group.apply {
-          y = 857
+          y = 34
           isVisible = true
         }
       }
@@ -99,14 +99,14 @@ class ScoresView(matchPlayers: List<Player>) {
     private val scoreTexts = // List(3) { i ->
         graphicEntityModule.createText("--").apply {
           fillColor = 0xffffff
-          fontSize = 35
+          fontSize = 25
           x = 120
           y = 87
           anchorX = 0.0
           anchorY = 0.0
           zIndex = 350
         }
-    //}
+//    }
 
     val messageText =
         graphicEntityModule.createText("").apply {
@@ -140,8 +140,7 @@ class ScoresView(matchPlayers: List<Player>) {
       if(playerNameText.text.length > 8 && !playerNameText.text.endsWith("..."))
         playerNameText.text = playerNameText.text.substring(0,8) + "..."
 
-      if (currentRoundNumber >= 3) return
-      entry.roundScores[currentRoundNumber]?.let { scoreTexts.text = it.toString() }
+      scoreTexts.text = entry.roundScores.joinToString("   ") { it?.toString() ?: "--" }
     }
 
   }

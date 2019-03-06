@@ -139,7 +139,7 @@ class QueueView {
         foodSprite.apply {
           isVisible = true
           when (edible) {
-            is Tart -> image = "tart.png"
+            is Tart -> image = "tart_big_bb.png"
             is IceCream -> image = "ice-cream.png"
             is Blueberries -> image = "blueberries.png"
             is Croissant -> image = "croissant.png"
