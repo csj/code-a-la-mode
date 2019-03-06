@@ -1,4 +1,5 @@
 import {
+<<<<<<< HEAD
   ErrorLog
 } from '../core/ErrorLog.js'
 import {
@@ -6,6 +7,12 @@ import {
   HEIGHT
 } from '../core/constants.js'
 import * as utils from '../core/utils.js'
+=======
+  WIDTH,
+  HEIGHT
+} from '../core/constants.js'
+
+>>>>>>> wip on tooltip module
 import {
   api as entityModule
 } from '../entity-module/GraphicEntityModule.js'
@@ -30,24 +37,24 @@ function getEntityState (entity, frame, progress) {
   return null
 }
 
-var playerList = []
-
-function replaceAll (str, replace, find) {
-  return str.replace(new RegExp(find, 'g'), replace)
-}
-
 function getMouseMoveFunc (tooltip, container, module) {
   return function (ev) {
     if (tooltip) {
       var pos = ev.data.getLocalPosition(container)
       tooltip.x = pos.x
       tooltip.y = pos.y
+
       var point = {
         x: pos.x * entityModule.toWorldUnits,
         y: pos.y * entityModule.toWorldUnits
       }
+
+      var cellX = (Math.floor((point.x - module.x0) / 132))
+      var cellY = (Math.floor((point.y - module.y0) / 110))
+
       const showing = []
       const ids = Object.keys(tooltip.inside).map(n => +n)
+      const tooltipBlocks = []
 
       for (let id of ids) {
         if (tooltip.inside[id]) {
@@ -62,93 +69,55 @@ function getMouseMoveFunc (tooltip, container, module) {
       }
 
       if (showing.length) {
-        var width = 1910 - 430
-        var height = 1080 - 264
-        var x0 = 430
-        var y0 = 290
-
-        var columns = 11
-        var rows = 7
-        //                var cellsize = width / columns;
-        var cellsize = 132 // TODO : Variable cell size & hardcoded cellX/Y calcs
-        var scale = height / (cellsize * (rows))
-        var cellX = (Math.floor((point.x - x0) / 132))
-        var cellY = (Math.floor((point.y - y0) / 110))
-
-        const tooltipBlocks = []
-        var found = false
-
         for (let show of showing) {
           const entity = entityModule.entities.get(show)
-
           const state = getEntityState(entity, module.currentFrame.number)
-          if (state !== null) {
-            var tooltipBlock = ''
+
+          if (entity && state) {
             const params = module.currentFrame.registered[show]
+
             if (params != null) {
+              let paramBlocks = []
               for (var key in params) {
-              // check if the property/key is defined in the object itself, not in parent
-                if (params.hasOwnProperty(key) && key.length > 0) {
-                  var txt = key + ': ' + params[key]
-                  if ((tooltipBlocks.indexOf(txt) > -1)) continue
-                  found = true
-                  tooltipBlocks.push(txt)
+                if (key.length > 0) {
+                  const txt = key + ': ' + params[key]
+                  if (paramBlocks.indexOf(txt) > -1) continue
+                  paramBlocks.push(txt)
                 }
               }
-            }
-
-            tooltip.visible = true
-            var extra = module.currentFrame.extraText[show]
-            if (extra && extra.length) {
-              tooltipBlock = extra
-              found = true
-            } else {
-              extra = module.currentFrame.extraText[show - 1]
-              if (extra && extra.length) {
-                found = true
-                tooltipBlock = extra
+              if (paramBlocks.length) {
+                tooltipBlocks.push(paramBlocks.join('\n'))
               }
             }
 
-            if ((tooltipBlocks.indexOf(tooltipBlock) > -1)) continue
-            tooltipBlocks.push(tooltipBlock)
+            var extra = module.currentFrame.extraText[show]
+            if (extra && extra.length) {
+              tooltipBlocks.push(extra)
+              console.log(extra.length, extra)
+            } else {
+              extra = module.currentFrame.extraText[show - 1]
+              if (extra && extra.length && tooltipBlocks.indexOf(extra) === -1) {
+                tooltipBlocks.push(extra)
+                console.log(extra.length, extra)
+              }
+            }
           }
         }
-        if (cellX >= 0 && cellX < columns && cellY >= 0 && cellY < rows) {
-          tooltipBlocks.splice(0, 0, 'y: ' + cellY)
-          tooltipBlocks.splice(0, 0, 'x: ' + cellX)
-        } else if (!found) {
-          tooltip.visible = false
-          return
-        }
+      }
+      if (cellY > 0 && cellY <= 7 && cellX > 0 && cellX <= 11) {
+        tooltipBlocks.push('x: ' + cellX +
+        '\ny: ' + cellY)
+      }
 
+      if (tooltipBlocks.length) {
         for (var i = 0; i < tooltipBlocks.length; i++) {
           for (var p = 0; p < playerList.length; p++) {
             tooltipBlocks[i] = tooltipBlocks[i].toString().replace('$' + p, playerList[p].name)
           }
         }
-        var txt = tooltipBlocks.filter(t => t !== '').join('\n')
-        txt = replaceAll(txt, 'DISH', '#D')
-        txt = replaceAll(txt, 'ICE_CREAM', '#I')
-        txt = replaceAll(txt, 'DOUGH', '#H')
-        txt = replaceAll(txt, 'STRAWBERRIES', '#S')
-        txt = replaceAll(txt, 'TART', '#T')
-        txt = replaceAll(txt, 'BLUEBERRIES', '#B')
-        txt = replaceAll(txt, 'CROISSANT', '#C')
-        txt = replaceAll(txt, 'CHOPPED', '#O')
-        if (txt.trim() == '') {
-          tooltip.visible = false
-        } else {
-          tooltip.label.text = txt
-        }
-        // #D DISH
-        // #I ICE_CREAM
-        // #H DOUGH
-        // #S STRAWBERRIES
-        // #T TART
-        // #B BLUEBERRIES
-        // #C CROISSANT
-        // #O CHOPPED
+
+        tooltip.label.text = tooltipBlocks.join('\n')
+        tooltip.visible = true
       } else {
         tooltip.visible = false
       }
@@ -156,7 +125,7 @@ function getMouseMoveFunc (tooltip, container, module) {
       tooltip.background.width = tooltip.label.width + 20
       tooltip.background.height = tooltip.label.height + 20
 
-      tooltip.pivot.x = -80
+      tooltip.pivot.x = -30
       tooltip.pivot.y = -50
 
       if (tooltip.y - tooltip.pivot.y + tooltip.height > HEIGHT) {
@@ -170,6 +139,8 @@ function getMouseMoveFunc (tooltip, container, module) {
     }
   }
 };
+
+var playerList = []
 
 export class TooltipModule {
   constructor (assets) {
@@ -280,6 +251,7 @@ export class TooltipModule {
     playerList = players
   }
 }
+<<<<<<< HEAD
 
 class NotYetImplemented extends Error {
   constructor (feature) {
@@ -288,3 +260,5 @@ class NotYetImplemented extends Error {
     this.name = 'NotYetImplemented'
   }
 }
+=======
+>>>>>>> wip on tooltip module
