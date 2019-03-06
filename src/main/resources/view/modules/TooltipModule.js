@@ -32,6 +32,10 @@ function getEntityState(entity, frame, progress) {
 
 var playerList = [];
 
+function replaceAll(str, replace, find) {
+    return str.replace(new RegExp(find, 'g'), replace);
+}
+
 function getMouseMoveFunc(tooltip, container, module) {
     return function(ev) {
         if (tooltip) {
@@ -64,7 +68,7 @@ function getMouseMoveFunc(tooltip, container, module) {
                 var width = 1910-430;
                 var height = 1080-264;
                 var x0 = 430;
-                var y0 = 264;
+                var y0 = 290;
 
                 var columns = 11;
                 var rows = 7;
@@ -126,7 +130,29 @@ function getMouseMoveFunc(tooltip, container, module) {
                         tooltipBlocks[i] = tooltipBlocks[i].toString().replace("$" + p, playerList[p].name);
                     }
                 }
-                tooltip.label.text = tooltipBlocks.filter(t => t !== "").join('\n');
+                var txt = tooltipBlocks.filter(t => t !== "").join('\n');
+                txt = replaceAll(txt,"DISH", "#D");
+                txt = replaceAll(txt,"ICE_CREAM", "#I");
+                txt = replaceAll(txt,"DOUGH", "#H");
+                txt = replaceAll(txt,"STRAWBERRIES", "#S");
+                txt = replaceAll(txt,"TART", "#T");
+                txt = replaceAll(txt,"BLUEBERRIES", "#B");
+                txt = replaceAll(txt,"CROISSANT", "#C");
+                txt = replaceAll(txt,"CHOPPED", "#O");
+                if(txt.trim() == "")
+                {
+                    tooltip.visible = false;
+                }else{
+                    tooltip.label.text = txt;
+                }
+                    //#D DISH
+                    //#I ICE_CREAM
+                    //#H DOUGH
+                    //#S STRAWBERRIES
+                    //#T TART
+                    //#B BLUEBERRIES
+                    //#C CROISSANT
+                    //#O CHOPPED
             } else {
                 tooltip.visible = false;
             }

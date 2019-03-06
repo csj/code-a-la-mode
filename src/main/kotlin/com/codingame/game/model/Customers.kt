@@ -21,7 +21,7 @@ class CustomerQueue {
 
   fun getNewCustomers() {
     activeCustomers.removeIf {
-      it.satisfaction in listOf(Satisfaction.Satisfied, Satisfaction.Leaving)
+      it.satisfaction in listOf(Satisfaction.Satisfied)
     }
     while(activeCustomers.size < 3) {
       activeCustomers += queueIterator.next().also {
@@ -40,8 +40,6 @@ class CustomerQueue {
 enum class Satisfaction {
   Waiting,
   Satisfied,
-  Danger,
-  Leaving
 }
 
 data class Customer(val dish: Dish, var award: Int) {
@@ -50,11 +48,6 @@ data class Customer(val dish: Dish, var award: Int) {
 
   fun updateSatisfaction() {
     award -= 1
-    satisfaction = when {
-      award > 25 -> Satisfaction.Waiting
-      award > 10 -> Satisfaction.Danger
-      else -> Satisfaction.Leaving
-    }
   }
 
   companion object {

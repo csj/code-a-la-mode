@@ -79,7 +79,6 @@ public class TooltipModule implements Module {
         registerEntity(entity.getId(), params);
     }
 
-
     public void registerEntity(Entity<?> entity, Map<String, Object> params) {
         registerEntity(entity.getId(), params);
     }
@@ -106,13 +105,35 @@ public class TooltipModule implements Module {
 
     public void updateExtraTooltipText(Entity<?> entity, String... lines) {
         int id = entity.getId();
-        if(lines.length== 0) return;
-        if(lines[0] == "") return;
 
-        if (!deepEquals(lines, extra.get(id)))
+        String[] newLines = new String[lines.length];
+        for(int i = 0; i < lines.length; i++){
+          newLines[i] = replaceKnownTooltips(lines[i]);
+        }
+
+        if (!deepEquals(newLines, extra.get(id)))
         {
-            newExtra.put(id, lines);
-            extra.put(id, lines);
+            newExtra.put(id, newLines);
+            extra.put(id, newLines);
         }
     }
+
+    private String replaceKnownTooltips(String s){
+      return s.replaceAll("DISH", "#D")
+              .replaceAll("ICE_CREAM", "#I")
+              .replaceAll("DOUGH", "#H")
+              .replaceAll("STRAWBERRIES", "#S")
+              .replaceAll("TART", "#T")
+              .replaceAll("BLUEBERRIES", "#B")
+              .replaceAll("CROISSANT", "#C")
+              .replaceAll("CHOPPED", "#O");
+    }
+    //#D DISH
+    //#I ICE_CREAM
+    //#H DOUGH
+    //#S STRAWBERRIES
+    //#T TART
+    //#B BLUEBERRIES
+    //#C CROISSANT
+    //#O CHOPPED
 }

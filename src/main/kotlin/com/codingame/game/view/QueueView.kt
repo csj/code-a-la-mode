@@ -28,29 +28,30 @@ class QueueView {
     zIndex = -1000
   }
 
-  val wholeGroup = graphicEntityModule.createGroup(*(customerViews.map { it.group } + failureBox).toTypedArray()).apply {
+  val wholeGroup = graphicEntityModule.createGroup().apply {
+    for(c in customerViews)
+      add(c.group)
+    add(failureBox)
     x = QueueView.xRange.first
     y = QueueView.yRange.first
   }
 
   fun updateQueue() {
     customerViews.forEachIndexed { index, custView ->
-      custView.group.apply { y = index * (187 + 20); x = 36 }
-
-      if (index >= queue.activeCustomers.size) {
-        custView.group.isVisible = false
-      } else {
         queue.activeCustomers[index].let {
-          custView.update(it)
-        }
+          custView.update(it, index)
       }
     }
-    failureBox.isVisible = failed
-    graphicEntityModule.commitEntityState(0.0, failureBox)
-    failed = false
+
+    if(failed != failureBox.isVisible){
+      failureBox.isVisible = failed
+      graphicEntityModule.commitEntityState(0.0, failureBox)
+      failed = false
+    }
   }
 
   inner class CustomerView {
+    var model : Customer? = null
     val viewWidth = 343
     val viewHeight = 187
 
@@ -84,16 +85,43 @@ class QueueView {
       fontWeight = Text.FontWeight.BOLDER
 
       x = 127 / 2
+      y = (viewHeight / 6 * 1.5).toInt()
+      anchorX = 0.5
+      anchorY = 0.5
+      zIndex = 350
+      alpha = 1.0
+    }
+
+
+    val plusText = graphicEntityModule.createText("+").apply {
+      fillColor = 0xffffff
+      strokeColor = 0x000000
+      strokeThickness = 2.0
+      fontSize = 25
+      fontWeight = Text.FontWeight.BOLDER
+      x = 127 / 2
       y = viewHeight / 2
       anchorX = 0.5
       anchorY = 0.5
       zIndex = 350
-      alpha = 0.0
+      alpha = 1.0
+    }
+
+    val tiptext = graphicEntityModule.createText("0").apply {
+      fillColor = 0xffffff
+      strokeColor = 0x000000
+      strokeThickness = 2.0
+      fontSize = 35
+      fontWeight = Text.FontWeight.BOLDER
+      x = 127 / 2
+      y = (viewHeight / 6 * 4.5).toInt()
+      anchorX = 0.5
+      anchorY = 0.5
+      zIndex = 350
+      alpha = 1.0
     }
 
     val waitingColour = 0x4286f4
-    val dangerColour = 0xf4d507
-    val angryColour = 0xc13d2c
     val happyColour = 0x37c648
 
     val backgroundBox = graphicEntityModule.createRectangle().apply {
@@ -103,7 +131,11 @@ class QueueView {
       zIndex = 200
       alpha = 0.0
     }
-    val group = graphicEntityModule.createGroup(*foodSprites.toTypedArray()).apply {
+    val group = graphicEntityModule.createGroup().apply {
+      for (f in foodSprites)
+        add(f)
+      add(plusText)
+      add(tiptext)
       add(awardText)
       add(backgroundBox)
     }
@@ -112,28 +144,28 @@ class QueueView {
       tooltipModule.registerEntity(group)
     }
 
-    fun update(customer: Customer) {
-      tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
-
+    fun update(customer: Customer, index: Int) {
       val baseAward = customer.originalAward - Constants.TIP
       val tip = customer.award - baseAward
+
+      tiptext.text = tip.toString()
+      if(customer.satisfaction == Satisfaction.Satisfied){
+        backgroundBox.setFillColor(happyColour).setAlpha(0.5, Curve.IMMEDIATE)
+        graphicEntityModule.commitEntityState(0.0, backgroundBox)
+      }
+
+      if(customer == model)
+        return
+
+      model = customer
+      tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
+      backgroundBox.setFillColor(waitingColour, Curve.IMMEDIATE).setAlpha(0.0, Curve.IMMEDIATE)
+
+      group.apply { y = index * (187 + 20); x = 36 }
+
+      awardText.text = baseAward.toString()
+
       val edibles = customer.dish.contents
-
-      awardText.text = "${baseAward.toString().padStart(4)}\r\n    +\r\n${tip.toString().padStart(4)}"
-      awardText.alpha = 1.0
-
-      backgroundBox.setFillColor(
-          when (customer.satisfaction) {
-            Satisfaction.Waiting -> waitingColour
-            Satisfaction.Satisfied -> happyColour
-            Satisfaction.Danger -> dangerColour
-            Satisfaction.Leaving -> angryColour
-          }, Curve.IMMEDIATE).setAlpha(
-          when (customer.satisfaction) {
-            Satisfaction.Waiting -> 0.0
-            else -> 0.5
-          }, Curve.IMMEDIATE)
-
       foodSprites.forEach { it.isVisible = false }
       edibles.zip(foodSprites).forEach { (edible, foodSprite) ->
         foodSprite.apply {
@@ -147,7 +179,11 @@ class QueueView {
           }
         }
       }
+
+      graphicEntityModule.commitEntityState(0.0, awardText)
+      graphicEntityModule.commitEntityState(0.0, tiptext)
+      for(f in foodSprites)
+        graphicEntityModule.commitEntityState(0.0, f)
     }
   }
-
 }
