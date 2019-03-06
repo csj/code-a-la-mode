@@ -1,0 +1,114 @@
+{
+  "frames": {
+    "player21": {
+      "frame": {
+        "x": 157,
+        "y": 0,
+        "w": 117,
+        "h": 204
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 117,
+        "h": 204
+      },
+      "sourceSize": {
+        "w": 117,
+        "h": 204
+      }
+    },
+    "player20": {
+      "frame": {
+        "x": 0,
+        "y": 34,
+        "w": 135,
+        "h": 162
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 135,
+        "h": 162
+      },
+      "sourceSize": {
+        "w": 135,
+        "h": 162
+      }
+    },
+    "player22": {
+      "frame": {
+        "x": 291,
+        "y": 38,
+        "w": 116,
+        "h": 156
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 116,
+        "h": 156
+      },
+      "sourceSize": {
+        "w": 116,
+        "h": 156
+      }
+    },
+    "player24": {
+      "frame": {
+        "x": 575,
+        "y": 39,
+        "w": 142,
+        "h": 157
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 142,
+        "h": 157
+      },
+      "sourceSize": {
+        "w": 142,
+        "h": 157
+      }
+    },
+    "player23": {
+      "frame": {
+        "x": 416,
+        "y": 40,
+        "w": 140,
+        "h": 160
+      },
+      "rotated": false,
+      "trimmed": false,
+      "spriteSourceSize": {
+        "x": 0,
+        "y": 0,
+        "w": 140,
+        "h": 160
+      },
+      "sourceSize": {
+        "w": 140,
+        "h": 160
+      }
+    }
+  },
+  "meta": {
+    "app": "https://www.leshylabs.com/apps/sstool/",
+    "version": "Leshy SpriteSheet Tool v0.8.4",
+    "image": "Player_green_v3.png",
+    "size": {
+      "w": 717,
+      "h": 204
+    },
+    "scale": 1
+  }
+}
