@@ -28,8 +28,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
   init {
     fun setTooltip(tooltipModule: TooltipModule, cell: Cell, group: Group) {
-      val toolTip = cell.equipment?.let { "Equipment:${it.tooltipString}" } ?: ""
-      tooltipModule.registerEntity(group, toolTip)
+      if(cell.equipment != null){
+        tooltipModule.registerEntity(group, "Equipment:${cell.equipment?.tooltipString}")
+      }
+      else
+        tooltipModule.registerEntity(group)
     }
 
     val floorColor = 0xe0e0eb
@@ -37,7 +40,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 //    val floorColor = 0xe0e0eb
 //    val tableColor = 0xb35900
 
-    graphicEntityModule.createSprite().apply {
+    val background = graphicEntityModule.createSprite().apply {
       image = "background03.jpg"
       baseWidth = 1920
       baseHeight = 1080
@@ -46,6 +49,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       x = 0
       y = 0
     }
+    tooltipModule.registerEntity(background)
 
     val gridHeight = yRange.last - yRange.first
     val gridWidth = xRange.last - xRange.first
@@ -368,7 +372,6 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
     init {
       tooltipModule.registerEntity(group)
-
     }
 
     var isVisible: Boolean = true
