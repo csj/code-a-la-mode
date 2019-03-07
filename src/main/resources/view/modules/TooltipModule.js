@@ -37,6 +37,10 @@ function getEntityState (entity, frame, progress) {
   return null
 }
 
+function replaceAll (str, replace, find) {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
 function getMouseMoveFunc (tooltip, container, module) {
   return function (ev) {
     if (tooltip) {
@@ -105,7 +109,7 @@ function getMouseMoveFunc (tooltip, container, module) {
         }
       }
       if (cellY > 0 && cellY <= 7 && cellX > 0 && cellX <= 11) {
-        tooltipBlocks.push('x: ' + cellX +
+        tooltipBlocks.unshift('x: ' + cellX +
         '\ny: ' + cellY)
       }
 
@@ -116,7 +120,16 @@ function getMouseMoveFunc (tooltip, container, module) {
           }
         }
 
-        tooltip.label.text = tooltipBlocks.join('\n')
+        var txt = tooltipBlocks.filter(t => t !== '').join('\n')
+        txt = replaceAll(txt, 'DISH', '#D')
+        txt = replaceAll(txt, 'ICE_CREAM', '#I')
+        txt = replaceAll(txt, 'DOUGH', '#H')
+        txt = replaceAll(txt, 'STRAWBERRIES', '#S')
+        txt = replaceAll(txt, 'TART', '#T')
+        txt = replaceAll(txt, 'BLUEBERRIES', '#B')
+        txt = replaceAll(txt, 'CROISSANT', '#C')
+        txt = replaceAll(txt, 'CHOPPED', '#O')
+        tooltip.label.text = txt
         tooltip.visible = true
       } else {
         tooltip.visible = false
