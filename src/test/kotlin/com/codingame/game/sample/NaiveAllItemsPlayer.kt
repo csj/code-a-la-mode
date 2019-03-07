@@ -23,72 +23,72 @@ Raisin Bran?!
 Well, don't you
 know that other kids
 are starving in
-Japan? So eat it
-Just eat it
-Don't wanna argue
+Japan? So eat it!
+Just eat it.
+Don't wanna argue,
 I don't wanna debate
 Don't wanna hear
 about what kind of
-food you hate
+food you hate!
 You won't get no
 dessert 'till you
 clean off your plate
 So eat it. Don't you
-tell me you're full
-Just eat it, eat it,
-eat it, eat it
+tell me you're full,
+just eat it, eat it,
+eat it, eat it,
 Get yourself an egg
-and beat it
+and beat it!
 Have some more
 chicken, have some
 more pie, it doesn't
 matter if it's
-broiled or fried
+broiled or fried,
 Just eat it, eat it,
-just eat it, eat it
+just eat it, eat it!
 Your table manners are
-a cryin' shame
+a cryin' shame.
 You're playin' with
 your food, this
 ain't some kind of
 game! Now, if you
 starve to death,
 you'll just have
-yourself to blame
+yourself to blame.
 So eat it
-just eat it
-You better listen
+just eat it!
+You better listen,
 better do what
 you're told, you
 haven't even
 touched your tuna
-casserole
+casserole!
 You better chow
 down or it's gonna
-get cold So eat it
+get cold, so eat it.
 I don't care if
-you're full
-Just eat it, eat it
-Eat it, eat it
+you're full,
+just eat it, eat it
+Eat it, eat it.
 Open up your mouth
-and feed it
+and feed it.
 Have some more
 yogurt, have some
-more Spam
+more Spam.
 It doesn't matter
 if it's fresh or
-canned Just eat it
+canned, just eat it
 Eat it, eat it
 Don't you make me
-Repeat it
-Have a banana
-Have a whole bunch
+Repeat it!
+Have a banana,
+Have a whole bunch.
 It doesn't matter
 what you had for
 lunch, just eat it!"""
       .split("\n", " ")
       .asSequence()
-      .splitAccumulate(20)
+      .splitAccumulate(18)
       .iterator()
 
   lateinit var goal: Item
