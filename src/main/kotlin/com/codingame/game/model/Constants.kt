@@ -2,7 +2,7 @@ package com.codingame.game.model
 
 object Constants {
   enum class ITEM {
-    FOOD, DOUGH, DISH, STRAWBERRIES, SHELL, RAW_TART
+    FOOD, DOUGH, DISH, STRAWBERRIES, CHOPPED_DOUGH, RAW_TART
   }
   
   enum class FOOD {
