@@ -35,14 +35,14 @@ class ScoresView(matchPlayers: List<Player>) {
       }
       1 -> {
         playerScoreViews[players[0]]!!.group.apply {
-          y = 34
+          y = 857
           isVisible = true
         }
         playerScoreViews[players[1]]!!.group.apply {
           isVisible = false
         }
         playerScoreViews[players[2]]!!.group.apply {
-          y = 857
+          y = 34
           isVisible = true
         }
       }
@@ -61,6 +61,7 @@ class ScoresView(matchPlayers: List<Player>) {
       }
     }
     scores.forEach { player, entry ->
+      graphicEntityModule.commitEntityState(0.0, playerScoreViews[player]!!.group)
       playerScoreViews[player]!!.update(entry)
 
       playerScoreViews[player]!!.messageText.text = (player.message)
@@ -93,25 +94,24 @@ class ScoresView(matchPlayers: List<Player>) {
       strokeThickness = 3.0
       strokeColor = 0
       zIndex = 350
-
     }
 
     private val scoreTexts = // List(3) { i ->
         graphicEntityModule.createText("--").apply {
           fillColor = 0xffffff
-          fontSize = 35
+          fontSize = 25
           x = 120
           y = 87
           anchorX = 0.0
           anchorY = 0.0
           zIndex = 350
         }
-    //}
+//    }
 
     val messageText =
         graphicEntityModule.createText("").apply {
           fillColor = 0xffffff
-          fontSize = 25
+          fontSize = 38
           x = 120
           y = viewHeight - 20
           anchorX = 0.0
@@ -119,6 +119,11 @@ class ScoresView(matchPlayers: List<Player>) {
           zIndex = 350
         }
 
+
+    init {
+      textLimitModule.limitAvailableSpace(playerNameText, 350, 100)
+      textLimitModule.limitAvailableSpace(messageText, 205, 55)
+    }
 
     val backgroundBox = graphicEntityModule.createRectangle().apply {
       fillColor = player.colorToken
@@ -140,8 +145,7 @@ class ScoresView(matchPlayers: List<Player>) {
       if(playerNameText.text.length > 8 && !playerNameText.text.endsWith("..."))
         playerNameText.text = playerNameText.text.substring(0,8) + "..."
 
-      if (currentRoundNumber >= 3) return
-      entry.roundScores[currentRoundNumber]?.let { scoreTexts.text = it.toString() }
+      scoreTexts.text = entry.roundScores.joinToString("   ") { it?.toString() ?: "--" }
     }
 
   }

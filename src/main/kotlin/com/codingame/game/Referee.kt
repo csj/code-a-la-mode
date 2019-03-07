@@ -9,8 +9,9 @@ import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.endscreen.EndScreenModule
-import com.codingame.gameengine.module.entities.*
+import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.google.inject.Inject
+import nicknameHandlerModule.TextLimitModule
 import tooltipModule.TooltipModule
 import java.util.*
 
@@ -33,6 +34,8 @@ class Referee : AbstractReferee() {
   private lateinit var graphicEntityModule: GraphicEntityModule
   @Inject private lateinit var tooltipModule: TooltipModule
   @Inject private lateinit var endScreenModule :EndScreenModule
+  @Inject private lateinit var textLimitModule: TextLimitModule
+
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -51,6 +54,7 @@ class Referee : AbstractReferee() {
     rand = Random(gameManager.seed)
     com.codingame.game.view.graphicEntityModule = graphicEntityModule
     com.codingame.game.view.tooltipModule = tooltipModule
+    com.codingame.game.view.textLimitModule = textLimitModule
 
     matchPlayers = gameManager.players.toMutableList()
     scoreBoard = mapOf(
@@ -112,6 +116,9 @@ class Referee : AbstractReferee() {
         gameManager.endGame()
         return
       }
+      currentRound!!.players.forEach {
+        gameManager.addTooltip(it, "Round ${roundNumber + 1} starting!")
+      }
       view.boardView.resetPlayers()
     } else {
       currentRound!!.gameTurn(turn)
@@ -132,7 +139,7 @@ class Referee : AbstractReferee() {
     endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
 
-  inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
+  inner class RoundReferee(val players: List<Player>, roundNumber: Int) {
     var score = 0
 
     private fun ScoreBoard.setScore(roundNumber: Int, score: Int) {
@@ -177,7 +184,7 @@ class Referee : AbstractReferee() {
       fun sendGameState(player: Player) {
 
         // 0. Describe turns remaining
-        player.sendInputLine((200 - turn) / 2)
+        player.sendInputLine(200 - turn)
 
         // 1. Describe self, then partner
         players.sortedByDescending { it == player }.forEach {
@@ -214,38 +221,43 @@ class Referee : AbstractReferee() {
       }
 
       fun processPlayerActions(player: Player) {
-          var line = if (!player.isActive) "WAIT" else player.outputs[0].trim()
-          if(line.isEmpty()) line = "WAIT"
+        var line = if (!player.isActive) "WAIT" else player.outputs[0].trim()
+        if(line.isEmpty()) line = "WAIT"
 
-          val splittedOutput = ("$line ").split(";")
-          val fullCommand = splittedOutput[0]
-          val toks = fullCommand.split(" ").iterator()
+        val semicolon = line.indexOf(';').nullIf(-1)
 
-          val command = toks.next()
-          var path: List<Cell>? = null
+        val fullCommand = if (semicolon != null) {
+          player.message = line.substring(semicolon + 1).replace(";", "").take(18)
+          line.substring(0, semicolon)
+        } else {
+          player.message = ""
+          line
+        }
 
-          if (command != "WAIT") {
-            if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-            val cellx = toks.next().toInt()
+        val toks = fullCommand.split(" ").iterator()
+        val command = toks.next()
+        var path: List<Cell>? = null
 
-            if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-            val celly = toks.next().toInt()
+        if (command != "WAIT") {
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
+          val cellx = toks.next().toInt()
 
-            val target = board[cellx, celly]
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
+          val celly = toks.next().toInt()
 
-            path = when (command) {
-              "MOVE" -> player.moveTo(target)
-              "USE" -> player.use(target)
-              else -> throw Exception("Invalid command: $fullCommand")
-            }
+          val target = board[cellx, celly]
+
+          path = when (command) {
+            "MOVE" -> player.moveTo(target)
+            "USE" -> player.use(target)
+            else -> throw Exception("Invalid command: $fullCommand")
           }
+        }
 
-          if(splittedOutput.size > 1) player.message = splittedOutput[1].take(9)
-          else player.message = ""
-          view.boardView.updatePlayer(player, path)
+        view.boardView.updatePlayer(player, path)
       }
 
-//      println("Current players: ${players.map { it.nicknameToken }}")
+      //println("Current players: ${players.map { it.nicknameToken }}")
       queue.getNewCustomers()
       sendGameState(thePlayer)
       thePlayer.execute()
@@ -276,6 +288,7 @@ class Referee : AbstractReferee() {
     }
   }
 }
+
 
 
 private fun Player.describeCustomers(customers: List<Customer>) {

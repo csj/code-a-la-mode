@@ -1,14 +1,11 @@
 package com.codingame.game.model
 
-import com.codingame.game.League
-import com.codingame.game.Player
-import com.codingame.game.league
-import com.codingame.game.rand
+import com.codingame.game.*
 
 val originalQueue = List(20) { Customer.randomCustomer() }
 
-class CustomerQueue() {
-  val queueIterator = originalQueue.iterator()
+class CustomerQueue {
+  private val queueIterator = originalQueue.loopingIterator()
 
   val activeCustomers: MutableList<Customer> = mutableListOf()
 
@@ -24,7 +21,7 @@ class CustomerQueue() {
 
   fun getNewCustomers() {
     activeCustomers.removeIf {
-      it.satisfaction in listOf(Satisfaction.Satisfied, Satisfaction.Leaving)
+      it.satisfaction in listOf(Satisfaction.Satisfied)
     }
     while(activeCustomers.size < 3) {
       activeCustomers += queueIterator.next().also {
@@ -43,8 +40,6 @@ class CustomerQueue() {
 enum class Satisfaction {
   Waiting,
   Satisfied,
-  Danger,
-  Leaving
 }
 
 data class Customer(val dish: Dish, var award: Int) {
@@ -53,19 +48,14 @@ data class Customer(val dish: Dish, var award: Int) {
 
   fun updateSatisfaction() {
     award -= 1
-    satisfaction = when {
-      award > 25 -> Satisfaction.Waiting
-      award > 10 -> Satisfaction.Danger
-      else -> Satisfaction.Leaving
-    }
   }
 
   companion object {
     private val possiblePlateContents =
         mapOf(IceCream to 200, Blueberries to 250) +
         (if (league >= League.StrawberriesChoppingBoard) mapOf(ChoppedStrawberries to 400) else mapOf()) +
-        (if (league >= League.Croissants) mapOf(Croissant to 600) else mapOf()) +
-        (if (league >= League.All) mapOf(Tart to 800) else mapOf())
+        (if (league >= League.Croissants) mapOf(Croissant to 650) else mapOf()) +
+        (if (league >= League.All) mapOf(Tart to 1000) else mapOf())
 
     private fun randomOrder(): Dish =
         Dish(possiblePlateContents.keys.shuffled(rand)
