@@ -223,8 +223,7 @@ class Referee : AbstractReferee() {
         val semicolon = line.indexOf(';').nullIf(-1)
 
         val fullCommand = if (semicolon != null) {
-          player.message = line.substring(semicolon + 1).take(9)
-              .also { System.err.println("player message is: [$it]") }
+          player.message = line.substring(semicolon + 1).replace(";", "").take(9)
           line.substring(0, semicolon)
         } else {
           player.message = ""

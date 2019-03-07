@@ -113,7 +113,7 @@ lunch, just eat it!"""
         item.name to (inputs.tables.firstOrNull { it.equipment == char } )
       }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
-      stdout.println((act() ?: "WAIT") + ";" + (lyrics.tryNext() ?: "") + "a;a")
+      stdout.println((act() ?: "WAIT") + ";" + (lyrics.tryNext() ?: ""))
     }
   }
 
