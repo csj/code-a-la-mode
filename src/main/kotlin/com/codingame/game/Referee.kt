@@ -60,9 +60,7 @@ class Referee : AbstractReferee() {
     )
     gameManager.maxTurns = 606
 
-    league =
-//        when(4) {
-        when (gameManager.leagueLevel) {
+    league = when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
       2 -> League.StrawberriesChoppingBoard
       3 -> League.Croissants
@@ -219,8 +217,8 @@ class Referee : AbstractReferee() {
       }
 
       fun processPlayerActions(player: Player) {
-          var line = if (!player.isActive) "WAIT" else player.outputs[0].trim()
-          if(line.isEmpty()) line = "WAIT"
+        var line = if (!player.isActive) "WAIT" else player.outputs[0].trim()
+        if(line.isEmpty()) line = "WAIT"
 
           val splittedOutput = ("$line ").split(";")
           val fullCommand = splittedOutput[0]
@@ -229,28 +227,28 @@ class Referee : AbstractReferee() {
           val command = toks.next()
           var path: List<Cell>? = null
 
-          if (command != "WAIT") {
-            if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-            val cellx = toks.next().toInt()
+        if (command != "WAIT") {
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
+          val cellx = toks.next().toInt()
 
-            if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-            val celly = toks.next().toInt()
+          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
+          val celly = toks.next().toInt()
 
-            val target = board[cellx, celly]
+          val target = board[cellx, celly]
 
-            path = when (command) {
-              "MOVE" -> player.moveTo(target)
-              "USE" -> player.use(target)
-              else -> throw Exception("Invalid command: $fullCommand")
-            }
+          path = when (command) {
+            "MOVE" -> player.moveTo(target)
+            "USE" -> player.use(target)
+            else -> throw Exception("Invalid command: $fullCommand")
           }
+        }
 
           if(splittedOutput.size > 1) player.message = splittedOutput[1].take(9)
           else player.message = ""
           view.boardView.updatePlayer(player, path)
       }
 
-//      println("Current players: ${players.map { it.nicknameToken }}")
+      //println("Current players: ${players.map { it.nicknameToken }}")
       queue.getNewCustomers()
       sendGameState(thePlayer)
       thePlayer.execute()
@@ -281,6 +279,7 @@ class Referee : AbstractReferee() {
     }
   }
 }
+
 
 
 private fun Player.describeCustomers(customers: List<Customer>) {

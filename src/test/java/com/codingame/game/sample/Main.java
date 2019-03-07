@@ -15,6 +15,8 @@ public class Main {
         gameRunner.addAgent(NaiveAllItemsPlayer.class);
 //        gameRunner.addAgent(HugPlayer.class);
 
+        gameRunner.setLeagueLevel(4);
+
         gameRunner.start();
     }
 }
