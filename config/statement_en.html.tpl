@@ -213,6 +213,18 @@
         <p>
           Cooking takes <const>5</const> turns, after which the food is READY. The food will remain READY for <const>5</const> more turns, after which it will be burned away and need to be restarted.
         </p>
+        <!-- BEGIN level1 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level2 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level3 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level4 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px;"></img>
+        <!-- END -->
       </div>
       <!-- END -->
       <p>
