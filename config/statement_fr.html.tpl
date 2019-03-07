@@ -28,16 +28,19 @@
     <span class="statement-league-alert-content">
       <!-- BEGIN level1 -->
       Les ligues Bois doivent être considérées comme un tutoriel pour apprendre les différentes règles du jeu. <br>
-      En ligue Bronze, toutes les règles sont débloquées et alors débute le challenge, le vrai.
+      En ligue Bronze, toutes les règles sont débloquées et alors débute le challenge, le vrai. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level2 -->
-      En ligue Bois 2, les clients peuvent commander un dessert plus complexe : des fraises découpées. Les fraises doivent être découpées à la planche à découper.
+      En ligue Bois 2, les clients peuvent commander un dessert plus complexe : des fraises découpées. Les fraises doivent être découpées à la planche à découper. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level3 -->
-      En ligue Bois 1, les clients peuvent commander un dessert plus complexe : des croissants. Une pâte est cuite en croissants dans le four.
+      En ligue Bois 1, les clients peuvent commander un dessert plus complexe : des croissants. Une pâte est cuite en croissants dans le four. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level4 -->
       En ligue Bronze, les clients peuvent commander un desserts encore plus complexes: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
+      <!-- END -->
+      <!-- BEGIN level1 level2 level3 -->
+      Des IAs de base sont disponibles dans le <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles ne peuvent pas battre le premier boss mais vous aideront à démarrer.
       <!-- END -->
     </span>
   </div>
