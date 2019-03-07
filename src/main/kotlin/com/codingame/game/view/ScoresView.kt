@@ -3,7 +3,6 @@ package com.codingame.game.view
 import com.codingame.game.Player
 import com.codingame.game.Referee
 import com.codingame.game.ScoreBoard
-import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Text
 
 class ScoresView(matchPlayers: List<Player>) {
@@ -95,7 +94,6 @@ class ScoresView(matchPlayers: List<Player>) {
       strokeThickness = 3.0
       strokeColor = 0
       zIndex = 350
-
     }
 
     private val scoreTexts = // List(3) { i ->
@@ -113,7 +111,7 @@ class ScoresView(matchPlayers: List<Player>) {
     val messageText =
         graphicEntityModule.createText("").apply {
           fillColor = 0xffffff
-          fontSize = 25
+          fontSize = 38
           x = 120
           y = viewHeight - 20
           anchorX = 0.0
@@ -121,6 +119,11 @@ class ScoresView(matchPlayers: List<Player>) {
           zIndex = 350
         }
 
+
+    init {
+      textLimitModule.limitAvailableSpace(playerNameText, 350, 100)
+      textLimitModule.limitAvailableSpace(messageText, 205, 55)
+    }
 
     val backgroundBox = graphicEntityModule.createRectangle().apply {
       fillColor = player.colorToken

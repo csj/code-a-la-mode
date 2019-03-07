@@ -157,7 +157,12 @@ class NaiveAllItemsPlayer(
                 item.name to (inputs.tables.firstOrNull { it.equipment == char } )
             }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
-            stdout.println(act() ?: "WAIT")
+            if (turn % 3 == 0) {
+                stdout.println("WAIT")
+            } else {
+                stdout.println(act() ?: "WAIT")
+            }
+
         }
     }
 
