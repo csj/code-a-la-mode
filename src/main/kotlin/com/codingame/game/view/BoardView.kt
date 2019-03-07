@@ -416,9 +416,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         }
       }
 
-      (subSprites + mainSprite).forEach {
-        graphicEntityModule.commitEntityState(0.5, it)
-      }
+      graphicEntityModule.commitWorldState(0.5)
       if (mainSprite.isVisible) {
           tooltipModule.updateExtraTooltipText(group,"Item: " + item?.describe())
       } else {
