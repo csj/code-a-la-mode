@@ -115,7 +115,7 @@ data class Customer(val dish: Item, val award: Int)
 
 object Constants {
     enum class ITEM {
-        FOOD, DOUGH, DISH, STRAWBERRIES, SHELL, RAW_TART
+        FOOD, DOUGH, DISH, STRAWBERRIES, CHOPPED_DOUGH, RAW_TART
     }
 
     enum class FOOD {
@@ -277,11 +277,11 @@ class NaiveAllItemsPlayer(
 
         val carrying = inputs.myPlayer.carrying
         when {
-            carrying == null -> // find the closest tart shell, or get one from the box
+            carrying == null -> // find the closest tart CHOPPED_DOUGH, or get one from the box
             {
-                stderr.println("looking for shell")
+                stderr.println("looking for CHOPPED_DOUGH")
                 val tart = (inputs.tables.filter {
-                    it.item?.itemType == Constants.ITEM.SHELL.name
+                    it.item?.itemType == Constants.ITEM.CHOPPED_DOUGH.name
                 } + crates[Constants.ITEM.DOUGH.name]!!)
                     .minBy { abs(it.x - x) + abs(it.y - y) }
 
@@ -291,11 +291,11 @@ class NaiveAllItemsPlayer(
             carrying.itemType == Constants.ITEM.DOUGH.name ->
                 return findEquipment('C')!!.use()
 
-            carrying.itemType == Constants.ITEM.SHELL.name ->
+            carrying.itemType == Constants.ITEM.CHOPPED_DOUGH.name ->
                 return crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
 
             carrying.itemType == Constants.ITEM.RAW_TART.name -> {
-                stderr.println("shell is complete; heading for oven")
+                stderr.println("CHOPPED_DOUGH is complete; heading for oven")
                 return findEquipment('O')!!.use()
             }
         }
