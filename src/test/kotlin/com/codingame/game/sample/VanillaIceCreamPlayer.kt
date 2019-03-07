@@ -13,7 +13,7 @@ class IceCreamPlayer(
 
   init {
     while (true) {
-      val inputs = readInputs()
+      readInputs()
       val me = inputs.myPlayer
 
       val iceCreamLoc = inputs.tables.firstOrNull { it.equipment == 'I' }

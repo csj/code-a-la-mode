@@ -11,6 +11,9 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
   val height: Int = 7
   val layout: List<String>
 
+  lateinit var inputs: GameState
+    private set
+
   init {
     val longQueue = List(scanner.nextInt()) {
       Customer(Item.parse(scanner.next())!!, scanner.nextInt())
@@ -20,7 +23,7 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
         .also { stderr.println("Table layout:\n$it")}
   }
 
-  protected fun readInputs(): GameState {
+  protected fun readInputs() {
     val turnsRemaining = scanner.nextInt()
         .also { stderr.println("Turns remaining: $it") }
     val myPlayer = Player(scanner.nextInt(), scanner.nextInt(), Item.parse(scanner.next()))
@@ -44,8 +47,12 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
       Customer(Item.parse(scanner.next())!!, scanner.nextInt())
     }
 
-    return GameState(myPlayer, myFriend, tables, queue, ovenContents, ovenTimer)
+    inputs = GameState(myPlayer, myFriend, tables, queue, ovenContents, ovenTimer)
   }
+
+  fun findEquipment(equipmentChar: Char) =
+      inputs.tables.firstOrNull { it.equipment == equipmentChar }
+
 }
 
 private fun Char.nullIf(char: Char) = if (this == char) null else this

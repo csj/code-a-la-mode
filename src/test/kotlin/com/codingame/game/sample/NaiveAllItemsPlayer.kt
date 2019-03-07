@@ -92,17 +92,13 @@ lunch, just eat it!"""
       .iterator()
 
   lateinit var goal: Item
-  lateinit var inputs: GameState
   lateinit var crates: Map<String, Table>
-
-  private fun findEquipment(equipmentChar: Char) =
-      inputs.tables.firstOrNull { it.equipment == equipmentChar }
 
   init {
     var turn = 0
     while (true) {
       turn++
-      inputs = readInputs()
+      readInputs()
 
       crates = listOf(
           Constants.FOOD.BLUEBERRIES to 'B',
