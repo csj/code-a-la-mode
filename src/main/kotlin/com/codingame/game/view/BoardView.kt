@@ -287,46 +287,46 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 
   fun updatePlayer(player: Player, playerPath: List<Cell>?, hardTransition: Boolean = false) {
-    if (!player.crashed) {
-      player.characterSprite.isVisible = true
-      player.itemSprite.isVisible = true
+    if (player.crashed) return
 
-      player.itemSprite.update(player.heldItem)
+    player.characterSprite.isVisible = true
+    player.itemSprite.isVisible = true
 
-      if(player.characterSprite.image === null) {
-        player.characterSprite.image = playerSprites[player.index][0]
-        player.characterSprite.anchorX = playerSpriteAnchors[0].getX()
-        player.characterSprite.anchorY = playerSpriteAnchors[0].getY()
-      }
+    player.itemSprite.update(player.heldItem)
 
-      if (playerPath == null) {
-        player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
-      } else {
-        println(playerPath)
-        playerPath.forEachIndexed { index, cell ->
-          if(playerPath.size > 1 && playerPath.first() !== playerPath.last()) {
-            if (index + 1 < playerPath.size) {
-              var nextCell = playerPath[index + 1]
-              var spriteNum = 0
-              when {
-                nextCell.x < cell.x -> spriteNum = 1
-                nextCell.x > cell.x -> spriteNum = 2
-                nextCell.y > cell.y -> spriteNum = 3
-                nextCell.y < cell.y -> spriteNum = 4
-              }
-              player.characterSprite.image = playerSprites[player.index][spriteNum]
-              player.characterSprite.anchorX = playerSpriteAnchors[spriteNum].getX()
-              player.characterSprite.anchorY = playerSpriteAnchors[spriteNum].getY()
-              graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.characterSprite)
-            }
-          }
-          player.sprite.setLocation(cell)
-          graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.sprite)
-        }
-      }
-
-      graphicEntityModule.commitEntityState(0.9, player.sprite)
+    if(player.characterSprite.image === null) {
+      player.characterSprite.image = playerSprites[player.index][0]
+      player.characterSprite.anchorX = playerSpriteAnchors[0].getX()
+      player.characterSprite.anchorY = playerSpriteAnchors[0].getY()
     }
+
+    if (playerPath == null) {
+      player.sprite.setLocation(board[player.location.x, player.location.y], hardTransition)
+    } else {
+      println(playerPath)
+      playerPath.forEachIndexed { index, cell ->
+        if(playerPath.size > 1 && playerPath.first() !== playerPath.last()) {
+          if (index + 1 < playerPath.size) {
+            var nextCell = playerPath[index + 1]
+            var spriteNum = 0
+            when {
+              nextCell.x < cell.x -> spriteNum = 1
+              nextCell.x > cell.x -> spriteNum = 2
+              nextCell.y > cell.y -> spriteNum = 3
+              nextCell.y < cell.y -> spriteNum = 4
+            }
+            player.characterSprite.image = playerSprites[player.index][spriteNum]
+            player.characterSprite.anchorX = playerSpriteAnchors[spriteNum].getX()
+            player.characterSprite.anchorY = playerSpriteAnchors[spriteNum].getY()
+            graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.characterSprite)
+          }
+        }
+        player.sprite.setLocation(cell)
+        graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.sprite)
+      }
+    }
+
+    graphicEntityModule.commitEntityState(0.9, player.sprite)
   }
 
   fun removePlayer(player: Player) {
@@ -409,18 +409,16 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
               }
             }
           }
-          is Shell -> {
-            if (item.hasBlueberry) {
-              image = "paton_bb.png"
-            } else {
-              image = "paton_cut_big.png"
-            }
-          }
+          is Shell ->
+            image = if (item.hasBlueberry) "paton_bb.png" else "paton_cut_big.png"
 
           else -> mainSprite.isVisible = false
         }
       }
 
+      (subSprites + mainSprite).forEach {
+        graphicEntityModule.commitEntityState(0.5, it)
+      }
       tooltipModule.updateExtraTooltipText(group,
           if (mainSprite.isVisible) "Item: " + item?.describe() else ""
       )

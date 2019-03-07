@@ -115,7 +115,7 @@ class Referee : AbstractReferee() {
         return
       }
       currentRound!!.players.forEach {
-        gameManager.addTooltip(it, "Round $roundNumber starting!")
+        gameManager.addTooltip(it, "Round ${roundNumber + 1} starting!")
       }
       view.boardView.resetPlayers()
     } else {
