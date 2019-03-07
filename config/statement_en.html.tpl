@@ -27,17 +27,20 @@
     </p>
     <span class="statement-league-alert-content">
       <!-- BEGIN level1 -->
-      Wood leagues should be considered as a tutorial which lets players discover the different rules of the game. <br>
-      In Bronze league, all rules will be unlocked and the real challenge will begin.
+      Wood leagues should be considered as a tutorial which lets players discover the different rules of the game. <br/>
+      In Bronze league, all rules will be unlocked and the real challenge will begin. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level2 -->
-      In Wood 2, customers can order a more complex dessert: chopped strawberries. Strawberries need to be chopped at the chopping board.
+      In Wood 2, customers can order a more complex dessert: chopped strawberries. Strawberries need to be chopped at the chopping board. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level3 -->
-      In Wood 1, customers can order a more complex dessert: croissants. Dough is cooked into croissants at the oven.
+      In Wood 1, customers can order a more complex dessert: croissants. Dough is cooked into croissants at the oven. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level4 -->
       In Bronze, customers can order an even more complex dessert: blueberry tart. Dough needs to be chopped at the chopping board. Then, blueberries should be added to have a raw tart. The raw tart needs then to be cooked into a blueberry tart at the oven.
+      <!-- END -->
+      <!-- BEGIN level1 level2 level3 -->
+      Starter AIs are available in the <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can't beat the first boss but will help you get started with coding.
       <!-- END -->
     </span>
   </div>
