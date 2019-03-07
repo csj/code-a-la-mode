@@ -88,7 +88,7 @@ what you had for
 lunch, just eat it!"""
       .split("\n", " ")
       .asSequence()
-      .splitAccumulate()
+      .splitAccumulate(20)
       .iterator()
 
   lateinit var goal: Item
