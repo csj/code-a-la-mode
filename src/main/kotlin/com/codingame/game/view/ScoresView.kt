@@ -96,10 +96,6 @@ class ScoresView(matchPlayers: List<Player>) {
       zIndex = 350
     }
 
-    init {
-      nicknamesHandlerModule.registerNickname(playerNameText)
-    }
-
     private val scoreTexts = // List(3) { i ->
         graphicEntityModule.createText("--").apply {
           fillColor = 0xffffff
@@ -115,7 +111,7 @@ class ScoresView(matchPlayers: List<Player>) {
     val messageText =
         graphicEntityModule.createText("").apply {
           fillColor = 0xffffff
-          fontSize = 25
+          fontSize = 38
           x = 120
           y = viewHeight - 20
           anchorX = 0.0
@@ -123,6 +119,11 @@ class ScoresView(matchPlayers: List<Player>) {
           zIndex = 350
         }
 
+
+    init {
+      textLimitModule.limitAvailableSpace(playerNameText, 350, 100)
+      textLimitModule.limitAvailableSpace(messageText, 205, 55)
+    }
 
     val backgroundBox = graphicEntityModule.createRectangle().apply {
       fillColor = player.colorToken
