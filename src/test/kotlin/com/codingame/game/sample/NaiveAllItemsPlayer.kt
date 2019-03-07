@@ -237,7 +237,7 @@ lunch, just eat it!"""
       {
         stderr.println("looking for shell")
         val tart = (inputs.tables.filter {
-          it.item?.itemType == Constants.ITEM.SHELL.name
+          it.item?.itemType == Constants.ITEM.CHOPPED_DOUGH.name
         } + crates[Constants.ITEM.DOUGH.name]!!)
             .minBy { abs(it.x - x) + abs(it.y - y) }
 
@@ -247,7 +247,7 @@ lunch, just eat it!"""
       carrying.itemType == Constants.ITEM.DOUGH.name ->
         return findEquipment('C')!!.use()
 
-      carrying.itemType == Constants.ITEM.SHELL.name ->
+      carrying.itemType == Constants.ITEM.CHOPPED_DOUGH.name ->
         return crates[Constants.FOOD.BLUEBERRIES.name]!!.use()
 
       carrying.itemType == Constants.ITEM.RAW_TART.name -> {

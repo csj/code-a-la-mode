@@ -23,5 +23,5 @@ data class Shell(var hasBlueberry: Boolean = false): Item() {
   }
 
   override fun describeTokens() =
-    listOf(if (hasBlueberry) Constants.ITEM.RAW_TART.name else Constants.ITEM.SHELL.name)
+    listOf(if (hasBlueberry) Constants.ITEM.RAW_TART.name else Constants.ITEM.CHOPPED_DOUGH.name)
 }

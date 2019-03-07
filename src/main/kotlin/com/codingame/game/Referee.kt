@@ -9,7 +9,7 @@ import com.codingame.gameengine.core.AbstractPlayer
 import com.codingame.gameengine.core.AbstractReferee
 import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.endscreen.EndScreenModule
-import com.codingame.gameengine.module.entities.*
+import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.google.inject.Inject
 import tooltipModule.TooltipModule
 import java.util.*
@@ -114,6 +114,9 @@ class Referee : AbstractReferee() {
         gameManager.endGame()
         return
       }
+      currentRound!!.players.forEach {
+        gameManager.addTooltip(it, "Round $roundNumber starting!")
+      }
       view.boardView.resetPlayers()
     } else {
       currentRound!!.gameTurn(turn)
@@ -134,7 +137,7 @@ class Referee : AbstractReferee() {
     endScreenModule.setScores(gameManager.players.map { it.score }.toIntArray())
   }
 
-  inner class RoundReferee(private val players: List<Player>, roundNumber: Int) {
+  inner class RoundReferee(val players: List<Player>, roundNumber: Int) {
     var score = 0
 
     private fun ScoreBoard.setScore(roundNumber: Int, score: Int) {
