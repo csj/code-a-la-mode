@@ -10,9 +10,9 @@ class CellView(val cell: Cell) {
   lateinit var background: Rectangle
   lateinit var content: Sprite
   lateinit var secondaryContent: Sprite
-  lateinit var itemSpriteGroup: BoardView.ItemSpriteGroup
+  var itemSpriteGroup: BoardView.ItemSpriteGroup? = null
   lateinit var group: Group
-  lateinit var text: Text
+//  lateinit var text: Text
 }
 
 class Cell(val x: Int, val y: Int, val isTable: Boolean = true, val character: Char? = null, val playerId: Int? = null) {
