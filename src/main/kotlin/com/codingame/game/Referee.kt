@@ -11,6 +11,7 @@ import com.codingame.gameengine.core.MultiplayerGameManager
 import com.codingame.gameengine.module.endscreen.EndScreenModule
 import com.codingame.gameengine.module.entities.GraphicEntityModule
 import com.google.inject.Inject
+import nicknameHandlerModule.NicknamesHandlerModule
 import tooltipModule.TooltipModule
 import java.util.*
 
@@ -33,6 +34,8 @@ class Referee : AbstractReferee() {
   private lateinit var graphicEntityModule: GraphicEntityModule
   @Inject private lateinit var tooltipModule: TooltipModule
   @Inject private lateinit var endScreenModule :EndScreenModule
+  @Inject private lateinit var nicknamesHandlerModule: NicknamesHandlerModule
+
 
   private lateinit var board: Board
   private lateinit var queue: CustomerQueue
@@ -51,6 +54,7 @@ class Referee : AbstractReferee() {
     rand = Random(gameManager.seed)
     com.codingame.game.view.graphicEntityModule = graphicEntityModule
     com.codingame.game.view.tooltipModule = tooltipModule
+    com.codingame.game.view.nicknamesHandlerModule = nicknamesHandlerModule
 
     matchPlayers = gameManager.players.toMutableList()
     scoreBoard = mapOf(
