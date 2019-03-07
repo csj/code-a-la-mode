@@ -4,6 +4,7 @@ import com.codingame.game.Player
 import com.codingame.game.model.*
 import com.codingame.gameengine.module.entities.*
 import tooltipModule.TooltipModule
+import java.awt.geom.Point2D
 
 
 class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
@@ -198,9 +199,9 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
     for (player in matchPlayers) {
       player.characterSprite = graphicEntityModule.createSprite().apply {
-//        image = "player00"
-        baseHeight = 187
-        baseWidth = 132
+//      image = "player00"
+        scaleX = 0.92
+        scaleY = 0.92
         x = 132 / 2
         y = 100
         anchorX = 0.5
@@ -290,6 +291,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
       if(player.characterSprite.image === null) {
         player.characterSprite.image = playerSprites[player.index][0]
+        player.characterSprite.anchorX = playerSpriteAnchors[0].getX()
+        player.characterSprite.anchorY = playerSpriteAnchors[0].getY()
       }
 
       if (playerPath == null) {
@@ -308,6 +311,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 nextCell.y < cell.y -> spriteNum = 4
               }
               player.characterSprite.image = playerSprites[player.index][spriteNum]
+              player.characterSprite.anchorX = playerSpriteAnchors[spriteNum].getX()
+              player.characterSprite.anchorY = playerSpriteAnchors[spriteNum].getY()
               graphicEntityModule.commitEntityState(0.2 * index + 0.1, player.characterSprite)
             }
           }
@@ -420,23 +425,22 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
   }
 }
 
-private fun Sprite.center() {
-  anchorY = 0.5
-  anchorX = 0.5
-  x = 132 / 2
-  y = 110 / 2
-}
+  private fun Sprite.center() {
+    anchorY = 0.5
+    anchorX = 0.5
+    x = 132 / 2
+    y = 110 / 2
+  }
 
+  val playerSpriteAnchors = arrayOf(
+          Point2D.Double(73/135.toDouble(), 1.toDouble()),
+          Point2D.Double(59/117.toDouble(), 1.toDouble()),
+          Point2D.Double(57/116.toDouble(), 169/156.toDouble()),
+          Point2D.Double(83/141.toDouble(), 168/160.toDouble()),
+          Point2D.Double(59/143.toDouble(), 180/158.toDouble())
+  )
 
-val playerSprites = arrayOf("red", "blue", "green").mapIndexed { index, col ->
-  graphicEntityModule.createSpriteSheetSplitter()
-      .setSourceImage("Player_${col}_v3.png")
-      .setImageCount(5)
-      .setWidth(143)
-      .setHeight(204)
-      .setOrigRow(0)
-      .setOrigCol(0)
-      .setImagesPerRow(5)
-      .setName("player$index")
-      .split()
-}
+  val playerSprites = arrayOf(0,1,2).map { index ->
+    Array(5) { "player$index$it" }
+  }
+
