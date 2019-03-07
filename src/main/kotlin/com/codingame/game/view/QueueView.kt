@@ -20,9 +20,18 @@ class QueueView {
     CustomerView()
   }
 
+  val failureBox = graphicEntityModule.createRectangle().apply {
+    width = QueueView.xRange.last - QueueView.xRange.first
+    height = QueueView.yRange.last - QueueView.yRange.first
+    fillColor = 0xff0000
+    isVisible = false
+    zIndex = -1000
+  }
+
   val wholeGroup = graphicEntityModule.createGroup().apply {
     for(c in customerViews)
       add(c.group)
+    add(failureBox)
     x = QueueView.xRange.first
     y = QueueView.yRange.first
   }
@@ -32,6 +41,12 @@ class QueueView {
         queue.activeCustomers[index].let {
           custView.update(it, index)
       }
+    }
+
+    if(failed != failureBox.isVisible){
+      failureBox.isVisible = failed
+      graphicEntityModule.commitEntityState(0.0, failureBox)
+      failed = false
     }
   }
 
