@@ -63,6 +63,7 @@ class Referee : AbstractReferee() {
         matchPlayers[2] to ScoreEntry(arrayOf(null, 0, 0))
     )
     gameManager.maxTurns = 606
+    gameManager.frameDuration = 400
 
     league = when (gameManager.leagueLevel) {
       1 -> League.IceCreamBerries
@@ -239,18 +240,19 @@ class Referee : AbstractReferee() {
         var path: List<Cell>? = null
 
         if (command != "WAIT") {
-          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-          val cellx = toks.next().toInt()
+          try {
+            val cellx = toks.next().toInt()
+            val celly = toks.next().toInt()
 
-          if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
-          val celly = toks.next().toInt()
+            val target = board[cellx, celly]
 
-          val target = board[cellx, celly]
-
-          path = when (command) {
-            "MOVE" -> player.moveTo(target)
-            "USE" -> player.use(target)
-            else -> throw Exception("Invalid command: $fullCommand")
+            path = when (command) {
+              "MOVE" -> player.moveTo(target)
+              "USE" -> player.use(target)
+              else -> throw Exception("Invalid command: $fullCommand")
+            }
+          } catch (_: Exception) {
+            throw Exception("Invalid command: $fullCommand")
           }
         }
 
@@ -279,7 +281,7 @@ class Referee : AbstractReferee() {
 
     fun disablePlayer(player: Player, message: String?){
       player.crashed = true
-      gameManager.addToGameSummary("${player.nicknameToken}: ${message} (deactivating?)")
+      gameManager.addToGameSummary("${player.nicknameToken}: ${message} (deactivating!)")
       player.deactivate("${player.nicknameToken}: ${message}")
       if (player.heldItem is Dish) {
         board.allCells.mapNotNull { (it.equipment as? DishWasher) }
