@@ -88,7 +88,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                 is ChoppingBoard -> image = "board02.png"
                 is GeneralCrate -> image = "bowl.png"
                 is Oven -> {
-                  image = if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "oven_top.png"
+                  image = if (cell.x == 0) "oven_left.png" else if (cell.x == 10) "oven_right.png" else "microwave.png"
 //                baseHeight = if (cell.x == 0 || cell.x == 10) 131 else 99
 //                baseWidth = if (cell.x == 0 || cell.x == 10) 140 else 132
                   baseHeight = cellHeight
@@ -262,7 +262,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         isVisible = showOvenOverlay
         image = ovenImage
       }
-      ovenGlowSprite!!.isVisible = it.state is OvenState.Baking
+      ovenGlowSprite!!.isVisible = it.state is OvenState.Baking || it.state is OvenState.Ready
     }
 
 

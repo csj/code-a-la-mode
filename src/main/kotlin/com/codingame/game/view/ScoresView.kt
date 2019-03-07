@@ -3,6 +3,7 @@ package com.codingame.game.view
 import com.codingame.game.Player
 import com.codingame.game.Referee
 import com.codingame.game.ScoreBoard
+import com.codingame.gameengine.module.entities.Curve
 import com.codingame.gameengine.module.entities.Text
 
 class ScoresView(matchPlayers: List<Player>) {
@@ -61,6 +62,7 @@ class ScoresView(matchPlayers: List<Player>) {
       }
     }
     scores.forEach { player, entry ->
+      graphicEntityModule.commitEntityState(0.0, playerScoreViews[player]!!.group)
       playerScoreViews[player]!!.update(entry)
 
       playerScoreViews[player]!!.messageText.text = (player.message)
