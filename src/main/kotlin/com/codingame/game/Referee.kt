@@ -220,12 +220,20 @@ class Referee : AbstractReferee() {
         var line = if (!player.isActive) "WAIT" else player.outputs[0].trim()
         if(line.isEmpty()) line = "WAIT"
 
-          val splittedOutput = ("$line ").split(";")
-          val fullCommand = splittedOutput[0]
-          val toks = fullCommand.split(" ").iterator()
+        val semicolon = line.indexOf(';').nullIf(-1)
 
-          val command = toks.next()
-          var path: List<Cell>? = null
+        val fullCommand = if (semicolon != null) {
+          player.message = line.substring(semicolon + 1).take(9)
+              .also { System.err.println("player message is: [$it]") }
+          line.substring(0, semicolon)
+        } else {
+          player.message = ""
+          line
+        }
+
+        val toks = fullCommand.split(" ").iterator()
+        val command = toks.next()
+        var path: List<Cell>? = null
 
         if (command != "WAIT") {
           if(!toks.hasNext()) throw Exception("Invalid command: $fullCommand")
@@ -243,9 +251,7 @@ class Referee : AbstractReferee() {
           }
         }
 
-          if(splittedOutput.size > 1) player.message = splittedOutput[1].take(9)
-          else player.message = ""
-          view.boardView.updatePlayer(player, path)
+        view.boardView.updatePlayer(player, path)
       }
 
       //println("Current players: ${players.map { it.nicknameToken }}")

@@ -38,3 +38,4 @@ fun Sequence<String>.splitAccumulate() = sequence {
 fun <E> List<E>.loopingIterator(): Iterator<E> =
     sequence { while (true) yieldAll(this@loopingIterator) }.iterator()
 
+fun <T> T.nullIf(nullVal: T): T? = if (this == nullVal) null else this
