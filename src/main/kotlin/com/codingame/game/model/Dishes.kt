@@ -33,17 +33,26 @@ class DishWasher: Equipment() {
       player.heldItem = Dish()
       return
     }
+
+    if (item is EdibleItem) {
+      removeDish()
+      player.heldItem = Dish(item)
+      return
+    }
+
     super.receiveItem(player, item)
   }
 
   override fun takeFrom(player: Player): Item {
-    if (dishes <= 0) throw LogicException("Dishwasher is empty!")
-    dishes--
+    removeDish()
     return Dish()
   }
 
-  fun addDish() {
-    dishes++
+  fun addDish() { dishes++ }
+
+  fun removeDish() {
+    if (dishes <= 0) throw LogicException("Dishwasher is empty!")
+    dishes--
   }
 
 }

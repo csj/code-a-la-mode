@@ -1,12 +1,12 @@
 package com.codingame.game.view
 
 import com.codingame.gameengine.module.entities.GraphicEntityModule
-import nicknameHandlerModule.NicknamesHandlerModule
+import nicknameHandlerModule.TextLimitModule
 import tooltipModule.TooltipModule
 
 lateinit var graphicEntityModule: GraphicEntityModule
 lateinit var tooltipModule: TooltipModule
-lateinit var nicknamesHandlerModule: NicknamesHandlerModule
+lateinit var textLimitModule: TextLimitModule
 
 class GameView {
   lateinit var boardView: BoardView
