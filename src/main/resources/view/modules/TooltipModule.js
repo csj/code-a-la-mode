@@ -1,18 +1,8 @@
 import {
-<<<<<<< HEAD
-  ErrorLog
-} from '../core/ErrorLog.js'
-import {
-  WIDTH,
-  HEIGHT
-} from '../core/constants.js'
-import * as utils from '../core/utils.js'
-=======
   WIDTH,
   HEIGHT
 } from '../core/constants.js'
 
->>>>>>> wip on tooltip module
 import {
   api as entityModule
 } from '../entity-module/GraphicEntityModule.js'
@@ -97,18 +87,16 @@ function getMouseMoveFunc (tooltip, container, module) {
             var extra = module.currentFrame.extraText[show]
             if (extra && extra.length) {
               tooltipBlocks.push(extra)
-              console.log(extra.length, extra)
             } else {
               extra = module.currentFrame.extraText[show - 1]
               if (extra && extra.length && tooltipBlocks.indexOf(extra) === -1) {
                 tooltipBlocks.push(extra)
-                console.log(extra.length, extra)
               }
             }
           }
         }
       }
-      if (cellY > 0 && cellY <= 7 && cellX > 0 && cellX <= 11) {
+      if (cellY >= 0 && cellY < 7 && cellX >= 0 && cellX < 11) {
         tooltipBlocks.unshift('x: ' + cellX +
         '\ny: ' + cellY)
       }
@@ -167,7 +155,7 @@ export class TooltipModule {
     this.width = 1910 - 430
     this.height = 1080 - 264
     this.x0 = 430
-    this.y0 = 264
+    this.y0 = 290
   }
 
   static get name () {
@@ -264,14 +252,3 @@ export class TooltipModule {
     playerList = players
   }
 }
-<<<<<<< HEAD
-
-class NotYetImplemented extends Error {
-  constructor (feature) {
-    super('Not yet implemented: "' + feature)
-    this.feature = feature
-    this.name = 'NotYetImplemented'
-  }
-}
-=======
->>>>>>> wip on tooltip module

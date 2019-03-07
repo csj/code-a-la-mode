@@ -419,9 +419,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       (subSprites + mainSprite).forEach {
         graphicEntityModule.commitEntityState(0.5, it)
       }
-      tooltipModule.updateExtraTooltipText(group,
-          if (mainSprite.isVisible) "Item: " + item?.describe() else ""
-      )
+      if (mainSprite.isVisible) {
+          tooltipModule.updateExtraTooltipText(group,"Item: " + item?.describe())
+      } else {
+          tooltipModule.updateExtraTooltipText(group)
+      }
     }
   }
 }
