@@ -55,9 +55,6 @@ class Player {
             else if (!playerItem.contains("BLUEBERRIES")) {
                 k.tables.stream().filter(t -> t.isBlueBerries()).findFirst().get().use();
             }
-            else if (!playerItem.contains("ICE_CREAM")) {
-                k.tables.stream().filter(t -> t.isIceCream()).findFirst().get().use();
-            }
             else {
                 k.tables.stream().filter(t -> t.isEmpty()).findFirst().get().use();
             }
@@ -121,7 +118,6 @@ class Table {
     }
 
     public boolean isDish() {
-        System.err.println(type);
         return isTableType(TableType.PLATES);
     }
 
@@ -142,12 +138,11 @@ class Table {
     }
 
     private boolean isTableType(TableType t) {
-        System.err.println(type.equals(t));
         return type.equals(t);
     }
 
     public void use() {
-        System.out.println("USE "+x+" "+y+" my message");
+        System.out.println("USE "+x+" "+y+"; Java Starter AI");
     }
 }
 

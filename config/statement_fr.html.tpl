@@ -607,7 +607,14 @@ Invalid action
       <p>
         <action>WAIT</action>
       </p>
-      Utilisez cette commande pour passer votre tour.
+      <p>
+        Utilisez cette commande pour passer votre tour.
+      </p>
+      <br>
+      <p>
+        Pour afficher un message dans la vidéo, ajoutez un point-virgule suivi de votre message à la sortie. <br>
+        Ex: <action>USE 0 0; mon message</action>
+      </p>
     </div>
   </div>
 
