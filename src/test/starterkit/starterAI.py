@@ -19,10 +19,10 @@ class Tile:
         self.y = y
         self.name = name
         self.item = None
-    
+
     def parse_name(self):
         return self.name.split("-")
-    
+
     def __repr__(self):
         return "Tile: " + str(self.x) + ", " + str(self.y)
 
@@ -45,7 +45,7 @@ class Game:
         self.player = Player()
         self.partner = Player()
         self.tiles = []
-    
+
     def addTile(self, x, y, tileChar):
         if tileChar != '.':
             self.tiles.append(Tile(x, y, tileChar))
@@ -54,23 +54,24 @@ class Game:
         for t in self.tiles:
             if t.name == name:
                 return t
-        
+
         #If tile not found
         log("Error: Tile not found in function getTileByName")
-        
+
     def getTileByItem(self, item):
         for t in self.tiles:
             if t.item == item:
                 return t
-        
+
         #If tile not found
         log("Error: Tile not found in function getTileByItem")
     
+
     def getTileByCoords(self, x, y):
         for t in self.tiles:
             if t.x == x and t.y == y:
                 return t
-        
+
         #If tile not found
         log("Error: Tile not found in function getTileByCoords")
 
@@ -78,7 +79,7 @@ class Game:
         self.player.x = x
         self.player.y = y
         self.player.item = item
-    
+
     def updatePartner(self, x, y, item):
         self.partner.x = x
         self.partner.y = y
@@ -86,7 +87,7 @@ class Game:
 
     def use(self, tile):
         print("USE", tile.x, tile.y,"; Python Starter AI")
-    
+
     def move(self, tile):
         print("MOVE", tile.x, tile.y)
 #End Util code
@@ -126,7 +127,7 @@ while True:
     game.updatePartner(partner_x, partner_y, partner_item)
 
     #Gather and update table information
-    for t in game.tiles:        
+    for t in game.tiles:
         t.item = None
     num_tables_with_items = int(input())  # the number of tables in the kitchen that currently hold an item
     for i in range(num_tables_with_items):
