@@ -1,6 +1,6 @@
 <!-- LEAGUES level1 level2 level3 level4 -->
 <div class="statement-body">
-  <!-- BEGIN level1 level2 level3 -->
+  <!-- BEGIN level1 level2 level3 level4 -->
   <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 20px;
@@ -31,13 +31,13 @@
       En ligue Bronze, toutes les règles sont débloquées et alors débute le challenge, le vrai. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level2 -->
-      En ligue Bois 2, les clients peuvent commander un dessert plus complexe : des fraises découpées. Les fraises doivent être découpées à la planche à découper. <br/> <br/>
+      En ligue Bois 2, les clients peuvent commander un dessert plus complexe&nbsp;: des fraises découpées. Les fraises doivent être découpées à la planche à découper. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level3 -->
-      En ligue Bois 1, les clients peuvent commander un dessert plus complexe : des croissants. Une pâte est cuite en croissants dans le four. <br/> <br/>
+      En ligue Bois 1, les clients peuvent commander un dessert plus complexe&nbsp;: des croissants. Une pâte est cuite en croissants dans le four. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level4 -->
-      En ligue Bronze, les clients peuvent commander un desserts encore plus complexes: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
+      En ligue Bronze, les clients peuvent commander un dessert encore plus complexe&nbsp;: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
       Des IAs de base sont disponibles dans le <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles ne peuvent pas battre le premier boss mais vous aideront à démarrer.
@@ -242,16 +242,16 @@
         La cuisson dure <const>10</const> tours, après lesquels le plat est prêt (<b>READY</b>). Le plat reste prêt (<b>READY</b>) pendant <const>10</const> autre tours, après lesquels il brûle et disparaît.
       </p>
       <!-- BEGIN level1 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level2 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level3 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level4 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
       <!-- END -->
       <br>
@@ -333,7 +333,7 @@
         <action>USE x y</action>
       </p>
       <p>
-        Utilisez cette commande pour interagir avec la case (x,y). Si le chef est adjacent à la case quand l'action <action>USE</action> est utilisée, l'action est réussie ; sinon, le chef se déplacera en direction de cette case. L'action <action>USE</action> fonctionne en diagonale (8-adjacence).
+        Utilisez cette commande pour interagir avec la case (x,y). Si le chef est adjacent à la case quand l'action <action>USE</action> est utilisée, l'action est réussie&nbsp;; sinon, le chef se déplacera en direction de cette case. L'action <action>USE</action> fonctionne en diagonale (8-adjacence).
       </p>
       <p>
         L'action <action>USE</action> a différents effets qui dépendent de la case. Ils sont listés ci-dessous :
@@ -666,7 +666,7 @@ Invalid action
             Les chefs ne peuvent pas prendre d'assiette s'ils en possèdent déjà une.
           </li>
           <li>
-            Dès que d'un dessert est servi sur une assiette, il ne peut pas en être retirée. Pour vider une assiette, il faut utiliser (<action>USE</action>) le lave-vaisselle avec cette assiette.
+            Dès que d'un dessert est servi sur une assiette, il ne peut pas en être retirée. Pour vider une assiette, il faut utiliser (<action>USE</action>) sur le lave-vaisselle avec cette assiette en main.
           </li>
           <li>
             A chaque tour où un client attend sa commande, la récompense liée décroit de <const>1</const> point.
@@ -726,7 +726,7 @@ Invalid action
           <!-- END -->
           <!-- BEGIN level3 level4 -->
           <li>
-            <const>D</const>: la corbeille de pâte
+            <const>H</const>: la corbeille de pâte
           </li>
           <li>
             <const>O</const>: le four
