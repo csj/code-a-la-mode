@@ -40,7 +40,7 @@
       In Bronze, customers can order an even more complex dessert: blueberry tart. Dough needs to be chopped at the chopping board. Then, blueberries should be added to have a raw tart. The raw tart needs then to be cooked into a blueberry tart at the oven.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
-      Starter AIs are available in the <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can't beat the first boss but will help you get started with coding.
+      Starter AIs are available in the <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can help you get started with coding your own bot.
       <!-- END -->
     </span>
   </div>
