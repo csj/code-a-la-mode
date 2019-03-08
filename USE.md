@@ -1,4 +1,4 @@
-#All Possible USE cases
+# All Possible USE cases
 
 Invalid action results as a **WAIT** action.
 
@@ -13,7 +13,7 @@ Invalid action results as a **WAIT** action.
 **Food Crates**
 
 | Carried Item | Type of Crate | => | Carried Item |
-|:---:|:---:|:---:|:--:|:---:|
+|:---:|:---:|:---:|:---:|
 | none | any |  => | corresponding food |
 | CHOPPED_DOUGH | BLUEBERRY | => | RAW_TART |
 | DISH | BLUEBERRY or ICE_CREAM | => | DISH + (BLUEBERRY or ICE_CREAM) |
