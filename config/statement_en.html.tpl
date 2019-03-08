@@ -414,7 +414,7 @@
     </h2>
     <div class="statement-expert-rules-content">
       <p>
-        You can see the game's source code here: <a href=""></a>.
+        You can see the game's source code here: <a href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
       </p>
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
