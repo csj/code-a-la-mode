@@ -538,7 +538,7 @@
         <span class="statement-lineno">Next line</span>: to ignore in this league <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 -->
-        <span class="statement-lineno">Next line</span>: A string <var>ovenContents</var> for what's in the oven and an integer <var>ovenTimer</var> for the number of turns the food has been put in the oven. <br/>
+        <span class="statement-lineno">Next line</span>: A string <var>ovenContents</var> for what's in the oven and an integer <var>ovenTimer</var> for the number of turns the food will stay in the oven before being cooked or burned. <br/>
         <!-- END -->
         <span class="statement-lineno">First line</span>: an integer <var>numCustomers</var> for the current number of customers waiting for their order. <br/>
         <span class="statement-lineno">Next <var>numCustomers</var> lines</span>:
