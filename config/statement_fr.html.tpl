@@ -609,4 +609,100 @@
   </div>
   <!-- END -->
 
+<div style="background-color: #87cefa;
+    padding: 20px;
+    margin-top: 10px;
+    text-align: left;">
+    <div style="text-align: center; margin-bottom: 6px">
+    </div>
+    <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
+      Evenements de la communauté
+    </p>
+    <p>
+      Ce jeu a été créé par csj et Matteh. Ils ont été par ces testeurs : eulerscheZahl, Illedan, Nanosplitter et SeebOmega.
+    </p>
+    <p>
+      <b> Streams prévus 📺</b>
+    </p>
+    <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
+      🍨 <u>"De Bois à Bronze"</u> (C#)<br />
+        Le 8 mars à 19 h par Illedan sur la <a href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
+    </li>
+    <li>
+        🍫 <u>"Le coup d'oeil du pro"</u> (C++)<br />
+        Le 8 mars à 21 h par Errichto sur ses chaînes <a href="https://www.twitch.tv/errichto">Twitch</a> et <a href="https://youtube.com/errichto">Youtube</a>
+    </li>
+    <li>
+        🍪 <u>"Le mot du créateur"</u> (Kotlin)<br />
+        Le 9 mars à 16 h par csj sur la <a href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
+    </li>
+    <li>
+        🍓 <u>"Affronter la ligue Argent"</u> (Python 3) <br />
+        Le 11 mars à 18 h par Icebox sur la <a href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
+    </li>
+    </ul>
+    <p>
+      <b> CodingHubs prévus 🍿</b>
+    </p>
+    <p>
+      Tous les détails sur les CodingHubs sont <a href="https://trello.com/c/Xy0Qk4nu">ici</a>
+    </p>
+    <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
+      <li>
+        8 mars
+        <ul>
+          <li>
+            LeoLet at Viseo Technologies in Lyon (France)
+          </li>
+          <li>
+            Lechevelut at ADNEOM in Lyon (France)
+          </li>
+          <li>
+            Wusch at Corworking Baunatal in Baunatal (Germany)
+          </li>
+        </ul>
+      </li>
+      <li>
+        9 mars
+        <ul>
+          <li>
+            wahijacodes at a private place in RawalPindi (Pakistan)
+          </li>
+        </ul>
+      </li>
+      <li>
+        11 mars
+        <ul>
+          <li>
+            Ramdeath at Kaunas Saules gymnasium in Kaunas (Lithuania)
+          </li>
+        </ul>
+      </li>
+      <li>
+        13 mars
+        <ul>
+          <li>
+            AntiSquid at EOF Hackspace Co-operative in Oxford (England)
+          </li>
+          <li>
+            egaetan at Meritis in Paris (France)
+          </li>
+          <li>
+            Spacebird1313 at iMagineLab in University of Antwerp (Belgium)
+          </li>
+        </ul>
+      </li>
+      <li>
+        15 mars
+        <ul>
+          <li>
+            Bisou at Société Générale near Paris (France)
+          </li>
+          <li>
+            orendon at WeWork in Medellin (Colombia)
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 </div>

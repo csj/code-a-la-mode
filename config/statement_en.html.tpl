@@ -582,7 +582,7 @@
     </div>
   </div>
 
-  <!-- BEGIN level1 level2 level3 -->
+<!-- BEGIN level1 level2 level3 -->
   <div style="color: #7cc576;
       background-color: rgba(124, 197, 118,.1);
       padding: 20px;
@@ -608,5 +608,103 @@
       </ul>
   </div>
   <!-- END -->
+
+  <div style="background-color: #87cefa;
+    padding: 20px;
+    margin-top: 10px;
+    text-align: left;">
+    <div style="text-align: center; margin-bottom: 6px">
+    </div>
+    <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
+      Community Events
+    </p>
+    <p>
+      This game has been created by csj and Matteh. They have been helped by the following testers: eulerscheZahl, Illedan, Nanosplitter and SeebOmega.
+    </p>
+    <p>
+      <b> Scheduled Streams 📺</b>
+    </p>
+    <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
+      <li>
+        🍨 <u>"From Wood to Bronze"</u> (C#)<br />
+        On March 8th at 1 PM EST by Illedan on the <a href="https://www.twitch.tv/codingame">CodinGame channel</a>
+      </li>
+      <li>
+          🍫 <u>"A look from the pro"</u> (C++)<br />
+          On March 8th at 3 PM EST by Errichto on his <a href="https://www.twitch.tv/errichto">Twitch</a> and <a href="https://youtube.com/errichto">Youtube</a> channels
+      </li>
+      <li>
+          🍪 <u>"A word from the creator"</u> (Kotlin)<br />
+          On March 9th at 10 AM EST by csj on the <a href="https://www.twitch.tv/codingame">CodinGame channel</a>
+      </li>
+      <li>
+          🍓 <u>"Facing the Silver league"</u> (Python 3) <br />
+          On March 11th at 12 PM EST by Icebox on the <a href="https://www.twitch.tv/codingame">CodinGame channel</a>
+      </li>
+    </ul>
+    <p>
+      <b> Scheduled CodingHubs 🍿</b>
+    </p>
+    <p>
+      The full details of CodingHubs can be found <a href="https://trello.com/c/Xy0Qk4nu">here</a>
+    </p>
+    <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
+      <li>
+        8th of March
+        <ul>
+          <li>
+            LeoLet at Viseo Technologies in Lyon (France)
+          </li>
+          <li>
+            Lechevelut at ADNEOM in Lyon (France)
+          </li>
+          <li>
+            Wusch at Corworking Baunatal in Baunatal (Germany)
+          </li>
+        </ul>
+      </li>
+      <li>
+        9th of March
+        <ul>
+          <li>
+            wahijacodes at a private place in RawalPindi (Pakistan)
+          </li>
+        </ul>
+      </li>
+      <li>
+        11th of March
+        <ul>
+          <li>
+            Ramdeath at Kaunas Saules gymnasium in Kaunas (Lithuania)
+          </li>
+        </ul>
+      </li>
+      <li>
+        13th of March
+        <ul>
+          <li>
+            AntiSquid at EOF Hackspace Co-operative in Oxford (England)
+          </li>
+          <li>
+            egaetan at Meritis in Paris (France)
+          </li>
+          <li>
+            Spacebird1313 at iMagineLab in University of Antwerp (Belgium)
+          </li>
+        </ul>
+      </li>
+      <li>
+        15th of March
+        <ul>
+          <li>
+            Bisou at Société Générale near Paris (France)
+          </li>
+          <li>
+            orendon at WeWork in Medellin (Colombia)
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 
 </div>
