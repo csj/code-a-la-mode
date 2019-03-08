@@ -15,7 +15,7 @@ data class Shell(var hasBlueberry: Boolean = false): Item() {
     if (hasBlueberry) throw LogicException("This already has blueberries!")
 
     player.heldItem = this.also { it.hasBlueberry = true }
-    cell!!.item = null
+    cell?.item = null
   }
 
   override fun describeTokens() =
@@ -28,6 +28,6 @@ object Blueberries: EdibleItem(Constants.FOOD.BLUEBERRIES.name) {
     if (item.hasBlueberry) throw LogicException("This already has blueberries!")
 
     player.heldItem = item.also { it.hasBlueberry = true }
-    cell!!.item = null
+    cell?.item = null
   }
 }
