@@ -117,7 +117,7 @@
             <li>Des fraises (<const>S</const>).</li>
           </ul>
         <p>
-          On y trouve aussi : une planche à découper (<const>C</const>).
+          On y trouve aussi un équipement supplémentaire : une planche à découper (<const>C</const>).
         </p>
       </div>
       <!-- END -->
@@ -133,10 +133,10 @@
             <li>De la pâte (<const>D</const>).</li>
           </ul>
 
-          It also contains two extra appliances: 
+          On y trouve aussi deux équipements supplémentaires :
           <ul style="padding-top:0; padding-bottom: 0;">
-            <li>A chopping board (<const>C</const>).</li>
-            <li> An oven (<const>O</const>).</li>
+            <li>Une planche à découper (<const>C</const>).</li>
+            <li>Un four (<const>O</const>).</li>
           </ul>
       </div>
       <!-- END -->
@@ -149,11 +149,11 @@
           <li>De la pâte (<const>D</const>).</li>
         </ul>
 
-        On y trouve aussi : 
-          <ul style="padding-top:0; padding-bottom: 0;">
-            <li>Une planche à découper (<const>C</const>).</li>
-            <li>Un four (<const>O</const>).</li>
-          </ul>
+        On y trouve aussi deux équipements supplémentaires :
+        <ul style="padding-top:0; padding-bottom: 0;">
+          <li>Une planche à découper (<const>C</const>).</li>
+          <li>Un four (<const>O</const>).</li>
+        </ul>
       <!-- END -->
       <br>
       <p>
@@ -336,272 +336,26 @@
         Utilisez cette commande pour interagir avec la case (x,y). Si le chef est adjacent à la case quand l'action <action>USE</action> est utilisée, l'action est réussie ; sinon, le chef se déplacera en direction de cette case. L'action <action>USE</action> fonctionne en diagonale (8-adjacence).
       </p>
       <p>
-        L'action <action>USE</action> a différents effets qui dépendent de la case. Ils sont listés ci-dessous :
-        <table border="1" style="width:100%; ">
-<tr>
-<th>
-Carried Item
-</th>
-<th>
-Used table
-</th>
-<th>
-Table result
-</th>
-<th>
-Carried Item result
-</th>
-</tr>
-<tr><td colspan="4">Food crates</td></tr><tr>
-                        <td valign="top"></td>
-                    </tr>
-          <tr>
-<td>
-empty
-</td>
-<td>
-any crate of item X
-</td>
-<td>
-any crate of item X (unlimited food)
-</td>
-<td>
-item X
-</td>
-</tr>
-<tr>
-<td>
-<const>DISH</const>
-</td>
-<td>
-BLUEBERRY or ICE_CREAM crate
-</td>
-<td>
-BLUEBERRY or ICE_CREAM crate
-</td>
-<td>
-<const>DISH</const> + BLUEBERRY or ICE_CREAM
-</td>
-</tr>
-<tr>
-<td>
-<const>DISH</const>
-</td>
-<td>
-STRAWBERRY or DOUGH crate
-</td>
-<td colspan="2">
-Invalid action
-</td>
-</tr>
-                    <tr><td colspan="4"><action style="margin: 20px; font-size: 150%">CHOPPING_BOARD</action></td></tr><tr>
-                        <td valign="top"></td>
-                    </tr>
-          <tr>
-<td>
-<const>STRAWBERRIES</const>
-</td>
-<td>
-<const>CHOPPING_BOARD</const>
-</td>
-<td>
-empty
-</td>
-<td>
-<const>CHOPPED_STRAWBERRIES</const>
-</td>
-</tr>
-<tr>
-<td>
-<const>DOUGH</const>
-</td>
-<td>
-<const>CHOPPING_BOARD</const>
-</td>
-<td>
-empty
-</td>
-<td>
-<const>CHOPPED_DOUGH</const>
-</td>
-</tr>
-<tr>
-<td>
-<const>any other item</const>
-</td>
-<td>
-<const>CHOPPING_BOARD</const>
-</td>
-<td colspan="2">
-<const>invalid action</const>
-</td>
-</tr>
-<tr><td colspan="4"><action style="margin: 20px; font-size: 150%">OVEN</action></td></tr><tr>
-                        <td valign="top"></td>
-                    </tr>
-<tr>
-<td>
-empty or <const>DISH</const> with desserts (<4)
-</td>
-<td>
-<const>CROISSANT</const> in <const>OVEN</const>
-</td>
-<td>
-<const>empty</const>
-</td>
-<td>
-<const>CROISSANT</const> or <const>DISH</const> with desserts + <const>CROISSANT</const>
-</td>
-</tr>
-<tr>
-<td>
-empty or <const>DISH</const> with desserts (<4)
-</td>
-<td>
-<const>BLUEBERRY_TART</const> in <const>OVEN</const>
-</td>
-<td>
-<const>empty</const>
-</td>
-<td>
-<const>BLUEBERRY_TART</const> or <const>DISH</const> with desserts + <const>BLUEBERRY_TART</const>
-</td>
-</tr>
-          <tr>
-<td>
-<const>DOUGH</const>
-</td>
-<td>
-empty <const>OVEN</const>
-</td>
-<td>
-<const>DOUGH cooking</const>
-</td>
-<td>
-<const>empty</const>
-</td>
-</tr>
-<tr>
-<td>
-<const>RAW_TART</const>
-</td>
-<td>
-empty <const>OVEN</const>
-</td>
-<td>
-<const>RAW_TART</const> cooking
-</td>
-<td>
-empty
-</td>
-</tr>
-<tr>
-<td>
-<const>any other item</const>
-</td>
-<td>
-empty <const>OVEN</const>
-</td>
-<td colspan="2">
-<const>invalid action</const>
-</td>
-</tr>
-<tr><td colspan="4">Tables</td></tr><tr>
-                        <td valign="top"></td>
-                    </tr>
-          <tr>
-<td>
-<const>any item X</const>
-</td>
-<td>
-<const>empty table</const>
-</td>
-<td>
-item X
-</td>
-<td>
-empty
-</td>
-</tr>
-<tr>
-<td>
-empty
-</td>
-<td>
-table with any item X
-</td>
-<td>
-empty
-</td>
-<td>
-item X
-</td>
-</tr>
-<tr>
-<td>
-<const>DISH</const>
-</td>
-<td>
-dessert X
-</td>
-<td>
-empty
-</td>
-<td>
-<const>DISH</const> + dessert X
-</td>
-</tr>
-<tr>
-<td>
-dessert X
-</td>
-<td>
-<const>DISH</const>
-</td>
-<td>
-<const>DISH</const> + dessert X
-</td>
-<td>
-empty
-</td>
-</tr>
-<tr>
-<td>
-CHOPPED_DOUGH or BLUEBERRY
-</td>
-<td>
-BLUEBERRY or CHOPPED_DOUGH
-</td>
-<td>
-empty
-</td>
-<td>
-RAW_TART
-</td>
-</tr>
-<tr>
-<td>
-any food item
-</td>
-<td>
-any food item
-</td>
-<td colspan="2">
-Invalid action
-</td>
-</tr>
-<tr>
-<td>
-<const>DISH</const> + any item
-</td>
-<td>
-<const>DISH</const> + any item
-</td>
-<td colspan="2">
-Invalid action
-</td>
-</tr>
-                </table>
+        L'action <action>USE</action> a différents effets qui dépendent de la case et de ce que le chef porte. Les principaux effets sont listés ci-dessous :
+        <ul style="padding-top:0; padding-bottom: 0;">
+          <li>
+            Utiliser l'action <action>USE</action> sur un équipement vous fait utiliser l'équipement.
+          </li>
+          <li>
+            Utiliser l'action <action>USE</action> sur une table avec un objet (nourriture ou assiette) en ne portant rien vous fera prendre cet objet.
+          </li>
+          <li>
+            Utiliser l'action <action>USE</action> avec un dessert terminé, tout en portant une assiette, vous fera ajouter le dessert à l'assiette.
+          </li>
+          <!-- BEGIN level4 -->
+          <li style="color: #7cc576;
+        background-color: rgba(124, 197, 118,.1);
+        padding: 2px;">
+            L'action <action>USE</action> sur une table avec de la nourriture, tout en portant de la nourriture, vous fera tenter de mélanger les deux. </br>
+            (ne fonctionne qu'avec : <const>CHOPPED_DOUGH</const> et <const>BLUEBERRIES</const>)
+          </li>
+          <!-- END -->
+        </ul>
       </p>
       <br>
       <p>
@@ -666,13 +420,16 @@ Invalid action
             Les chefs ne peuvent pas prendre d'assiette s'ils en possèdent déjà une.
           </li>
           <li>
-            Dès que d'un dessert est servi sur une assiette, il ne peut pas en être retirée. Pour vider une assiette, il faut utiliser (<action>USE</action>) le lave-vaisselle avec cette assiette.
-          </li>
-          <li>
-            A chaque tour où un client attend sa commande, la récompense liée décroit de <const>1</const> point.
+            Dès que d'un dessert est servi sur une assiette, il ne peut pas en être retiré. Pour vider une assiette, il faut utiliser (<action>USE</action>) le lave-vaisselle avec cette assiette.
           </li>
           <li>
             Une assiette ne peut contenir plus que <const>4</const> desserts.
+          </li>
+          <li>
+            Tous les différents cas possibles de l'action <action>USE</action> sont listés <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">ici</a>.
+          </li>
+          <li>
+            A chaque tour où un client attend sa commande, la récompense liée décroit de <const>1</const> point.
           </li>
         </ul>
     </div>

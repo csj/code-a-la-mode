@@ -333,9 +333,28 @@
         Use this command to go interact with the cell (x,y). If the chef is adjacent to the cell when using the <action>USE</action> command, the action is successful; else, the chef will move closer to that cell. The <action>USE</action> command works diagonally (8-adjacency).
       </p>
       <p>
-        Depending on the cell, the <action>USE</action> will have different effects. They're summarized in the table below:
+        Depending on the cell and what the chef is holding, the <action>USE</action> will have different effects. The main effects are summarized below:
       </p>
-      <br>
+      <ul style="padding-top:0; padding-bottom: 0;">
+          <li>
+            The <action>USE</action> action on an equipment will make you use that equipment.
+          </li>
+          <li>
+            The <action>USE</action> action on a table with an item (food or dish) while holding nothing will make you pick up that item.
+          </li>
+          <li>
+            The <action>USE</action> action on a table with a finished dessert while holding a dish will make you add that dessert to the dish.
+          </li>
+          <!-- BEGIN level4 -->
+          <li style="color: #7cc576;
+        background-color: rgba(124, 197, 118,.1);
+        padding: 2px;">
+            The <action>USE</action> action on a table with food while holding food will make you attempt to fuse both. </br>
+            (works only if food is: <const>CHOPPED_DOUGH</const> and <const>BLUEBERRIES</const>)
+          </li>
+          <!-- END -->
+        </ul>
+          <br>
       <p>
         <action>WAIT</action>
       </p>
@@ -401,10 +420,13 @@
             As soon as food is put on a dish, it cannot be removed from it. To empty a dish, <action>USE</action> the dishwasher while holding it.
           </li>
           <li>
-            For every turn a customer waits for an order, the reward is decreased by <const>1</const>.
+            A dish cannot contain more than <const>4</const> desserts.
           </li>
           <li>
-            A dish cannot contain more than <const>4</const> desserts.
+            All possible cases of the <action>USE</action> are listed <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">here</a>.
+          </li>
+          <li>
+            For every turn a customer waits for an order, the reward is decreased by <const>1</const>.
           </li>
         </ul>
     </div>
