@@ -240,19 +240,19 @@ class Referee : AbstractReferee() {
         var path: List<Cell>? = null
 
         if (command != "WAIT") {
-          try {
+          val target = try {
             val cellx = toks.next().toInt()
             val celly = toks.next().toInt()
 
-            val target = board[cellx, celly]
-
-            path = when (command) {
-              "MOVE" -> player.moveTo(target)
-              "USE" -> player.use(target)
-              else -> throw Exception("Invalid command: $fullCommand")
-            }
+            board[cellx, celly]
           } catch (_: Exception) {
             throw Exception("Invalid command: $fullCommand")
+          }
+
+          path = when (command) {
+            "MOVE" -> player.moveTo(target)
+            "USE" -> player.use(target)
+            else -> throw Exception("Invalid command: $fullCommand")
           }
         }
 
