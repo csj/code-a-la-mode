@@ -295,6 +295,18 @@
         <p>
           A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
         </p>
+        <!-- BEGIN level1 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level2 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level3 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level4 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px;"></img>
+        <!-- END -->
       </div>
       <!-- END -->
       <!-- BEGIN level3 level4 -->

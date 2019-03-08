@@ -21,11 +21,11 @@ inline fun <reified T> Array<Array<T>>.transpose(default: () -> T): Array<Array<
   return trans
 }
 
-fun Sequence<String>.splitAccumulate() = sequence {
+fun Sequence<String>.splitAccumulate(length: Int) = sequence {
   var currentLine = ""
 
   forEach { tok ->
-    if (currentLine.length + tok.length > 9) {
+    if (currentLine.length + tok.length > length) {
       yield(currentLine.substring(1))
       currentLine = ""
     }
@@ -38,3 +38,4 @@ fun Sequence<String>.splitAccumulate() = sequence {
 fun <E> List<E>.loopingIterator(): Iterator<E> =
     sequence { while (true) yieldAll(this@loopingIterator) }.iterator()
 
+fun <T> T.nullIf(nullVal: T): T? = if (this == nullVal) null else this

@@ -11,9 +11,12 @@ public class Main {
         // Adds as many player as you need to test your game
 //        gameRunner.addAgent(IceCreamPlayer.class);
         gameRunner.addAgent(NaiveAllItemsPlayer.class);
+//        gameRunner.addAgent(InstaFoodPlayer.class);
         gameRunner.addAgent(NaiveAllItemsPlayer.class);
         gameRunner.addAgent(NaiveAllItemsPlayer.class);
 //        gameRunner.addAgent(HugPlayer.class);
+
+        gameRunner.setLeagueLevel(4);
 
         gameRunner.start();
     }

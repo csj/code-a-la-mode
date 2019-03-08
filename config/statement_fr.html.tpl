@@ -241,6 +241,18 @@
       <p>
         La cuisson dure <const>10</const> tours, après lesquels le plat est prêt (<b>READY</b>). Le plat reste prêt (<b>READY</b>) pendant <const>10</const> autre tours, après lesquels il brûle et disparaît.
       </p>
+      <!-- BEGIN level1 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level2 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level3 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px;"></img>
+        <!-- END -->
+        <!-- BEGIN level4 -->
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px;"></img>
+        <!-- END -->
       <!-- END -->
       <br>
       <p>
@@ -325,6 +337,271 @@
       </p>
       <p>
         L'action <action>USE</action> a différents effets qui dépendent de la case. Ils sont listés ci-dessous :
+        <table border="1" style="width:100%; ">
+<tr>
+<th>
+Carried Item
+</th>
+<th>
+Used table
+</th>
+<th>
+Table result
+</th>
+<th>
+Carried Item result
+</th>
+</tr>
+<tr><td colspan="4">Food crates</td></tr><tr>
+                        <td valign="top"></td>
+                    </tr>
+          <tr>
+<td>
+empty
+</td>
+<td>
+any crate of item X
+</td>
+<td>
+any crate of item X (unlimited food)
+</td>
+<td>
+item X
+</td>
+</tr>
+<tr>
+<td>
+<const>DISH</const>
+</td>
+<td>
+BLUEBERRY or ICE_CREAM crate
+</td>
+<td>
+BLUEBERRY or ICE_CREAM crate
+</td>
+<td>
+<const>DISH</const> + BLUEBERRY or ICE_CREAM
+</td>
+</tr>
+<tr>
+<td>
+<const>DISH</const>
+</td>
+<td>
+STRAWBERRY or DOUGH crate
+</td>
+<td colspan="2">
+Invalid action
+</td>
+</tr>
+                    <tr><td colspan="4"><action style="margin: 20px; font-size: 150%">CHOPPING_BOARD</action></td></tr><tr>
+                        <td valign="top"></td>
+                    </tr>
+          <tr>
+<td>
+<const>STRAWBERRIES</const>
+</td>
+<td>
+<const>CHOPPING_BOARD</const>
+</td>
+<td>
+empty
+</td>
+<td>
+<const>CHOPPED_STRAWBERRIES</const>
+</td>
+</tr>
+<tr>
+<td>
+<const>DOUGH</const>
+</td>
+<td>
+<const>CHOPPING_BOARD</const>
+</td>
+<td>
+empty
+</td>
+<td>
+<const>CHOPPED_DOUGH</const>
+</td>
+</tr>
+<tr>
+<td>
+<const>any other item</const>
+</td>
+<td>
+<const>CHOPPING_BOARD</const>
+</td>
+<td colspan="2">
+<const>invalid action</const>
+</td>
+</tr>
+<tr><td colspan="4"><action style="margin: 20px; font-size: 150%">OVEN</action></td></tr><tr>
+                        <td valign="top"></td>
+                    </tr>
+<tr>
+<td>
+empty or <const>DISH</const> with desserts (<4)
+</td>
+<td>
+<const>CROISSANT</const> in <const>OVEN</const>
+</td>
+<td>
+<const>empty</const>
+</td>
+<td>
+<const>CROISSANT</const> or <const>DISH</const> with desserts + <const>CROISSANT</const>
+</td>
+</tr>
+<tr>
+<td>
+empty or <const>DISH</const> with desserts (<4)
+</td>
+<td>
+<const>BLUEBERRY_TART</const> in <const>OVEN</const>
+</td>
+<td>
+<const>empty</const>
+</td>
+<td>
+<const>BLUEBERRY_TART</const> or <const>DISH</const> with desserts + <const>BLUEBERRY_TART</const>
+</td>
+</tr>
+          <tr>
+<td>
+<const>DOUGH</const>
+</td>
+<td>
+empty <const>OVEN</const>
+</td>
+<td>
+<const>DOUGH cooking</const>
+</td>
+<td>
+<const>empty</const>
+</td>
+</tr>
+<tr>
+<td>
+<const>RAW_TART</const>
+</td>
+<td>
+empty <const>OVEN</const>
+</td>
+<td>
+<const>RAW_TART</const> cooking
+</td>
+<td>
+empty
+</td>
+</tr>
+<tr>
+<td>
+<const>any other item</const>
+</td>
+<td>
+empty <const>OVEN</const>
+</td>
+<td colspan="2">
+<const>invalid action</const>
+</td>
+</tr>
+<tr><td colspan="4">Tables</td></tr><tr>
+                        <td valign="top"></td>
+                    </tr>
+          <tr>
+<td>
+<const>any item X</const>
+</td>
+<td>
+<const>empty table</const>
+</td>
+<td>
+item X
+</td>
+<td>
+empty
+</td>
+</tr>
+<tr>
+<td>
+empty
+</td>
+<td>
+table with any item X
+</td>
+<td>
+empty
+</td>
+<td>
+item X
+</td>
+</tr>
+<tr>
+<td>
+<const>DISH</const>
+</td>
+<td>
+dessert X
+</td>
+<td>
+empty
+</td>
+<td>
+<const>DISH</const> + dessert X
+</td>
+</tr>
+<tr>
+<td>
+dessert X
+</td>
+<td>
+<const>DISH</const>
+</td>
+<td>
+<const>DISH</const> + dessert X
+</td>
+<td>
+empty
+</td>
+</tr>
+<tr>
+<td>
+CHOPPED_DOUGH or BLUEBERRY
+</td>
+<td>
+BLUEBERRY or CHOPPED_DOUGH
+</td>
+<td>
+empty
+</td>
+<td>
+RAW_TART
+</td>
+</tr>
+<tr>
+<td>
+any food item
+</td>
+<td>
+any food item
+</td>
+<td colspan="2">
+Invalid action
+</td>
+</tr>
+<tr>
+<td>
+<const>DISH</const> + any item
+</td>
+<td>
+<const>DISH</const> + any item
+</td>
+<td colspan="2">
+Invalid action
+</td>
+</tr>
+                </table>
       </p>
       <br>
       <p>
