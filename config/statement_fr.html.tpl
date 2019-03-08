@@ -538,7 +538,7 @@
         <span class="statement-lineno">Prochaine ligne</span>: à ignorer <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 -->
-        <span class="statement-lineno">Prochaine ligne</span>: Une chaine de charactères <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours depuis que le plat a été enfourné. <br/>
+        <span class="statement-lineno">Prochaine ligne</span>: Une chaine de charactères <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours que la nourriture restera au four avant d'être cuite ou brûlée. <br/>
         <!-- END -->
         <span class="statement-lineno">Prochaine ligne</span>: Un entier <var>numCustomers</var> pour le nombre courant de clients attendant leurs commandes. <br/>
         <span class="statement-lineno">Les <var>numCustomers</var> prochaines lignes</span>:
