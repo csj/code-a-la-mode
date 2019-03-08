@@ -1,5 +1,6 @@
 package sample
 
+import com.codingame.game.model.Constants
 import java.io.InputStream
 import java.io.PrintStream
 import java.util.*
@@ -52,6 +53,19 @@ abstract class BaseCALMPlayer(val stdin: InputStream, val stdout: PrintStream, v
 
   fun findEquipment(equipmentChar: Char) =
       inputs.tables.firstOrNull { it.equipment == equipmentChar }
+
+  fun getEmptyPlate(): String = (
+      inputs.tables.find { it.item?.itemType == Constants.ITEM.DISH.name }
+          ?: findEquipment('D')!!).use()
+
+  fun useEmptyTable(): String {
+    return inputs.myPlayer.run {
+      inputs.tables.filter { it.equipment == null && it.item == null }
+          .minBy { Math.abs(it.x - x) + Math.abs(it.y - y) }!!.use()
+    }
+  }
+
+  fun Table.use(): String = "USE $x $y"
 
 }
 

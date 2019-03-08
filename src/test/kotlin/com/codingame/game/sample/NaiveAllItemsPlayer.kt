@@ -198,17 +198,6 @@ lunch, just eat it!"""
               Constants.FOOD.CROISSANT.name
           ))
 
-  private fun getEmptyPlate(): String = (
-      inputs.tables.find { it.item?.itemType == Constants.ITEM.DISH.name }
-          ?: findEquipment('D')!!).use()
-
-  private fun useEmptyTable(): String {
-    return inputs.myPlayer.run {
-      inputs.tables.filter { it.equipment == null && it.item == null }
-          .minBy { abs(it.x - x) + abs(it.y - y) }!!.use()
-    }
-  }
-
   private fun buildCroissant(): String? {
     return when(inputs.myPlayer.carrying?.itemType) {
       null -> crates[Constants.ITEM.DOUGH.name]!!.use()
@@ -254,6 +243,4 @@ lunch, just eat it!"""
 
     return useEmptyTable()
   }
-
-  private fun Table.use(): String = "USE $x $y"
 }

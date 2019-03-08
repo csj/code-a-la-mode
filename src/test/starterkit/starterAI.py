@@ -1,0 +1,146 @@
+#Begin Imports
+import sys
+import math
+#End Imports
+
+#Begin Util Code
+def log(x):
+    print(x, file=sys.stderr)
+
+class Player:
+    def __init__(self):
+        self.x = 0
+        self.y = 0
+        self.in_hand = ""
+
+class Tile:
+    def __init__(self, x, y, name, canHaveItem):
+        self.x = x
+        self.y = y
+        self.name = name
+        self.canHaveItem = canHaveItem
+    
+    def parse_name(self):
+        return self.name.split("-")
+    
+    def __repr__(self):
+        return "Tile: " + str(self.x) + ", " + str(self.y)
+    
+
+class Game:
+    def __init__(self):
+        self.player = Player()
+        self.partner = Player()
+        self.tiles = []
+    
+    def addTile(self, x, y, tileChar):
+        if tileChar == "#":
+            self.tiles.append(Tile(x, y, "NONE", True))
+        elif tileChar == "B":
+            self.tiles.append(Tile(x, y, "BLUEBERRIES-PICKUP", False))
+        elif tileChar == "I":
+            self.tiles.append(Tile(x, y, "ICE_CREAM-PICKUP", False))
+        elif tileChar == "W":
+            self.tiles.append(Tile(x, y, "WINDOW", False))
+        elif tileChar == "D":
+            self.tiles.append(Tile(x, y, "DISHWASHER", False))
+
+    def getTileByName(self, name):
+        for t in self.tiles:
+            if t.name == name:
+                return t
+        
+        #If tile not found
+        log("Error: Tile not found in function getTileByName")
+    
+    def getTileByCoords(self, x, y):
+        for t in self.tiles:
+            if t.x == x and t.y == y:
+                return t
+        
+        #If tile not found
+        log("Error: Tile not found in function getTileByCoords")
+
+    def updatePlayer(self, x, y, item):
+        self.player.x = x
+        self.player.y = y
+        self.player.item = item
+    
+    def updatePartner(self, x, y, item):
+        self.partner.x = x
+        self.partner.y = y
+        self.partner.item = item
+
+    def use(self, tile):
+        print("USE", tile.x, tile.y)
+    
+    def move(self, tile):
+        print("MOVE", tile.x, tile.y)
+#End Util code
+
+#Begin game code
+game = Game()
+
+# ALL CUSTOMERS INPUT: to ignore until bronze
+num_all_customers = int(input())
+for i in range(num_all_customers):
+    # customer_item: the food the customer is waiting for
+    # customer_award: the number of points awarded for delivering the food
+    customer_item, customer_award = input().split()
+    customer_award = int(customer_award)
+
+# KITCHEN INPUT
+for y in range(7):
+    kitchen_line = input()
+    for x in range(len(kitchen_line)):
+        game.addTile(x, y, kitchen_line[x])
+
+# game loop
+while True:
+    
+    turns_remaining = int(input())
+
+    # PLAYERS INPUT
+    #Gather and update player information
+    player_x, player_y, player_item = input().split()
+    player_x = int(player_x)
+    player_y = int(player_y)
+    game.updatePlayer(player_x, player_y, player_item)
+
+    #Gather and update partner information
+    partner_x, partner_y, partner_item = input().split()
+    partner_x = int(partner_x)
+    partner_y = int(partner_y)
+    game.updatePartner(partner_x, partner_y, partner_item)
+
+    #Gather and update table information
+    num_tables_with_items = int(input())  # the number of tables in the kitchen that currently hold an item
+    for i in range(num_tables_with_items):
+        table_x, table_y, item = input().split()
+        table_x = int(table_x)
+        table_y = int(table_y)
+        for t in game.tiles:
+            if t.x == table_x and t.y == table_y:
+                t.name = item
+            elif t.canHaveItem:
+                t.name = "NONE"
+
+    # oven_contents: ignore until bronze league
+    oven_contents, oven_timer = input().split()
+    oven_timer = int(oven_timer)
+    num_customers = int(input())  # the number of customers currently waiting for food
+    for i in range(num_customers):
+        customer_item, customer_award = input().split()
+        customer_award = int(customer_award)
+
+    # GAME LOGIC
+    #Gather plate, Icecream, Blueberries, then take them all to window
+    if "DISH" not in game.player.item:
+        game.use(game.getTileByName("DISHWASHER"))
+    elif "ICE" not in game.player.item:
+        game.use(game.getTileByName("ICE_CREAM-PICKUP"))
+    elif "BLUE" not in game.player.item:
+        game.use(game.getTileByName("BLUEBERRIES-PICKUP"))
+    else:
+        game.use(game.getTileByName("WINDOW"))
+#End game code
