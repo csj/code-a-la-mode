@@ -1,6 +1,6 @@
 # All Possible USE cases
 
-_Invalid action_ results as a **WAIT** action.
+_Invalid action_ resolves as a **WAIT** action.
 
 **Dishwasher**
 
