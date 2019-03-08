@@ -19,10 +19,14 @@ class Tile:
         self.y = y
         self.name = name
         self.item = None
+<<<<<<< HEAD
     
+=======
+
+>>>>>>> 066833a... update python starter
     def parse_name(self):
         return self.name.split("-")
-    
+
     def __repr__(self):
         return "Tile: " + str(self.x) + ", " + str(self.y)
 
@@ -45,7 +49,7 @@ class Game:
         self.player = Player()
         self.partner = Player()
         self.tiles = []
-    
+
     def addTile(self, x, y, tileChar):
         if tileChar != '.':
             self.tiles.append(Tile(x, y, tileChar))
@@ -54,23 +58,34 @@ class Game:
         for t in self.tiles:
             if t.name == name:
                 return t
-        
+
         #If tile not found
         log("Error: Tile not found in function getTileByName")
+<<<<<<< HEAD
         
+=======
+
+>>>>>>> 066833a... update python starter
     def getTileByItem(self, item):
         for t in self.tiles:
             if t.item == item:
                 return t
+<<<<<<< HEAD
         
         #If tile not found
         log("Error: Tile not found in function getTileByItem")
     
+=======
+
+        #If tile not found
+        log("Error: Tile not found in function getTileByItem")
+
+>>>>>>> 066833a... update python starter
     def getTileByCoords(self, x, y):
         for t in self.tiles:
             if t.x == x and t.y == y:
                 return t
-        
+
         #If tile not found
         log("Error: Tile not found in function getTileByCoords")
 
@@ -78,15 +93,20 @@ class Game:
         self.player.x = x
         self.player.y = y
         self.player.item = item
-    
+
     def updatePartner(self, x, y, item):
         self.partner.x = x
         self.partner.y = y
         self.partner.item = item
 
     def use(self, tile):
+<<<<<<< HEAD
         print("USE", tile.x, tile.y,"; Python Starter AI")
     
+=======
+        print("USE", tile.x, tile.y)
+
+>>>>>>> 066833a... update python starter
     def move(self, tile):
         print("MOVE", tile.x, tile.y)
 #End Util code
@@ -144,7 +164,7 @@ while True:
         customer_award = int(customer_award)
 
     # GAME LOGIC
-    #Gather plate, Icecream, Blueberries, then take them all to window
+    #Gather plate and Icecream
     if DISH not in game.player.item:
         game.use(game.getTileByName(DISHWASHER))
     elif ICE_CREAM not in game.player.item:
