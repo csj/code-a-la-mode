@@ -12,10 +12,6 @@ import kotlin.math.abs
 
 data class XY(val x: Int, val y: Int)
 
-/**
- * Auto-generated code below aims at helping you parse
- * the standard input according to the problem statement.
- **/
 fun main(args : Array<String>) {
     val input = Scanner(System.`in`)
     val numAllCustomers = input.nextInt()
@@ -79,9 +75,6 @@ fun main(args : Array<String>) {
             val customerAward = input.nextInt()
         }
 
-        // Write an action using println()
-        // To debug: System.err.println("Debug messages...");
-
         val useTarget = if (useEmptyTable) {
             (tables - filledTables)[0]   // the first empty table
         } else {
@@ -100,6 +93,6 @@ fun main(args : Array<String>) {
             useEmptyTable = !useEmptyTable
         }
 
-        println("USE ${useTarget.x} ${useTarget.y}")
+        println("USE ${useTarget.x} ${useTarget.y}; Kotlin Starter AI")
     }
 }

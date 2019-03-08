@@ -6,6 +6,7 @@ const HEIGHT = 7;
 const TABLE = "#";
 const EMPTY = ".";
 const ICE_CREAM_CRATE = "I";
+const BLUEBERRY_CRATE = "B";
 const DISH_WASHER = "D";
 const WINDOW = "W";
 
@@ -168,23 +169,17 @@ while (true) {
 	}
 
     // GAME LOGIC
-    // fetch a dish
+    // fetch dish, then blueberries, then ice cream, then drop it at first empty table
 	if(playerItem === NONE){
 		let dishwasher = GAME.grid.getCellFromType(DISH_WASHER).getPos();
-		console.log(`USE ${dishwasher.x} ${dishwasher.y}`)
+		console.log(`USE ${dishwasher.x} ${dishwasher.y}; JS starter AI`)
 	}
-	// fetch blueberries
 	else if(playerItem === DISH){
 		let blueberries = GAME.grid.getCellFromType(BLUEBERRY_CRATE).getPos();
-		console.log(`USE ${blueberries.x} ${blueberries.y}`);
-	}
-	// fetch ice cream
-	else if(playerItem === "DISH-BLUEBERRIES"){
-		let icecream = GAME.grid.getCellFromType(ICE_CREAM_CRATE).getPos();
-		console.log(`USE ${icecream.x} ${icecream.y}`);
+		console.log(`USE ${blueberries.x} ${blueberries.y}; JS starter AI`);
 	}
 	else{
-		let windowC = GAME.grid.getCellFromType(WINDOW).getPos();
-		console.log(`USE ${windowC.x} ${windowC.y}`);
+		let emptyTable = GAME.grid.getCellFromType(TABLE).getPos();
+		console.log(`USE ${emptyTable.x} ${emptyTable.y}; JS starter AI`);
 	}
 }
