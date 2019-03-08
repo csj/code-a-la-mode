@@ -1,6 +1,6 @@
 # All Possible USE cases
 
-Invalid action results as a **WAIT** action.
+_Invalid action_ results as a **WAIT** action.
 
 **Dishwasher**
 
@@ -17,8 +17,8 @@ Invalid action results as a **WAIT** action.
 | none | any |  => | corresponding food |
 | CHOPPED_DOUGH | BLUEBERRY | => | RAW_TART |
 | DISH | BLUEBERRY or ICE_CREAM | => | DISH + (BLUEBERRY or ICE_CREAM) |
-| DISH | STRAWBERRY or DOUGH | => | Invalid action |
-| any food but CHOPPED_DOUGH | any | => | Invalid action |
+| DISH | STRAWBERRY or DOUGH | => | _Invalid action_ |
+| any food but CHOPPED_DOUGH | any | => | _Invalid action_ |
 
 
 Food in food crates is unlimited.
@@ -29,7 +29,7 @@ Food in food crates is unlimited.
 |:---:|:---:|:---:|
 | STRAWBERRIES | => | CHOPPED_STRAWBERRIES |
 | DOUGH | => | CHOPPED_DOUGH |
-| any other item | => | Invalid action |
+| any other item | => | _Invalid action_ |
 
 **Oven**
 
@@ -39,8 +39,8 @@ Food in food crates is unlimited.
 | RAW_TART | empty | => | RAW_TART cooking | empty |
 | none | CROISSANT or TART | => | empty | CROISSANT or TART |
 | DISH | CROISSANT or TART | => | empty | DISH + (CROISSANT or TART) |
-| any other item | empty | => | Invalid action | Invalid action |
-| RAW_TART or DOUGH | cooking (DOUGH or TART) | => | Invalid action | Invalid action |
+| any other item | empty | => | _Invalid action_ | _Invalid action_ |
+| RAW_TART or DOUGH | cooking (DOUGH or TART) | => | _Invalid action_ | _Invalid action_ |
 
 
 **Tables**
@@ -50,11 +50,11 @@ Food in food crates is unlimited.
 | any item | empty |  => | item | none |
 | none | any item | => | empty | item |
 | DISH | any finished dessert | => | empty | DISH + finished dessert |
-| DISH | any non-finished dessert | => | Invalid Action | Invalid action |
-| DISH | DISH | => | Invalid Action | Invalid Action |
+| DISH | any non-finished dessert | => | _Invalid action_ | _Invalid action_ |
+| DISH | DISH | => | _Invalid action_ | _Invalid action_ |
 | any finished dessert | DISH | => | DISH + finished dessert | none |
-| any non-finished dessert | DISH | => | Invalid action | Invalid action |
+| any non-finished dessert | DISH | => | _Invalid action_ | _Invalid action_ |
 | CHOPPED_DOUGH | BLUEBERRY | => | none | RAW_TART |
 | BLUEBERRY | CHOPPED_DOUGH | => | none | RAW_TART |
-| any other food | any other food | => | Invalid action | Invalid action |
+| any other food | any other food | => | _Invalid action_ | _Invalid action_ |
 
