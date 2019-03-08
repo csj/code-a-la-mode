@@ -53,7 +53,7 @@
       <span>Objectif</span>
     </h2>
     <div class="statement-goal-content">
-      Controlez un chef de cuisine et préparez des desserts pour des clients aussi vite que possible afin de gagner plus de points que les autres joueurs.
+      Contrôlez un chef de cuisine et préparez des desserts pour des clients aussi vite que possible afin de gagner plus de points que les autres joueurs.
     </div>
   </div>
 
@@ -65,28 +65,28 @@
     </h2>
     <div class="statement-rules-content">
       <p>
-        C'est un jeu à 3 joueurs qui se joue sur une grille de <const>11</const> cases en longueur et <const>7</const> cases de largeur. Un match est joué en 3 rounds, chaque round avec 2 joueurs.
+        C'est un jeu à 3 joueurs qui se joue sur une grille de <const>11</const> cases de large et <const>7</const> cases de haut. Un match est joué en 3 manches, chaque manche avec 2 joueurs.
       </p>
       <ul style="padding-top:0; padding-bottom:0">
-        <li><b>Round 1 :</b> joueur A avec joueur B.</li>
-        <li><b>Round 2 :</b> joueur C avec joueur A.</li>
-        <li><b>Round 3 :</b> joueur B avec joueur C.</li>
+        <li><b>Manche 1 :</b> joueur A avec joueur B.</li>
+        <li><b>Manche 2 :</b> joueur C avec joueur A.</li>
+        <li><b>Manche 3 :</b> joueur B avec joueur C.</li>
       </ul>
       <p>
-        Chaque joueur joue donc 2 rounds par match. La totalité des points d'un joueur est la somme des points qu'il a obtenus pendant ses 2 rounds.
+        Chaque joueur joue donc 2 manches par match. La totalité des points d'un joueur est la somme des points qu'il a obtenus pendant ses 2 manches.
       </p>
       <p>
-        Chaque round dure <const>200</const> tours. Les 3 rounds sont joués avec les mêmes conditions pour la cuisine et les clients.
+        Chaque manche dure <const>200</const> tours. Les 3 manches sont jouées avec les mêmes conditions pour la cuisine et les clients.
       </p>
       <br>
       <p>
-        <b>Un round</b>
+        <b>Une manche</b>
       </p>
       <p>
         Chaque joueur controle un chef qui se déplace dans la cuisine et prépare des desserts pour des clients.
       </p>
       <p>
-        Dans un même round, un joueur joue <const>100</const> tours, en collaboration avec l'autre joueur. Les joueurs jouent leurs tours les uns après les autres.
+        Dans une même manche, un joueur joue <const>100</const> tours, en collaboration avec l'autre joueur. Les joueurs jouent leurs tours les uns après les autres.
        </p>
       <br>
        <p>
@@ -373,7 +373,7 @@
       <div class="text">
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
-            Vous obtenez plus de points que les autres joueurs après les 3 rounds.
+            Vous obtenez plus de points que les autres joueurs après les 3 manches.
           </li>
         </ul>
       </div>
@@ -445,7 +445,7 @@
     <div class="blk">
       <div class="title">Entrée pour le premier tour</div>
       <div class="text">
-        <span class="statement-lineno">Première ligne</span>: un entier <var>numAllCustomers</var> pour le nombre total de clients (liste identique à chaque round).<br>
+        <span class="statement-lineno">Première ligne</span>: un entier <var>numAllCustomers</var> pour le nombre total de clients (liste identique à chaque manche).<br>
         <span class="statement-lineno">Les <var>numAllCustomers</var> prochaines lignes</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
@@ -495,7 +495,7 @@
     <div class="blk">
       <div class="title">Entrée pour un tour de jeu</div>
       <div class="text">
-        <span class="statement-lineno">Première ligne</span>: Un entier <var>turnsRemaining</var> pour le nombre de tours restants avant la fin du round courant. <br/>
+        <span class="statement-lineno">Première ligne</span>: Un entier <var>turnsRemaining</var> pour le nombre de tours restants avant la fin de la manche courante. <br/>
         <span class="statement-lineno">Les <const>3</const> prochaines lignes</span>: 
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
