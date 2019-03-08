@@ -65,6 +65,7 @@ class Game:
 
         #If tile not found
         log("Error: Tile not found in function getTileByItem")
+    
 
     def getTileByCoords(self, x, y):
         for t in self.tiles:
@@ -85,7 +86,7 @@ class Game:
         self.partner.item = item
 
     def use(self, tile):
-        print("USE", tile.x, tile.y)
+        print("USE", tile.x, tile.y,"; Python Starter AI")
 
     def move(self, tile):
         print("MOVE", tile.x, tile.y)
@@ -149,8 +150,6 @@ while True:
         game.use(game.getTileByName(DISHWASHER))
     elif ICE_CREAM not in game.player.item:
         game.use(game.getTileByName(ICE_CREAM_CRATE))
-    elif BLUEBERRIES not in game.player.item:
-        game.use(game.getTileByName(BLUEBERRIES_CRATE))
     else:
-        game.use(game.getTileByName(WINDOW))
+        game.use(game.getTileByName(EMPTY_TABLE))
 #End game code

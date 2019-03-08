@@ -47,7 +47,7 @@ class Player {
             }
 
             // GAME LOGIC
-            // fectch dish, then blueberries, then ice cream
+            // fetch dish, then blueberries, then ice cream, then drop it at first empty table
             if (!playerItem.contains("DISH")) {
                 Table table = k.tables.stream().filter(t -> t.isDish()).findFirst().get();
                 table.use();
@@ -55,11 +55,8 @@ class Player {
             else if (!playerItem.contains("BLUEBERRIES")) {
                 k.tables.stream().filter(t -> t.isBlueBerries()).findFirst().get().use();
             }
-            else if (!playerItem.contains("ICE_CREAM")) {
-                k.tables.stream().filter(t -> t.isIceCream()).findFirst().get().use();
-            }
             else {
-                k.tables.stream().filter(t -> t.isWindow()).findFirst().get().use();
+                k.tables.stream().filter(t -> t.isEmpty()).findFirst().get().use();
             }
         }
     }
@@ -121,7 +118,6 @@ class Table {
     }
 
     public boolean isDish() {
-        System.err.println(type);
         return isTableType(TableType.PLATES);
     }
 
@@ -133,17 +129,20 @@ class Table {
         return isTableType(TableType.ICE_CREAM);
     }
 
+    public boolean isEmpty() {
+        return isTableType(TableType.EMPTY);
+    }
+
     public boolean isWindow() {
         return isTableType(TableType.WINDOW);
     }
 
     private boolean isTableType(TableType t) {
-        System.err.println(type.equals(t));
         return type.equals(t);
     }
 
     public void use() {
-        System.out.println("USE "+x+" "+y+" my message");
+        System.out.println("USE "+x+" "+y+"; Java Starter AI");
     }
 }
 
@@ -152,6 +151,7 @@ enum TableType {
     BLUEBERRY,
     ICE_CREAM,
     PLATES,
+    EMPTY,
     WINDOW;
 
     static TableType get(Character c) {
@@ -164,6 +164,8 @@ enum TableType {
                 return ICE_CREAM;
             case 'W':
                 return WINDOW;
+            case '#':
+                return EMPTY;
 
         }
         return null;

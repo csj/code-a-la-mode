@@ -130,7 +130,7 @@
             <li>Blueberries (<const>B</const>).</li>
             <li>Ice cream (<const>I</const>).</li>
             <li>Strawberries (<const>S</const>).</li>
-            <li>Dough (<const>D</const>).</li>
+            <li>Dough (<const>H</const>).</li>
           </ul>
 
           It also contains two extra appliances: 
@@ -146,7 +146,7 @@
           <li>Blueberries (<const>B</const>).</li>
           <li>Ice cream (<const>I</const>).</li>
           <li>Strawberries (<const>S</const>).</li>
-          <li>Dough (<const>D</const>).</li>
+          <li>Dough (<const>H</const>).</li>
         </ul>
 
         It also contains two extra appliances: 
@@ -361,7 +361,14 @@
       <p>
         <action>WAIT</action>
       </p>
-      Use this command to do nothing.
+      <p>
+        Use this command to do nothing.
+      </p>
+      <br>
+      <p>
+        To display a message in a viewer, append a semicolon followed by your message to the output. <br>
+        Ex: <action>USE 0 0; my message</action>
+      </p>
     </div>
   </div>
 
