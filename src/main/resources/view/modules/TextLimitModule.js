@@ -1,5 +1,5 @@
-import { api as entityModule } from '../../entity-module/GraphicEntityModule.js'
-import { fitAspectRatio } from '../../core/utils.js'
+import { api as entityModule } from '../entity-module/GraphicEntityModule.js'
+import { fitAspectRatio } from '../core/utils.js'
 export const api = {
   showDamage: true,
   showCurve: false
