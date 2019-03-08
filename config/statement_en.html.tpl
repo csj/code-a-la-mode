@@ -503,7 +503,8 @@
           </li>
           <li>
             A string <var>playerItem</var> for what the player's chef is carrying <br/>
-            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const><br/>
+            If no item is being carried: <const>NONE</const>
           </li>
         </ul>
         <span class="statement-lineno">Next <const>3</const> lines</span>: 
