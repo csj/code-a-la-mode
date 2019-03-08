@@ -144,7 +144,7 @@ while True:
         customer_award = int(customer_award)
 
     # GAME LOGIC
-    #Gather plate, Icecream, Blueberries, then take them all to window
+    #Gather plate & Icecream
     if DISH not in game.player.item:
         game.use(game.getTileByName(DISHWASHER))
     elif ICE_CREAM not in game.player.item:
