@@ -130,7 +130,7 @@
             <li>Des myrtilles (<const>B</const>).</li>
             <li>De la crème glacée (<const>I</const>).</li>
             <li>Des fraises (<const>S</const>).</li>
-            <li>De la pâte (<const>D</const>).</li>
+            <li>De la pâte (<const>H</const>).</li>
           </ul>
 
           On y trouve aussi deux équipements supplémentaires :
@@ -146,7 +146,7 @@
           <li>Des myrtilles (<const>B</const>).</li>
           <li>De la crème glacée (<const>I</const>).</li>
           <li>Des fraises (<const>S</const>).</li>
-          <li>De la pâte (<const>D</const>).</li>
+          <li>De la pâte (<const>H</const>).</li>
         </ul>
 
         On y trouve aussi deux équipements supplémentaires :
