@@ -3,7 +3,8 @@ package nicknameHandlerModule;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.codingame.game.Player;
+import com.codingame.gameengine.core.AbstractMultiplayerPlayer;
+
 import com.codingame.gameengine.core.Module;
 import com.codingame.gameengine.core.MultiplayerGameManager;
 import com.codingame.gameengine.module.entities.Text;
@@ -18,10 +19,10 @@ public class TextLimitModule implements Module {
     }
 
     List<TextLimit> limits = new ArrayList<>(6);
-    private MultiplayerGameManager<Player> gameManager;
+    private MultiplayerGameManager<AbstractMultiplayerPlayer> gameManager;
     
     @Inject
-    public TextLimitModule(MultiplayerGameManager<Player> gameManager) {
+    public TextLimitModule(MultiplayerGameManager<AbstractMultiplayerPlayer> gameManager) {
         this.gameManager = gameManager;
         gameManager.registerModule(this);
     }

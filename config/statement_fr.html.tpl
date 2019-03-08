@@ -1,6 +1,6 @@
 <!-- LEAGUES level1 level2 level3 level4 -->
 <div class="statement-body">
-  <!-- BEGIN level1 level2 level3 -->
+  <!-- BEGIN level1 level2 level3 level4 -->
   <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 20px;
@@ -31,13 +31,13 @@
       En ligue Bronze, toutes les règles sont débloquées et alors débute le challenge, le vrai. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level2 -->
-      En ligue Bois 2, les clients peuvent commander un dessert plus complexe : des fraises découpées. Les fraises doivent être découpées à la planche à découper. <br/> <br/>
+      En ligue Bois 2, les clients peuvent commander un dessert plus complexe&nbsp;: des fraises découpées. Les fraises doivent être découpées à la planche à découper. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level3 -->
-      En ligue Bois 1, les clients peuvent commander un dessert plus complexe : des croissants. Une pâte est cuite en croissants dans le four. <br/> <br/>
+      En ligue Bois 1, les clients peuvent commander un dessert plus complexe&nbsp;: des croissants. Une pâte est cuite en croissants dans le four. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level4 -->
-      En ligue Bronze, les clients peuvent commander un desserts encore plus complexes: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
+      En ligue Bronze, les clients peuvent commander un dessert encore plus complexe&nbsp;: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
       Des IAs de base sont disponibles dans le <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles ne peuvent pas battre le premier boss mais vous aideront à démarrer.
@@ -242,16 +242,16 @@
         La cuisson dure <const>10</const> tours, après lesquels le plat est prêt (<b>READY</b>). Le plat reste prêt (<b>READY</b>) pendant <const>10</const> autre tours, après lesquels il brûle et disparaît.
       </p>
       <!-- BEGIN level1 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level2 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level3 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level4 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
       <!-- END -->
       <br>
@@ -333,7 +333,7 @@
         <action>USE x y</action>
       </p>
       <p>
-        Utilisez cette commande pour interagir avec la case (x,y). Si le chef est adjacent à la case quand l'action <action>USE</action> est utilisée, l'action est réussie ; sinon, le chef se déplacera en direction de cette case. L'action <action>USE</action> fonctionne en diagonale (8-adjacence).
+        Utilisez cette commande pour interagir avec la case (x,y). Si le chef est adjacent à la case quand l'action <action>USE</action> est utilisée, l'action est réussie&nbsp;; sinon, le chef se déplacera en direction de cette case. L'action <action>USE</action> fonctionne en diagonale (8-adjacence).
       </p>
       <p>
         L'action <action>USE</action> a différents effets qui dépendent de la case et de ce que le chef porte. Les principaux effets sont listés ci-dessous :
@@ -420,7 +420,7 @@
             Les chefs ne peuvent pas prendre d'assiette s'ils en possèdent déjà une.
           </li>
           <li>
-            Dès que d'un dessert est servi sur une assiette, il ne peut pas en être retiré. Pour vider une assiette, il faut utiliser (<action>USE</action>) le lave-vaisselle avec cette assiette.
+            Dès qu'un dessert est servi sur une assiette, il ne peut pas en être retiré. Pour vider une assiette, il faut utiliser (<action>USE</action>) le lave-vaisselle avec cette assiette en main.
           </li>
           <li>
             Une assiette ne peut contenir plus de <const>4</const> desserts.
@@ -449,14 +449,14 @@
         <span class="statement-lineno">Les <var>numAllCustomers</var> prochaines lignes</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Un String <var>customerItem</var> pour la commande du client <br/>
+            Une chaine de charactères <var>customerItem</var> pour la commande du client <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
             Un entier <var>customerAward</var> pour le nombre de points obtenus si la commande est livrée.
           </li>
         </ul>
-        <span class="statement-lineno">Les <const>7</const> prochaines lignes</span>: Un String <var>kitchenLine</var> de taille 11 représentant une partie de la cuisine. <br/>
+        <span class="statement-lineno">Les <const>7</const> prochaines lignes</span>: Une chaine de charactères <var>kitchenLine</var> de taille 11 représentant une partie de la cuisine. <br/>
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: case de sol
@@ -483,7 +483,7 @@
           <!-- END -->
           <!-- BEGIN level3 level4 -->
           <li>
-            <const>D</const>: la corbeille de pâte
+            <const>H</const>: la corbeille de pâte
           </li>
           <li>
             <const>O</const>: le four
@@ -502,7 +502,7 @@
             Deux entiers <var>playerX</var> et <var>playerY</var> pour la position du chef
           </li>
           <li>
-            Un string <var>playerItem</var> pour représenter ce que le chef transporte <br/>
+            Une chaine de charactères <var>playerItem</var> pour représenter ce que le chef transporte <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
@@ -512,7 +512,7 @@
             Deux entiers <var>partnerX</var> et <var>partnerY</var> pour la position du chef de l'autre joueur
           </li>
           <li>
-            Un String <var>partnerItem</var> pour représenter ce que le chef de l'autre joueur transporte
+            Une chaine de charactères <var>partnerItem</var> pour représenter ce que le chef de l'autre joueur transporte
           </li>
         </ul>
         <span class="statement-lineno">Prochaine ligne</span>: Un entier <var>numTablesWithItems</var> pour le nombre de tables occupées par de la nourriture ou une assiette <br/>
@@ -522,7 +522,7 @@
             Deux entiers <var>tableX</var> et <var>tableY</var> pour la position de la table
           </li>
           <li>
-            Un String <var>item</var> pour représenter ce qu'il y a sur la table <br/>
+            Une chaine de charactères <var>item</var> pour représenter ce qu'il y a sur la table <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
@@ -530,13 +530,13 @@
         <span class="statement-lineno">Prochaine ligne</span>: à ignorer <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 -->
-        <span class="statement-lineno">Prochaine ligne</span>: Un String <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours depuis que le plat a été enfourné. <br/>
+        <span class="statement-lineno">Prochaine ligne</span>: Une chaine de charactères <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours depuis que le plat a été enfourné. <br/>
         <!-- END -->
         <span class="statement-lineno">Prochaine ligne</span>: Un entier <var>numCustomers</var> pour le nombre courant de clients attendant leurs commandes. <br/>
         <span class="statement-lineno">Les <var>numCustomers</var> prochaines lignes</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Un String <var>customerItem</var> pour la commande du client <br/>
+            Une chaine de charactères <var>customerItem</var> pour la commande du client <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>

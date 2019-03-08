@@ -1,6 +1,6 @@
 <!-- LEAGUES level1 level2 level3 level4 -->
 <div class="statement-body">
-  <!-- BEGIN level1 level2 level3 -->
+  <!-- BEGIN level1 level2 level3 level4 -->
   <div style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 20px;
@@ -27,17 +27,20 @@
     </p>
     <span class="statement-league-alert-content">
       <!-- BEGIN level1 -->
-      Wood leagues should be considered as a tutorial which lets players discover the different rules of the game. <br>
-      In Bronze league, all rules will be unlocked and the real challenge will begin.
+      Wood leagues should be considered as a tutorial which lets players discover the different rules of the game. <br/>
+      In Bronze league, all rules will be unlocked and the real challenge will begin. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level2 -->
-      In Wood 2, customers can order a more complex dessert: chopped strawberries. Strawberries need to be chopped at the chopping board.
+      In Wood 2, customers can order a more complex dessert: chopped strawberries. Strawberries need to be chopped at the chopping board. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level3 -->
-      In Wood 1, customers can order a more complex dessert: croissants. Dough is cooked into croissants at the oven.
+      In Wood 1, customers can order a more complex dessert: croissants. Dough is cooked into croissants at the oven. <br/> <br/>
       <!-- END -->
       <!-- BEGIN level4 -->
       In Bronze, customers can order an even more complex dessert: blueberry tart. Dough needs to be chopped at the chopping board. Then, blueberries should be added to have a raw tart. The raw tart needs then to be cooked into a blueberry tart at the oven.
+      <!-- END -->
+      <!-- BEGIN level1 level2 level3 -->
+      Starter AIs are available in the <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can't beat the first boss but will help you get started with coding.
       <!-- END -->
     </span>
   </div>
@@ -62,7 +65,7 @@
     </h2>
     <div class="statement-rules-content">
       <p>
-        This is a three-player game played on a grid <const>11</const> cells wide and <const>7</const> cells high. A match is played in 3 rounds, each with 2 of the players.
+        This is a three-player game played on a grid <const>11</const> cells wide and <const>7</const> cells high. A match is played in 3 rounds, each round with only 2 of the players.
       </p>
       <ul style="padding-top:0; padding-bottom:0">
         <li><b>Round 1:</b> player A with player B.</li>
@@ -73,7 +76,7 @@
         Each player will thus play two rounds in each match. A player's total points is the sum of both rounds' points.
       </p>
       <p>
-        Each round lasts for <const>200</const> turns and is played with the same kitchen and customers conditions.
+        Each round lasts for <const>200</const> turns and is played with the same <b>kitchen</b> and <b>customers</b>.
       </p>
       <br>
       <p>
@@ -293,16 +296,16 @@
           A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
         </p>
         <!-- BEGIN level1 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level2 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level3 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
         <!-- BEGIN level4 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px;"></img>
+        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px; width: 100%;"></img>
         <!-- END -->
       </div>
       <!-- END -->
@@ -330,7 +333,7 @@
         <action>USE x y</action>
       </p>
       <p>
-        Use this command to go interact with the cell (x,y). If the chef is adjacent to the cell when using the <action>USE</action> command, the action is successful; else, the chef will move closer to that cell. The <action>USE</action> command works diagonally (8-adjacency).
+        Use this command to interact with the cell (x,y). If the chef is adjacent to the cell when using the <action>USE</action> command, the action is successful. Otherwise, the chef will move closer to that cell. The <action>USE</action> command works diagonally (8-adjacency).
       </p>
       <p>
         Depending on the cell and what the chef is holding, the <action>USE</action> will have different effects. The main effects are summarized below:
@@ -408,10 +411,10 @@
       </p>
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
-            The chefs cannot exchange any food or dish between each other. They need to put it down on a table for the other to pick it up.
+            The chefs cannot exchange any food or dish with each other. They need to put it down on a table for the other to pick it up.
           </li>
           <li>
-            The chefs cannot put food on the floor.
+            The chefs cannot put food or dishes on the floor.
           </li>
           <li>
             The chefs cannot pick up a dish if they're already carrying one.
@@ -442,18 +445,18 @@
     <div class="blk">
       <div class="title">Input for the first turn</div>
       <div class="text">
-        <span class="statement-lineno">First line</span>: an Integer <var>numAllCustomers</var> for the total number of customers (same list of customers for each round).<br>
+        <span class="statement-lineno">First line</span>: an integer <var>numAllCustomers</var> for the total number of customers (same list of customers for each round).<br>
         <span class="statement-lineno">Next <var>numAllCustomers</var> lines</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            A String <var>customerItem</var> for the customer's order <br/>
+            A string <var>customerItem</var> for the customer's order <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
-            An Integer <var>customerAward</var> for the number of points awarded if the customer's order is delivered
+            An integer <var>customerAward</var> for the number of points awarded if the customer's order is delivered
           </li>
         </ul>
-        <span class="statement-lineno">Next <const>7</const> lines</span>: A String <var>kitchenLine</var> of size 11 representing a part of the kitchen. <br/>
+        <span class="statement-lineno">Next <const>7</const> lines</span>: A string <var>kitchenLine</var> of size 11 representing a part of the kitchen. <br/>
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: walkable cell
@@ -480,7 +483,7 @@
           <!-- END -->
           <!-- BEGIN level3 level4 -->
           <li>
-            <const>D</const>: the dough crate
+            <const>H</const>: the dough crate
           </li>
           <li>
             <const>O</const>: the oven
@@ -492,34 +495,34 @@
     <div class="blk">
       <div class="title">Input for one game turn</div>
       <div class="text">
-        <span class="statement-lineno">First line</span>: An Integer <var>turnsRemaining</var> for the number of turns remaining before the end of the current round. <br/>
+        <span class="statement-lineno">First line</span>: An integer <var>turnsRemaining</var> for the number of turns remaining before the end of the current round. <br/>
         <span class="statement-lineno">Next <const>3</const> lines</span>: 
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Two Integers <var>playerX</var> and <var>playerY</var> for the player's chef position
+            Two integers <var>playerX</var> and <var>playerY</var> for the player's chef position
           </li>
           <li>
-            A String <var>playerItem</var> for what the player's chef is carrying <br/>
+            A string <var>playerItem</var> for what the player's chef is carrying <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
         <span class="statement-lineno">Next <const>3</const> lines</span>: 
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Two Integers <var>partnerX</var> and <var>partnerY</var> for the other player's chef position
+            Two integers <var>partnerX</var> and <var>partnerY</var> for the other player's chef position
           </li>
           <li>
-            A String <var>partnerItem</var> for what the other player's chef is carrying
+            A string <var>partnerItem</var> for what the other player's chef is carrying
           </li>
         </ul>
-        <span class="statement-lineno">Next line</span>: An Integer <var>numTablesWithItems</var> for the number of non-empty tables <br/>
+        <span class="statement-lineno">Next line</span>: An integer <var>numTablesWithItems</var> for the number of non-empty tables <br/>
         <span class="statement-lineno">Next <var>numTablesWithItems</var> lines</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Two Integers <var>tableX</var> and <var>tableY</var> for the table's position
+            Two integers <var>tableX</var> and <var>tableY</var> for the table's position
           </li>
           <li>
-            A String <var>item</var> for what's on the table. <br/>
+            A string <var>item</var> for what's on the table. <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
@@ -527,17 +530,17 @@
         <span class="statement-lineno">Next line</span>: to ignore in this league <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 -->
-        <span class="statement-lineno">Next line</span>: A String <var>ovenContents</var> for what's in the oven and an Integer <var>ovenTimer</var> for the number of turns the food has been put in the oven. <br/>
+        <span class="statement-lineno">Next line</span>: A string <var>ovenContents</var> for what's in the oven and an integer <var>ovenTimer</var> for the number of turns the food has been put in the oven. <br/>
         <!-- END -->
-        <span class="statement-lineno">First line</span>: an Integer <var>numCustomers</var> for the current number of customers waiting for their order. <br/>
+        <span class="statement-lineno">First line</span>: an integer <var>numCustomers</var> for the current number of customers waiting for their order. <br/>
         <span class="statement-lineno">Next <var>numCustomers</var> lines</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            A String <var>customerItem</var> for the customer's order <br/>
+            A string <var>customerItem</var> for the customer's order <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
-            An Integer <var>customerAward</var> for the number of points awarded if the customer's order is delivered
+            An integer <var>customerAward</var> for the number of points awarded if the customer's order is delivered
           </li>
         </ul>
       </div>
