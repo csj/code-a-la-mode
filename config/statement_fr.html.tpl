@@ -692,14 +692,14 @@ Invalid action
         <span class="statement-lineno">Les <var>numAllCustomers</var> prochaines lignes</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Un String <var>customerItem</var> pour la commande du client <br/>
+            Une chaine de charactères <var>customerItem</var> pour la commande du client <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
             Un entier <var>customerAward</var> pour le nombre de points obtenus si la commande est livrée.
           </li>
         </ul>
-        <span class="statement-lineno">Les <const>7</const> prochaines lignes</span>: Un String <var>kitchenLine</var> de taille 11 représentant une partie de la cuisine. <br/>
+        <span class="statement-lineno">Les <const>7</const> prochaines lignes</span>: Une chaine de charactères <var>kitchenLine</var> de taille 11 représentant une partie de la cuisine. <br/>
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: case de sol
@@ -745,7 +745,7 @@ Invalid action
             Deux entiers <var>playerX</var> et <var>playerY</var> pour la position du chef
           </li>
           <li>
-            Un string <var>playerItem</var> pour représenter ce que le chef transporte <br/>
+            Une chaine de charactères <var>playerItem</var> pour représenter ce que le chef transporte <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
@@ -755,7 +755,7 @@ Invalid action
             Deux entiers <var>partnerX</var> et <var>partnerY</var> pour la position du chef de l'autre joueur
           </li>
           <li>
-            Un String <var>partnerItem</var> pour représenter ce que le chef de l'autre joueur transporte
+            Une chaine de charactères <var>partnerItem</var> pour représenter ce que le chef de l'autre joueur transporte
           </li>
         </ul>
         <span class="statement-lineno">Prochaine ligne</span>: Un entier <var>numTablesWithItems</var> pour le nombre de tables occupées par de la nourriture ou une assiette <br/>
@@ -765,7 +765,7 @@ Invalid action
             Deux entiers <var>tableX</var> et <var>tableY</var> pour la position de la table
           </li>
           <li>
-            Un String <var>item</var> pour représenter ce qu'il y a sur la table <br/>
+            Une chaine de charactères <var>item</var> pour représenter ce qu'il y a sur la table <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
         </ul>
@@ -773,13 +773,13 @@ Invalid action
         <span class="statement-lineno">Prochaine ligne</span>: à ignorer <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 -->
-        <span class="statement-lineno">Prochaine ligne</span>: Un String <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours depuis que le plat a été enfourné. <br/>
+        <span class="statement-lineno">Prochaine ligne</span>: Une chaine de charactères <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours depuis que le plat a été enfourné. <br/>
         <!-- END -->
         <span class="statement-lineno">Prochaine ligne</span>: Un entier <var>numCustomers</var> pour le nombre courant de clients attendant leurs commandes. <br/>
         <span class="statement-lineno">Les <var>numCustomers</var> prochaines lignes</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
-            Un String <var>customerItem</var> pour la commande du client <br/>
+            Une chaine de charactères <var>customerItem</var> pour la commande du client <br/>
             Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
           </li>
           <li>
