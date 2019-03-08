@@ -503,7 +503,8 @@
           </li>
           <li>
             Une chaine de charactères <var>playerItem</var> pour représenter ce que le chef transporte <br/>
-            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const><br/>
+            S'il ne transporte rien&nbsp;: <const>NONE</const>
           </li>
         </ul>
         <span class="statement-lineno">les <const>3</const> prochaines lines</span>: 
