@@ -130,7 +130,7 @@
             <li>Blueberries (<const>B</const>).</li>
             <li>Ice cream (<const>I</const>).</li>
             <li>Strawberries (<const>S</const>).</li>
-            <li>Dough (<const>D</const>).</li>
+            <li>Dough (<const>H</const>).</li>
           </ul>
 
           It also contains two extra appliances: 
@@ -146,7 +146,7 @@
           <li>Blueberries (<const>B</const>).</li>
           <li>Ice cream (<const>I</const>).</li>
           <li>Strawberries (<const>S</const>).</li>
-          <li>Dough (<const>D</const>).</li>
+          <li>Dough (<const>H</const>).</li>
         </ul>
 
         It also contains two extra appliances: 
