@@ -423,7 +423,7 @@
             Dès que d'un dessert est servi sur une assiette, il ne peut pas en être retiré. Pour vider une assiette, il faut utiliser (<action>USE</action>) le lave-vaisselle avec cette assiette.
           </li>
           <li>
-            Une assiette ne peut contenir plus que <const>4</const> desserts.
+            Une assiette ne peut contenir plus de <const>4</const> desserts.
           </li>
           <li>
             Tous les différents cas possibles de l'action <action>USE</action> sont listés <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">ici</a>.
