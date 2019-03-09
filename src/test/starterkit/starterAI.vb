@@ -150,7 +150,7 @@ Module CodeALaMode
             For i As Integer = 0 To numTablesWithItems - 1
                 inputs = ReadLine().Split(" "c)
                 Dim position As New Position(CInt(inputs(0)), CInt(inputs(1)))
-                Dim Table = Game.getTableAtPosition(position)
+                Dim Table as Table = Game.getTableAtPosition(position)
                 Table.Item = New Item(inputs(2))
             Next
 
