@@ -24,11 +24,11 @@ inline fun <reified T> Array<Array<T>>.transpose(default: () -> T): Array<Array<
     return trans
 }
 
-fun Sequence<String>.splitAccumulate() = sequence {
+fun Sequence<String>.splitAccumulate(length: Int) = sequence {
     var currentLine = ""
 
     forEach { tok ->
-        if (currentLine.length + tok.length > 9) {
+        if (currentLine.length + tok.length > length) {
             yield(currentLine.substring(1))
             currentLine = ""
         }
@@ -37,6 +37,12 @@ fun Sequence<String>.splitAccumulate() = sequence {
 
     yield(currentLine.substring(1))
 }
+
+fun <E> List<E>.loopingIterator(): Iterator<E> =
+    sequence { while (true) yieldAll(this@loopingIterator) }.iterator()
+
+fun <T> T.nullIf(nullVal: T): T? = if (this == nullVal) null else this
+
 
 @Suppress("unused")
 abstract class BaseCALMPlayer(val stdin: InputStream = System.`in`, val stdout: PrintStream = System.out, val stderr: PrintStream = System.err) {
@@ -139,6 +145,86 @@ class NaiveAllItemsPlayer(
     lateinit var inputs: GameState
     lateinit var crates: Map<String, Table>
 
+    val lyrics = """
+How come you're
+always such a
+fussy young man?
+Don't want no
+Captain Crunch,
+don't want no
+Raisin Bran?!
+Well, don't you
+know that other kids
+are starving in
+Japan? So eat it!
+Just eat it.
+Don't wanna argue,
+I don't wanna debate
+Don't wanna hear
+about what kind of
+food you hate!
+You won't get no
+dessert 'till you
+clean off your plate
+So eat it. Don't you
+tell me you're full,
+just eat it, eat it,
+eat it, eat it,
+Get yourself an egg
+and beat it!
+Have some more
+chicken, have some
+more pie, it doesn't
+matter if it's
+broiled or fried,
+Just eat it, eat it,
+just eat it, eat it!
+Your table manners are
+a cryin' shame.
+You're playin' with
+your food, this
+ain't some kind of
+game! Now, if you
+starve to death,
+you'll just have
+yourself to blame.
+So eat it
+just eat it!
+You better listen,
+better do what
+you're told, you
+haven't even
+touched your tuna
+casserole!
+You better chow
+down or it's gonna
+get cold, so eat it.
+I don't care if
+you're full,
+just eat it, eat it
+Eat it, eat it.
+Open up your mouth
+and feed it.
+Have some more
+yogurt, have some
+more Spam.
+It doesn't matter
+if it's fresh or
+canned, just eat it
+Eat it, eat it
+Don't you make me
+Repeat it!
+Have a banana,
+Have a whole bunch.
+It doesn't matter
+what you had for
+lunch, just eat it!"""
+        .split("\n", " ")
+        .asSequence()
+        .splitAccumulate(18)
+        .iterator()
+
+
     private fun findEquipment(equipmentChar: Char) =
         inputs.tables.firstOrNull { it.equipment == equipmentChar }
 
@@ -157,11 +243,11 @@ class NaiveAllItemsPlayer(
                 item.name to (inputs.tables.firstOrNull { it.equipment == char } )
             }.filter { (_, v) -> v != null }.map { (k, v) -> k to v!! }.toMap()
 
-            if (turn % 3 == 0) {
-                stdout.println("WAIT")
-            } else {
-                stdout.println(act() ?: "WAIT")
-            }
+//            if (turn % 3 == 0) {
+//                stdout.println("WAIT")
+//            } else {
+                stdout.println(act() ?: "WAIT" + ";" + (lyrics.tryNext() ?: ""))
+//            }
 
         }
     }
