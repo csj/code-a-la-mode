@@ -4,7 +4,7 @@ import com.codingame.game.Player
 
 abstract class Item {
   open fun receiveItem(player: Player, item: Item, cell: Cell?) {
-    throw LogicException("Cannot take $item while holding $this!")
+    throw LogicException("Cannot take $this while holding $item!")
   }
 
   open fun take(player: Player, cell: Cell) {
