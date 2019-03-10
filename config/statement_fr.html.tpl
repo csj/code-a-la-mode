@@ -94,7 +94,7 @@
       </p>
         Dans la cuisine, on peut trouver:
         <ul style="padding-top:0; padding-bottom: 0;">
-          <li>Des cases vides, sur lesquelles les chefs se déplacent (<const>.</const>).</li>
+          <li>Des cases vides, sur lesquelles les chefs se déplacent (<const>.</const>, <const>0</const>, <const>1</const>).</li>
           <li>Des tables de travail (<const>#</const>).</li>
           <li>Un lave-vaisselle (<const>D</const>).</li>
           <li>Une fenêtre pour les clients representée par une cloche (<const>W</const>).</li>
@@ -467,6 +467,12 @@
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: case de sol
+          </li>
+          <li>
+            <const>0</const>: spawn du premier joueur
+          </li>
+          <li>
+            <const>1</const>: spawn du deuxième joueur
           </li>
           <li>
             <const>D</const>: le lave-vaisselle
