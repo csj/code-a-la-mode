@@ -94,7 +94,7 @@
       </p>
         The kitchen contains:
         <ul style="padding-top:0; padding-bottom: 0;">
-          <li>Floor cells, on which the chefs can move (<const>.</const>).</li>
+          <li>Floor cells, on which the chefs can move (<const>.</const>, <const>0</const>, <const>1</const>).</li>
           <li>Empty tables (<const>#</const>).</li>
           <li>A dishwasher (<const>D</const>).</li>
           <li>A customer window represented by a bell (<const>W</const>).</li>
@@ -467,6 +467,12 @@
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: walkable cell
+          </li>
+          <li>
+            <const>0</const>: first player spawn location (also walkable)
+          </li>
+          <li>
+            <const>1</const>: second player spawn location (also walkable)
           </li>
           <li>
             <const>D</const>: the dishwasher
