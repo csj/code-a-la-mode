@@ -1,9 +1,14 @@
 import java.util.*
 import kotlin.math.abs
 
+// ideas:
+// - get from closest table, not just any, or crate
+// - when holding plate, go clockwise, not in plate order
+// - when building food, build easiest first
+
 data class XY(val x: Int, val y: Int) {
     fun use() { println("USE $x $y") }
-    fun dist(myPos: XY) = abs(myPos.x - x) + abs(myPos.y - y)
+    fun dist(other: XY) = abs(other.x - x) + abs(other.y - y)
 }
 
 data class Table(val loc: XY, val item: String)
@@ -41,10 +46,10 @@ fun main(args : Array<String>) {
     }
 
     val oven = findEquipment('O')
-    val blueberries = findEquipment('B')
-    val iceCream = findEquipment('I')
-    val dishWasher = findEquipment('D')
-    val bell = findEquipment('W')
+    val blueberries = findEquipment('B')!!
+    val iceCream = findEquipment('I')!!
+    val dishWasher = findEquipment('D')!!
+    val bell = findEquipment('W')!!
     val choppingBoard = findEquipment('C')
     val strawberries = findEquipment('S')
     val dough = findEquipment('H')
@@ -108,39 +113,33 @@ fun main(args : Array<String>) {
 
         val customer = customers.first()
 
-
         // DISH-BLUEBERRIES-TART
         val itemsTheyWant = customer.item.split('-').drop(1)
             .map { Things.valueOf(it) }
 
-        fun prepareStrawberries(): XY? {
-            System.err.println("STRAWABEEIES")
-            if (findItem(Things.CHOPPED_STRAWBERRIES) != null) return null
-            if (playerThing == Things.STRAWBERRIES) return choppingBoard
-            if (playerItem == "NONE") return strawberries
-            return useClosestEmptyTable()!!
+        fun prepareStrawberries(): XY? = when {
+            findItem(Things.CHOPPED_STRAWBERRIES) != null -> null
+            playerThing == Things.STRAWBERRIES -> choppingBoard
+            playerItem == "NONE" -> strawberries
+            else -> useClosestEmptyTable()!!
         }
 
-        fun prepareCroissant(): XY? {
-            System.err.println("CROIESIEAT")
-
-            if (findItem(Things.CROISSANT) != null) return null
-            if (ovenContents != "NONE") return oven
-            if (playerThing == Things.DOUGH) return oven
-            if (playerItem == "NONE") return dough
-            return useClosestEmptyTable()!!
+        fun prepareCroissant(): XY? = when {
+            findItem(Things.CROISSANT) != null -> null
+            ovenContents != "NONE" -> oven
+            playerThing == Things.DOUGH -> oven
+            playerItem == "NONE" -> dough
+            else -> useClosestEmptyTable()!!
         }
 
-        fun prepareTart(): XY? {
-            System.err.println("TANTA")
-
-            if (findItem(Things.TART) != null) return null
-            if (ovenContents != "NONE") return oven
-            if (playerThing == Things.DOUGH) return choppingBoard
-            if (playerThing == Things.CHOPPED_DOUGH) return blueberries
-            if (playerThing == Things.RAW_TART) return oven
-            if (playerItem == "NONE") return dough
-            return useClosestEmptyTable()!!
+        fun prepareTart(): XY? = when {
+            findItem(Things.TART) != null -> null
+            ovenContents != "NONE" -> oven
+            playerThing == Things.DOUGH -> choppingBoard
+            playerThing == Things.CHOPPED_DOUGH -> blueberries
+            playerThing == Things.RAW_TART -> oven
+            playerItem == "NONE" -> dough
+            else -> useClosestEmptyTable()!!
         }
 
         fun action() {
@@ -154,23 +153,17 @@ fun main(args : Array<String>) {
                     Things.TART -> prepareTart()
                     else -> throw Exception("They want unusual things!")
                 }
-                if (prepareAction != null) {
-                    System.err.println("Doing a thing to prepare")
-                    return println("USE ${prepareAction.x} ${prepareAction.y}")
-                }
-                System.err.println("Everything is ready")
+                if (prepareAction != null) return prepareAction.use()
             }
+            System.err.println("Everything is ready")
 
             // 2. If not holding a dish, get a dish
-            System.err.println("2")
-            if (playerDish == null) return dishWasher!!.use()
+            if (playerDish == null) return dishWasher.use()
 
-            System.err.println("3")
             // 3. We are holding a dish. Figure out what to get next
-            val nextItem = (itemsTheyWant - playerDish).firstOrNull() ?: return bell!!.use()
+            val nextItem = (itemsTheyWant - playerDish).firstOrNull() ?: return bell.use()
 
             // 4. Get the next item we need
-            System.err.println("4")
             val useLoc = when (nextItem) {
                 Things.BLUEBERRIES -> blueberries
                 Things.ICE_CREAM -> iceCream
