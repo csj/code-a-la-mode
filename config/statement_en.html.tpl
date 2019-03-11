@@ -40,7 +40,7 @@
       In Bronze, customers can order an even more complex dessert: blueberry tart. Dough needs to be chopped at the chopping board. Then, blueberries should be added to have a raw tart. The raw tart needs then to be cooked into a blueberry tart at the oven.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
-      Starter AIs are available in the <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can help you get started with coding your own bot.
+      Starter AIs are available in the <a target="_blank" href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can help you get started with coding your own bot.
       <!-- END -->
     </span>
   </div>
@@ -414,7 +414,7 @@
     </h2>
     <div class="statement-expert-rules-content">
       <p>
-        You can see the game's source code here: <a href=""></a>.
+        You can see the game's source code here: <a target="_blank" href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
       </p>
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
@@ -433,7 +433,7 @@
             A dish cannot contain more than <const>4</const> desserts.
           </li>
           <li>
-            All possible cases of the <action>USE</action> are listed <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">here</a>.
+            All possible cases of the <action>USE</action> are listed <a target="_blank" href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">here</a>.
           </li>
           <li>
             For every turn a customer waits for an order, the reward is decreased by <const>1</const>.
@@ -615,7 +615,7 @@
   </div>
   <!-- END -->
 
-  <div style="background-color: #87cefa;
+  <div style="background-color: #87cefa80;
     padding: 20px;
     margin-top: 10px;
     text-align: left;">
@@ -633,26 +633,26 @@
     <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
       <li>
         🍨 <u>"From Wood to Bronze"</u> (C#)<br />
-        On March 8th at 1 PM EST by Illedan on the <a href="https://www.twitch.tv/codingame">CodinGame channel</a>
+        On March 8th at 1 PM EST by Illedan on the <a target="_blank" href="https://www.twitch.tv/codingame">CodinGame channel</a>
       </li>
       <li>
           🍫 <u>"A look from the pro"</u> (C++)<br />
-          On March 8th at 3 PM EST by Errichto on his <a href="https://www.twitch.tv/errichto">Twitch</a> and <a href="https://youtube.com/errichto">Youtube</a> channels
+          On March 8th at 3 PM EST by Errichto on his <a target="_blank" href="https://www.twitch.tv/errichto">Twitch</a> and <a target="_blank" href="https://youtube.com/errichto">Youtube</a> channels
       </li>
       <li>
           🍪 <u>"A word from the creator"</u> (Kotlin)<br />
-          On March 9th at 10 AM EST by csj on the <a href="https://www.twitch.tv/codingame">CodinGame channel</a>
+          On March 9th at 10 AM EST by csj on the <a target="_blank" href="https://www.twitch.tv/codingame">CodinGame channel</a>
       </li>
       <li>
           🍓 <u>"Facing the Silver league"</u> (Python 3) <br />
-          On March 11th at 12 PM EST by Icebox on the <a href="https://www.twitch.tv/codingame">CodinGame channel</a>
+          On March 11th at 12 PM EST by Icebox on the <a target="_blank" href="https://www.twitch.tv/codingame">CodinGame channel</a>
       </li>
     </ul>
     <p>
       <b> Scheduled CodingHubs 🍿</b>
     </p>
     <p>
-      The full details of CodingHubs can be found <a href="https://trello.com/c/Xy0Qk4nu">here</a>
+      The full details of CodingHubs can be found <a target="_blank" href="https://trello.com/c/Xy0Qk4nu">here</a>
     </p>
     <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
       <li>

@@ -40,7 +40,7 @@
       En ligue Bronze, les clients peuvent commander un dessert encore plus complexe&nbsp;: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
-      Des IAs de base sont disponibles dans le <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles peuvent vous aider à démarrer votre propre IA.
+      Des IAs de base sont disponibles dans le <a target="_blank" href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles peuvent vous aider à démarrer votre propre IA.
       <!-- END -->
     </span>
   </div>
@@ -414,7 +414,7 @@
     </h2>
     <div class="statement-expert-rules-content">
       <p>
-        Vous pouvez retrouver le code source du jeu ici : <a href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
+        Vous pouvez retrouver le code source du jeu ici : <a target="_blank" href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
       </p>
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
@@ -433,7 +433,7 @@
             Une assiette ne peut contenir plus de <const>4</const> desserts.
           </li>
           <li>
-            Tous les différents cas possibles de l'action <action>USE</action> sont listés <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">ici</a>.
+            Tous les différents cas possibles de l'action <action>USE</action> sont listés <a target="_blank" href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">ici</a>.
           </li>
           <li>
             A chaque tour où un client attend sa commande, la récompense liée décroit de <const>1</const> point.
@@ -615,7 +615,7 @@
   </div>
   <!-- END -->
 
-<div style="background-color: #87cefa;
+<div style="background-color: #87cefa80;
     padding: 20px;
     margin-top: 10px;
     text-align: left;">
@@ -632,26 +632,26 @@
     </p>
     <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
       🍨 <u>"De Bois à Bronze"</u> (C#)<br />
-        Le 8 mars à 19 h par Illedan sur la <a href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
+        Le 8 mars à 19 h par Illedan sur la <a target="_blank" href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
     </li>
     <li>
         🍫 <u>"Le coup d'oeil du pro"</u> (C++)<br />
-        Le 8 mars à 21 h par Errichto sur ses chaînes <a href="https://www.twitch.tv/errichto">Twitch</a> et <a href="https://youtube.com/errichto">Youtube</a>
+        Le 8 mars à 21 h par Errichto sur ses chaînes <a target="_blank" href="https://www.twitch.tv/errichto">Twitch</a> et <a target="_blank" href="https://youtube.com/errichto">Youtube</a>
     </li>
     <li>
         🍪 <u>"Le mot du créateur"</u> (Kotlin)<br />
-        Le 9 mars à 16 h par csj sur la <a href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
+        Le 9 mars à 16 h par csj sur la <a target="_blank" href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
     </li>
     <li>
         🍓 <u>"Affronter la ligue Argent"</u> (Python 3) <br />
-        Le 11 mars à 18 h par Icebox sur la <a href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
+        Le 11 mars à 18 h par Icebox sur la <a target="_blank" href="https://www.twitch.tv/codingame">chaîne CodinGame</a>
     </li>
     </ul>
     <p>
       <b> CodingHubs prévus 🍿</b>
     </p>
     <p>
-      Tous les détails sur les CodingHubs sont <a href="https://trello.com/c/Xy0Qk4nu">ici</a>
+      Tous les détails sur les CodingHubs sont <a target="_blank" href="https://trello.com/c/Xy0Qk4nu">ici</a>
     </p>
     <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
       <li>
