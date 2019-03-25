@@ -230,6 +230,7 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         view.itemSpriteGroup = ItemSpriteGroup()
         view.group.add(view.itemSpriteGroup!!.group)
         view.itemSpriteGroup!!.update(cell.item)
+        graphicEntityModule.commitEntityState(0.5, view.group, view.itemSpriteGroup!!.group)
       }
       if (view.itemSpriteGroup !== null) {
         view.itemSpriteGroup!!.update(cell.item)
@@ -237,7 +238,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
       if (cell.equipment is DishWasher) {
         var dishCount = (cell.equipment as DishWasher).dishes
         for ((index, dishSprite) in dishesSprites.withIndex()) {
+          val prevVisible = dishSprite.isVisible
           dishSprite.isVisible = index <= dishCount - 1
+          if (prevVisible != dishSprite.isVisible) {
+            graphicEntityModule.commitEntityState(0.5, dishSprite)
+          }
         }
       }
     }
@@ -259,8 +264,12 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         else -> "smoke.png"
       }
       ovenContentSprite!!.apply {
+        var shouldCommit = (isVisible != showOvenOverlay || image != ovenImage)
         isVisible = showOvenOverlay
         image = ovenImage
+        if (shouldCommit) {
+          graphicEntityModule.commitEntityState(0.5, this)
+        }
       }
       ovenGlowSprite!!.isVisible = it.state is OvenState.Baking || it.state is OvenState.Ready
     }
@@ -383,6 +392,11 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
 
     fun update(item: Item?) {
       subSprites.forEach { it.isVisible = false }
+
+      val prevVisible = mainSprite.isVisible
+      val prevImage = mainSprite.image
+      var dishChange = false
+
       mainSprite.apply {
         isVisible = true
 
@@ -397,6 +411,8 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
           is Dish -> {
             image = "plate.png"
             item.contents.zip(subSprites).forEach { (edible, subSprite) ->
+              val prevSubImage = subSprite.image
+              val prevSubVisible = subSprite.isVisible
               subSprite.apply {
                 isVisible = true
                 when (edible) {
@@ -405,6 +421,9 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
                   is ChoppedStrawberries -> image = "strawberries-cut.png"
                   is Croissant -> image = "croissant.png"
                   is Tart -> image = "tart_big_bb.png"
+                }
+                if (prevSubImage != subSprite.image || prevSubVisible != subSprite.isVisible) {
+                  dishChange = true
                 }
               }
             }
@@ -416,7 +435,16 @@ class BoardView(baseBoard: Board, matchPlayers: List<Player>) {
         }
       }
 
-      graphicEntityModule.commitWorldState(0.5)
+      if (prevImage != mainSprite.image || prevVisible != mainSprite.isVisible) {
+        graphicEntityModule.commitEntityState(0.5, mainSprite)
+      }
+      if (dishChange) {
+        subSprites.forEach {
+          graphicEntityModule.commitEntityState(0.5, it)
+        }
+
+      }
+
       if (mainSprite.isVisible) {
           tooltipModule.updateExtraTooltipText(group,"Item: " + item?.describe())
       } else {
