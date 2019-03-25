@@ -40,7 +40,7 @@
       In Bronze, customers can order an even more complex dessert: blueberry tart. Dough needs to be chopped at the chopping board. Then, blueberries should be added to have a raw tart. The raw tart needs then to be cooked into a blueberry tart at the oven.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
-      Starter AIs are available in the <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can't beat the first boss but will help you get started with coding.
+      Starter AIs are available in the <a target="_blank" href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">Starter Kit</a>. They can help you get started with coding your own bot.
       <!-- END -->
     </span>
   </div>
@@ -94,7 +94,7 @@
       </p>
         The kitchen contains:
         <ul style="padding-top:0; padding-bottom: 0;">
-          <li>Floor cells, on which the chefs can move (<const>.</const>).</li>
+          <li>Floor cells, on which the chefs can move (<const>.</const>, <const>0</const>, <const>1</const>).</li>
           <li>Empty tables (<const>#</const>).</li>
           <li>A dishwasher (<const>D</const>).</li>
           <li>A customer window represented by a bell (<const>W</const>).</li>
@@ -130,7 +130,7 @@
             <li>Blueberries (<const>B</const>).</li>
             <li>Ice cream (<const>I</const>).</li>
             <li>Strawberries (<const>S</const>).</li>
-            <li>Dough (<const>D</const>).</li>
+            <li>Dough (<const>H</const>).</li>
           </ul>
 
           It also contains two extra appliances: 
@@ -146,7 +146,7 @@
           <li>Blueberries (<const>B</const>).</li>
           <li>Ice cream (<const>I</const>).</li>
           <li>Strawberries (<const>S</const>).</li>
-          <li>Dough (<const>D</const>).</li>
+          <li>Dough (<const>H</const>).</li>
         </ul>
 
         It also contains two extra appliances: 
@@ -393,7 +393,14 @@
       <p>
         <action>WAIT</action>
       </p>
-      Use this command to do nothing.
+      <p>
+        Use this command to do nothing.
+      </p>
+      <br>
+      <p>
+        To display a message in a viewer, append a semicolon followed by your message to the output. <br>
+        Ex: <action>USE 0 0; my message</action>
+      </p>
     </div>
   </div>
 
@@ -439,7 +446,7 @@
     </h2>
     <div class="statement-expert-rules-content">
       <p>
-        You can see the game's source code here: <a href=""></a>.
+        You can see the game's source code here: <a target="_blank" href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
       </p>
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
@@ -458,7 +465,7 @@
             A dish cannot contain more than <const>4</const> desserts.
           </li>
           <li>
-            All possible cases of the <action>USE</action> are listed <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">here</a>.
+            All possible cases of the <action>USE</action> are listed <a target="_blank" href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">here</a>.
           </li>
           <li>
             For every turn a customer waits for an order, the reward is decreased by <const>1</const>.
@@ -492,6 +499,12 @@
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: walkable cell
+          </li>
+          <li>
+            <const>0</const>: first player spawn location (also walkable)
+          </li>
+          <li>
+            <const>1</const>: second player spawn location (also walkable)
           </li>
           <li>
             <const>D</const>: the dishwasher
@@ -535,7 +548,8 @@
           </li>
           <li>
             A string <var>playerItem</var> for what the player's chef is carrying <br/>
-            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const><br/>
+            If no item is being carried: <const>NONE</const>
           </li>
         </ul>
         <span class="statement-lineno">Next <const>3</const> lines</span>: 
@@ -562,7 +576,7 @@
         <span class="statement-lineno">Next line</span>: to ignore in this league <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 level5 -->
-        <span class="statement-lineno">Next line</span>: A string <var>ovenContents</var> for what's in the oven and an integer <var>ovenTimer</var> for the number of turns the food has been put in the oven. <br/>
+        <span class="statement-lineno">Next line</span>: A string <var>ovenContents</var> for what's in the oven and an integer <var>ovenTimer</var> for the number of turns the food will stay in the oven before being cooked or burned. <br/>
         <!-- END -->
         <span class="statement-lineno">First line</span>: an integer <var>numCustomers</var> for the current number of customers waiting for their order. <br/>
         <span class="statement-lineno">Next <var>numCustomers</var> lines</span>:

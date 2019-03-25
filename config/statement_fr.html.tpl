@@ -40,7 +40,7 @@
       En ligue Bronze, les clients peuvent commander un dessert encore plus complexe&nbsp;: une tarte aux myrtilles. Une pâte doit être préparée à la planche à découper. Puis, des myrtilles y sont ajoutées pour obtenir une tarte crue. Celle-ci est ensuite cuite dans le four.
       <!-- END -->
       <!-- BEGIN level1 level2 level3 -->
-      Des IAs de base sont disponibles dans le <a href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles ne peuvent pas battre le premier boss mais vous aideront à démarrer.
+      Des IAs de base sont disponibles dans le <a target="_blank" href="https://github.com/csj/code-a-la-mode/tree/master/src/test/starterkit">kit de démarrage</a>. Elles peuvent vous aider à démarrer votre propre IA.
       <!-- END -->
     </span>
   </div>
@@ -53,7 +53,7 @@
       <span>Objectif</span>
     </h2>
     <div class="statement-goal-content">
-      Controlez un chef de cuisine et préparez des desserts pour des clients aussi vite que possible afin de gagner plus de points que les autres joueurs.
+      Contrôlez un chef de cuisine et préparez des desserts pour des clients aussi vite que possible afin de gagner plus de points que les autres joueurs.
     </div>
   </div>
 
@@ -65,28 +65,28 @@
     </h2>
     <div class="statement-rules-content">
       <p>
-        C'est un jeu à 3 joueurs qui se joue sur une grille de <const>11</const> cases en longueur et <const>7</const> cases de largeur. Un match est joué en 3 rounds, chaque round avec 2 joueurs.
+        C'est un jeu à 3 joueurs qui se joue sur une grille de <const>11</const> cases de large et <const>7</const> cases de haut. Un match est joué en 3 manches, chaque manche avec 2 joueurs.
       </p>
       <ul style="padding-top:0; padding-bottom:0">
-        <li><b>Round 1 :</b> joueur A avec joueur B.</li>
-        <li><b>Round 2 :</b> joueur C avec joueur A.</li>
-        <li><b>Round 3 :</b> joueur B avec joueur C.</li>
+        <li><b>Manche 1 :</b> joueur A avec joueur B.</li>
+        <li><b>Manche 2 :</b> joueur C avec joueur A.</li>
+        <li><b>Manche 3 :</b> joueur B avec joueur C.</li>
       </ul>
       <p>
-        Chaque joueur joue donc 2 rounds par match. La totalité des points d'un joueur est la somme des points qu'il a obtenus pendant ses 2 rounds.
+        Chaque joueur joue donc 2 manches par match. La totalité des points d'un joueur est la somme des points qu'il a obtenus pendant ses 2 manches.
       </p>
       <p>
-        Chaque round dure <const>200</const> tours. Les 3 rounds sont joués avec les mêmes conditions pour la cuisine et les clients.
+        Chaque manche dure <const>200</const> tours. Les 3 manches sont jouées avec les mêmes conditions pour la cuisine et les clients.
       </p>
       <br>
       <p>
-        <b>Un round</b>
+        <b>Une manche</b>
       </p>
       <p>
         Chaque joueur controle un chef qui se déplace dans la cuisine et prépare des desserts pour des clients.
       </p>
       <p>
-        Dans un même round, un joueur joue <const>100</const> tours, en collaboration avec l'autre joueur. Les joueurs jouent leurs tours les uns après les autres.
+        Dans une même manche, un joueur joue <const>100</const> tours, en collaboration avec l'autre joueur. Les joueurs jouent leurs tours les uns après les autres.
        </p>
       <br>
        <p>
@@ -94,7 +94,7 @@
       </p>
         Dans la cuisine, on peut trouver:
         <ul style="padding-top:0; padding-bottom: 0;">
-          <li>Des cases vides, sur lesquelles les chefs se déplacent (<const>.</const>).</li>
+          <li>Des cases vides, sur lesquelles les chefs se déplacent (<const>.</const>, <const>0</const>, <const>1</const>).</li>
           <li>Des tables de travail (<const>#</const>).</li>
           <li>Un lave-vaisselle (<const>D</const>).</li>
           <li>Une fenêtre pour les clients representée par une cloche (<const>W</const>).</li>
@@ -130,7 +130,7 @@
             <li>Des myrtilles (<const>B</const>).</li>
             <li>De la crème glacée (<const>I</const>).</li>
             <li>Des fraises (<const>S</const>).</li>
-            <li>De la pâte (<const>D</const>).</li>
+            <li>De la pâte (<const>H</const>).</li>
           </ul>
 
           On y trouve aussi deux équipements supplémentaires :
@@ -146,7 +146,7 @@
           <li>Des myrtilles (<const>B</const>).</li>
           <li>De la crème glacée (<const>I</const>).</li>
           <li>Des fraises (<const>S</const>).</li>
-          <li>De la pâte (<const>D</const>).</li>
+          <li>De la pâte (<const>H</const>).</li>
         </ul>
 
         On y trouve aussi deux équipements supplémentaires :
@@ -395,7 +395,14 @@
       <p>
         <action>WAIT</action>
       </p>
-      Utilisez cette commande pour passer votre tour.
+      <p>
+        Utilisez cette commande pour passer votre tour.
+      </p>
+      <br>
+      <p>
+        Pour afficher un message dans la vidéo, ajoutez un point-virgule suivi de votre message à la sortie. <br>
+        Ex: <action>USE 0 0; mon message</action>
+      </p>
     </div>
   </div>
 
@@ -407,7 +414,7 @@
       <div class="text">
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
-            Vous obtenez plus de points que les autres joueurs après les 3 rounds.
+            Vous obtenez plus de points que les autres joueurs après les 3 manches.
           </li>
         </ul>
       </div>
@@ -441,7 +448,7 @@
     </h2>
     <div class="statement-expert-rules-content">
       <p>
-        Vous pouvez retrouver le code source du jeu ici : <a href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
+        Vous pouvez retrouver le code source du jeu ici : <a target="_blank" href="https://github.com/csj/code-a-la-mode">https://github.com/csj/code-a-la-mode</a>.
       </p>
         <ul style="padding-top: 0;padding-bottom: 0;">
           <li>
@@ -460,7 +467,7 @@
             Une assiette ne peut contenir plus de <const>4</const> desserts.
           </li>
           <li>
-            Tous les différents cas possibles de l'action <action>USE</action> sont listés <a href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">ici</a>.
+            Tous les différents cas possibles de l'action <action>USE</action> sont listés <a target="_blank" href="https://github.com/csj/code-a-la-mode/blob/master/USE.md">ici</a>.
           </li>
           <li>
             A chaque tour où un client attend sa commande, la récompense liée décroit de <const>1</const> point.
@@ -479,7 +486,7 @@
     <div class="blk">
       <div class="title">Entrée pour le premier tour</div>
       <div class="text">
-        <span class="statement-lineno">Première ligne</span>: un entier <var>numAllCustomers</var> pour le nombre total de clients (liste identique à chaque round).<br>
+        <span class="statement-lineno">Première ligne</span>: un entier <var>numAllCustomers</var> pour le nombre total de clients (liste identique à chaque manche).<br>
         <span class="statement-lineno">Les <var>numAllCustomers</var> prochaines lignes</span>:
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
@@ -494,6 +501,12 @@
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
             <const>.</const>: case de sol
+          </li>
+          <li>
+            <const>0</const>: spawn du premier joueur
+          </li>
+          <li>
+            <const>1</const>: spawn du deuxième joueur
           </li>
           <li>
             <const>D</const>: le lave-vaisselle
@@ -529,7 +542,7 @@
     <div class="blk">
       <div class="title">Entrée pour un tour de jeu</div>
       <div class="text">
-        <span class="statement-lineno">Première ligne</span>: Un entier <var>turnsRemaining</var> pour le nombre de tours restants avant la fin du round courant. <br/>
+        <span class="statement-lineno">Première ligne</span>: Un entier <var>turnsRemaining</var> pour le nombre de tours restants avant la fin de la manche courante. <br/>
         <span class="statement-lineno">Les <const>3</const> prochaines lignes</span>: 
         <ul style="margin-top: 0;padding-bottom: 0;">
           <li>
@@ -537,7 +550,8 @@
           </li>
           <li>
             Une chaine de charactères <var>playerItem</var> pour représenter ce que le chef transporte <br/>
-            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const>
+            Ex: <const>DISH-BLUEBERRIES-ICE_CREAM</const><br/>
+            S'il ne transporte rien&nbsp;: <const>NONE</const>
           </li>
         </ul>
         <span class="statement-lineno">les <const>3</const> prochaines lines</span>: 
@@ -564,7 +578,7 @@
         <span class="statement-lineno">Prochaine ligne</span>: à ignorer <br/>
         <!-- END -->
         <!-- BEGIN level3 level4 level5 -->
-        <span class="statement-lineno">Prochaine ligne</span>: Une chaine de charactères <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours depuis que le plat a été enfourné. <br/>
+        <span class="statement-lineno">Prochaine ligne</span>: Une chaine de charactères <var>ovenContents</var> pour représenter ce qu'il y a dans le four et un entier <var>ovenTimer</var> pour représenter le nombre de tours que la nourriture restera au four avant d'être cuite ou brûlée. <br/>
         <!-- END -->
         <span class="statement-lineno">Prochaine ligne</span>: Un entier <var>numCustomers</var> pour le nombre courant de clients attendant leurs commandes. <br/>
         <span class="statement-lineno">Les <var>numCustomers</var> prochaines lignes</span>:

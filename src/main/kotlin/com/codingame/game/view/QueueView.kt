@@ -161,7 +161,8 @@ class QueueView {
       tooltipModule.updateExtraTooltipText(group, customer.dish.describe())
       backgroundBox.setFillColor(waitingColour, Curve.IMMEDIATE).setAlpha(0.0, Curve.IMMEDIATE)
 
-      group.setX(36, Curve.IMMEDIATE).setY(index * (187 + 20), Curve.IMMEDIATE)
+      group.setX(36).setY(index * (187 + 20))
+      graphicEntityModule.commitEntityState(0.0, group)
 //      group.apply { y = index * (187 + 20); x = 36; }
 
       awardText.text = baseAward.toString()

@@ -15,13 +15,15 @@ public class Game
     public List<Table> Tables = new List<Table>();
 }
 
-public class Table{
+public class Table
+{
     public Position Position;
     public bool HasFunction;
     public Item Item;
 }
 
-public class Item{
+public class Item
+{
     public string Content;
     public bool HasPlate;
     public Item(string content){
@@ -30,7 +32,8 @@ public class Item{
     }
 }
 
-public class Player{
+public class Player
+{
     public Position Position;
     public Item Item;
     public Player(Position position, Item item){
@@ -89,7 +92,7 @@ public class MainClass
     private static void Move(Position p) => Console.WriteLine("MOVE " + p);
 
     private static void Use(Position p){
-        Console.WriteLine("USE " + p);
+        Console.WriteLine("USE " + p + "; C# Starter AI");
     }
 
     private static string ReadLine(){
@@ -150,16 +153,12 @@ public class MainClass
             }
 
             // GAME LOGIC
+            // fetch a dish, pick ice cream and drop the dish on an empty table
             var myChef = game.Players[0];
-            // fetch a dish
             if (!myChef.Item?.HasPlate ?? false)
                 Use(game.Dishwasher.Position);
-            // fetch ice cream
-            else if(!myChef.Item.Content.Contains("ICE"))
+            else if(!myChef.Item.Content.Contains("ICE_CREAM"))
                 Use(game.IceCream.Position);
-            // fetch blueberries
-            else if (!myChef.Item.Content.Contains("BLUE"))
-                Use(game.Blueberry.Position);
             // once ready, put it on the first empty table for now
             else
                 Use(game.Tables.First(t => t.Item == null).Position);
