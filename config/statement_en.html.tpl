@@ -1,4 +1,4 @@
-<!-- LEAGUES level1 level2 level3 level4 -->
+<!-- LEAGUES level1 level2 level3 level4 level5 -->
 <div class="statement-body">
   <!-- BEGIN level1 level2 level3 level4 -->
   <div style="color: #7cc576;
@@ -140,7 +140,7 @@
           </ul>
       </div>
       <!-- END -->
-      <!-- BEGIN level4 -->
+      <!-- BEGIN level4 level5 -->
         It also contains different food crates that dispense:
         <ul style="padding-top:0; padding-bottom: 0;">
           <li>Blueberries (<const>B</const>).</li>
@@ -242,6 +242,45 @@
         Cooking takes <const>10</const> turns, after which the food is <b>READY</b>. The food will remain <b>READY</b> for <const>10</const> more turns, after which it will be burned away and need to be restarted.
       </p>
       <!-- END -->
+      <!-- BEGIN level5 -->
+        The chefs can also prepare two classic desserts: 
+        <ul style="padding-top:0; padding-bottom: 0;">
+          <li>Chopped strawberries (<const>CHOPPED_STRAWBERRIES</const>).</li>
+          <li>Croissants (<const>CROISSANT</const>).</li>
+        </ul>
+      <p>
+        The chefs can also prepare one advanced dessert: blueberry tart (<const>TART</const>).
+      </p>
+      <p>
+        Strawberries need to be cut at the chopping board before being added to a dish. <br/>
+        <b>Chopping board:</b> <const>STRAWBERRIES</const> => (<const>CHOPPED_STRAWBERRIES</const>)
+      </p>
+      <p>
+        A ball of dough needs to be cooked into a croissant at the oven before being added to a dish. <br/>
+        <b>Oven:</b> <const>DOUGH</const> => <const>CROISSANT</const>
+      </p>
+        <p>
+        To make a blueberry tart, a ball of dough needs to be chopped at the chopping board, then mixed with blueberries and then cooked into a blueberry tart in the oven before being added to a dish. <br/>
+        <b>Chopping board:</b> <const>DOUGH</const> => <const>CHOPPED_DOUGH</const>
+        <const>CHOPPED_DOUGH</const> + <const>BLUEBERRIES</const> => <const>RAW_TART</const>
+        <b>Oven:</b> <const>RAW_TART</const> => <const>TART</const>
+      </p>
+      <p>
+        Cooking takes <const>10</const> turns, after which the food is <b>READY</b>. The food will remain <b>READY</b> for <const>10</const> more turns, after which it will be burned away and need to be restarted.
+      </p>
+      <!-- END -->
+      <!-- BEGIN level1 -->
+      <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px; width: 100%;"></img>
+      <!-- END -->
+      <!-- BEGIN level2 -->
+      <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px; width: 100%;"></img>
+      <!-- END -->
+      <!-- BEGIN level3 -->
+      <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px; width: 100%;"></img>
+      <!-- END -->
+      <!-- BEGIN level4 level5 -->
+      <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px; width: 100%;"></img>
+      <!-- END -->
       <br>
       <p>
         <b>The customers</b>
@@ -269,7 +308,7 @@
           <li><const>CROISSANT</const></li>
         </ul>      
       <!-- END -->
-      <!-- BEGIN level4 -->      
+      <!-- BEGIN level4 level5 -->      
         Every customer requests between 2-4 items, among
         <ul style="padding-top:0; padding-bottom: 0;">
           <li> <const>ICE_CREAM</const></li>
@@ -279,7 +318,7 @@
           <li><const>TART</const></li>
         </ul>
       <!-- END -->
-      <!-- BEGIN level2 level3 level4 -->
+      <!-- BEGIN level2 level3 level4 level5 -->
       (no duplicates).
       <!-- END -->
 
@@ -295,21 +334,9 @@
         <p>
           A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
         </p>
-        <!-- BEGIN level1 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786355937691" style="padding: 20px; width: 100%;"></img>
-        <!-- END -->
-        <!-- BEGIN level2 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786706826677" style="padding: 20px; width: 100%;"></img>
-        <!-- END -->
-        <!-- BEGIN level3 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px; width: 100%;"></img>
-        <!-- END -->
-        <!-- BEGIN level4 -->
-        <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px; width: 100%;"></img>
-        <!-- END -->
       </div>
       <!-- END -->
-      <!-- BEGIN level3 level4 -->
+      <!-- BEGIN level3 level4 level5 -->
       <p>
         A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
       </p>
@@ -352,6 +379,12 @@
           <li style="color: #7cc576;
         background-color: rgba(124, 197, 118,.1);
         padding: 2px;">
+            The <action>USE</action> action on a table with food while holding food will make you attempt to fuse both. </br>
+            (works only if food is: <const>CHOPPED_DOUGH</const> and <const>BLUEBERRIES</const>)
+          </li>
+          <!-- END -->
+          <!-- BEGIN level5 -->
+          <li>
             The <action>USE</action> action on a table with food while holding food will make you attempt to fuse both. </br>
             (works only if food is: <const>CHOPPED_DOUGH</const> and <const>BLUEBERRIES</const>)
           </li>
@@ -486,7 +519,7 @@
           <li>
             <const>I</const>: the ice cream crate
           </li>
-          <!-- BEGIN level2 level3 level4 -->
+          <!-- BEGIN level2 level3 level4 level5 -->
           <li>
             <const>S</const>: the strawberry crate
           </li>
@@ -494,7 +527,7 @@
             <const>C</const>: the chopping board
           </li>
           <!-- END -->
-          <!-- BEGIN level3 level4 -->
+          <!-- BEGIN level3 level4 level5 -->
           <li>
             <const>H</const>: the dough crate
           </li>
@@ -543,7 +576,7 @@
         <!-- BEGIN level1 level2 -->
         <span class="statement-lineno">Next line</span>: to ignore in this league <br/>
         <!-- END -->
-        <!-- BEGIN level3 level4 -->
+        <!-- BEGIN level3 level4 level5 -->
         <span class="statement-lineno">Next line</span>: A string <var>ovenContents</var> for what's in the oven and an integer <var>ovenTimer</var> for the number of turns the food will stay in the oven before being cooked or burned. <br/>
         <!-- END -->
         <span class="statement-lineno">First line</span>: an integer <var>numCustomers</var> for the current number of customers waiting for their order. <br/>
@@ -614,103 +647,3 @@
       </ul>
   </div>
   <!-- END -->
-
-  <div style="background-color: #87cefa80;
-    padding: 20px;
-    margin-top: 10px;
-    text-align: left;">
-    <div style="text-align: center; margin-bottom: 6px">
-    </div>
-    <p style="text-align: center; font-weight: 700; margin-bottom: 6px;">
-      Community Events
-    </p>
-    <p>
-      This game has been created by csj and Matteh. They have been helped by the following testers: eulerscheZahl, Illedan, Nanosplitter and SeebOmega.
-    </p>
-    <p>
-      <b> Scheduled Streams 📺</b>
-    </p>
-    <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
-      <li>
-        🍨 <u>"From Wood to Bronze"</u> (C#)<br />
-        On March 8th at 1 PM EST by Illedan on the <a target="_blank" href="https://www.twitch.tv/codingame">CodinGame channel</a>
-      </li>
-      <li>
-          🍫 <u>"A look from the pro"</u> (C++)<br />
-          On March 8th at 3 PM EST by Errichto on his <a target="_blank" href="https://www.twitch.tv/errichto">Twitch</a> and <a target="_blank" href="https://youtube.com/errichto">Youtube</a> channels
-      </li>
-      <li>
-          🍪 <u>"A word from the creator"</u> (Kotlin)<br />
-          On March 9th at 10 AM EST by csj on the <a target="_blank" href="https://www.twitch.tv/codingame">CodinGame channel</a>
-      </li>
-      <li>
-          🍓 <u>"Facing the Silver league"</u> (Python 3) <br />
-          On March 11th at 12 PM EST by Icebox on the <a target="_blank" href="https://www.twitch.tv/codingame">CodinGame channel</a>
-      </li>
-    </ul>
-    <p>
-      <b> Scheduled CodingHubs 🍿</b>
-    </p>
-    <p>
-      The full details of CodingHubs can be found <a target="_blank" href="https://trello.com/c/Xy0Qk4nu">here</a>
-    </p>
-    <ul style="margin-top: 0;padding-bottom: 0;" class="statement-next-rules">
-      <li>
-        8th of March
-        <ul>
-          <li>
-            LeoLet at Viseo Technologies in Lyon (France)
-          </li>
-          <li>
-            Lechevelut at ADNEOM in Lyon (France)
-          </li>
-          <li>
-            Wusch at Corworking Baunatal in Baunatal (Germany)
-          </li>
-        </ul>
-      </li>
-      <li>
-        9th of March
-        <ul>
-          <li>
-            wahijacodes at a private place in RawalPindi (Pakistan)
-          </li>
-        </ul>
-      </li>
-      <li>
-        11th of March
-        <ul>
-          <li>
-            Ramdeath at Kaunas Saules gymnasium in Kaunas (Lithuania)
-          </li>
-        </ul>
-      </li>
-      <li>
-        13th of March
-        <ul>
-          <li>
-            AntiSquid at EOF Hackspace Co-operative in Oxford (England)
-          </li>
-          <li>
-            egaetan at Meritis in Paris (France)
-          </li>
-          <li>
-            Spacebird1313 at iMagineLab in University of Antwerp (Belgium)
-          </li>
-        </ul>
-      </li>
-      <li>
-        15th of March
-        <ul>
-          <li>
-            Bisou at Société Générale near Paris (France)
-          </li>
-          <li>
-            orendon at WeWork in Medellin (Colombia)
-          </li>
-        </ul>
-      </li>
-    </ul>
-  </div>
-
-</div>
