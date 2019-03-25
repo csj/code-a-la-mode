@@ -278,7 +278,7 @@
       <!-- BEGIN level3 -->
       <img src="https://www.codingame.com/servlet/mfileservlet?id=25786714906811" style="padding: 20px; width: 100%;"></img>
       <!-- END -->
-      <!-- BEGIN level4 -->
+      <!-- BEGIN level4 level5 -->
       <img src="https://www.codingame.com/servlet/mfileservlet?id=25786724844549" style="padding: 20px; width: 100%;"></img>
       <!-- END -->
       <br>
@@ -308,7 +308,7 @@
           <li><const>CROISSANT</const></li>
         </ul>      
       <!-- END -->
-      <!-- BEGIN level4 -->      
+      <!-- BEGIN level4 level5 -->      
         Every customer requests between 2-4 items, among
         <ul style="padding-top:0; padding-bottom: 0;">
           <li> <const>ICE_CREAM</const></li>
@@ -318,7 +318,7 @@
           <li><const>TART</const></li>
         </ul>
       <!-- END -->
-      <!-- BEGIN level2 level3 level4 -->
+      <!-- BEGIN level2 level3 level4 level5 -->
       (no duplicates).
       <!-- END -->
 
@@ -336,7 +336,7 @@
         </p>
       </div>
       <!-- END -->
-      <!-- BEGIN level3 level4 -->
+      <!-- BEGIN level3 level4 level5 -->
       <p>
         A customer's order should be served on a dish (<const>DISH</const>). A dish can only contain (finished) desserts.
       </p>
@@ -382,6 +382,7 @@
             The <action>USE</action> action on a table with food while holding food will make you attempt to fuse both. </br>
             (works only if food is: <const>CHOPPED_DOUGH</const> and <const>BLUEBERRIES</const>)
           </li>
+          <!-- END -->
           <!-- BEGIN level5 -->
           <li>
             The <action>USE</action> action on a table with food while holding food will make you attempt to fuse both. </br>

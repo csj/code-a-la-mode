@@ -309,7 +309,7 @@
           <li><const>CROISSANT</const></li>
         </ul>      
       <!-- END -->
-      <!-- BEGIN level4 -->      
+      <!-- BEGIN level4 level5 -->      
         Chaque client commande entre 2 et 4 desserts parmi
         <ul style="padding-top:0; padding-bottom: 0;">
           <li> <const>ICE_CREAM</const></li>
@@ -319,7 +319,7 @@
           <li><const>TART</const></li>
         </ul>
       <!-- END -->
-      <!-- BEGIN level2 level3 level4 -->
+      <!-- BEGIN level2 level3 level4 level5 -->
       (pas de desserts en double).
       <!-- END -->
 
@@ -337,7 +337,7 @@
         </p>
       </div>
       <!-- END -->
-      <!-- BEGIN level3 level4 -->
+      <!-- BEGIN level3 level4 level5 -->
       <p>
         La commande d'un client doit être servie sur une assiette (<const>DISH</const>). Une assiette ne peut contenir que des desserts terminés.
       </p>
