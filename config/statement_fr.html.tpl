@@ -140,7 +140,7 @@
           </ul>
       </div>
       <!-- END -->
-      <!-- BEGIN level4 -->
+      <!-- BEGIN level4 level5 -->
         On peut aussi trouver des corbeilles de nourriture avec :
         <ul style="padding-top:0; padding-bottom: 0;">
           <li>Des myrtilles (<const>B</const>).</li>
