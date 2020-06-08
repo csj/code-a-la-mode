@@ -40,7 +40,7 @@ Food in food crates is unlimited.
 | none | CROISSANT or TART | => | empty | CROISSANT or TART |
 | DISH | CROISSANT or TART | => | empty | DISH + (CROISSANT or TART) |
 | any other item | empty | => | _Invalid action_ | _Invalid action_ |
-| RAW_TART or DOUGH | cooking (DOUGH or TART) | => | _Invalid action_ | _Invalid action_ |
+| RAW_TART or DOUGH | cooking (DOUGH or RAW_TART) | => | _Invalid action_ | _Invalid action_ |
 
 
 **Tables**
