@@ -17,9 +17,9 @@ _Invalid action_ resolves as a **WAIT** action.
 | none | any |  => | corresponding food |
 | CHOPPED_DOUGH | BLUEBERRY | => | RAW_TART |
 | DISH | BLUEBERRY or ICE_CREAM | => | DISH + (BLUEBERRY or ICE_CREAM) |
+| DISH + food | BLUEBERRY or ICE_CREAM | => | DISH + food + (BLUEBERRY or ICE_CREAM) |
 | DISH | STRAWBERRY or DOUGH | => | _Invalid action_ |
 | any food but CHOPPED_DOUGH | any | => | _Invalid action_ |
-
 
 Food in food crates is unlimited.
 
